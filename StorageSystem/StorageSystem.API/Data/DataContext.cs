@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Shared.Entities;
+using StorageSystem.Shared.Entities;
 
 namespace StorageSystem.API.Data
 {

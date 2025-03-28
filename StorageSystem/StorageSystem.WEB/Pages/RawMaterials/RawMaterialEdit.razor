@@ -1,3 +1,11 @@
-﻿<h3>RawMaterialEdit</h3>
+﻿@page "/rawMaterials/edit/{Id:int}"
 
 
+@if (rawMaterial is null)
+{
+    <Loading />
+}
+else
+{
+    <FormWithFields @ref="rawMaterialForm" Label="Materia Prima:" Model="rawMaterial" OnValidSubmit="EditAsync" ReturnAction="Return" />
+}

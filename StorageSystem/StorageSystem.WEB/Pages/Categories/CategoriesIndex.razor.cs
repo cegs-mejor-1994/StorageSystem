@@ -1,6 +1,6 @@
 using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components;
-using Shared.Entities;
+using StorageSystem.Shared.Entities;
 using StorageSystem.WEB.Repositories;
 using System.Net;
 

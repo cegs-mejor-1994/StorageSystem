@@ -1,3 +1,5 @@
-﻿<h3>RawMaterialCreate</h3>
+﻿@page "/rawMaterials/create"
+
+<FormWithFields @ref="rawMaterialForm" Label="Materia Prima:" Model="rawMaterial" OnValidSubmit="CreateAsync" ReturnAction="Return" />
 
 

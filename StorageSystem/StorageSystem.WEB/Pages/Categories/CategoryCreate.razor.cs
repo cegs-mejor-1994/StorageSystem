@@ -17,6 +17,7 @@ namespace StorageSystem.WEB.Pages.Categories
 
         private async Task CreateAsync()
         {
+            category.DateRegister = DateTime.Now;
             var responseHttp = await repository.PostAsync("/api/categories", category);
             if (responseHttp.Error)
             {

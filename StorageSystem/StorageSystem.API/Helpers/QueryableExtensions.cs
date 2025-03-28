@@ -1,4 +1,4 @@
-﻿using Shared.DTOs;
+﻿using StorageSystem.Shared.DTOs;
 
 namespace StorageSystem.API.Helpers
 {

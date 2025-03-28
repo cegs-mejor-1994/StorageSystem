@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Shared.Entities;
 using StorageSystem.API.UnitOfWork.Interfaces;
+using StorageSystem.Shared.Entities;
 
 namespace StorageSystem.API.Controllers
 {
