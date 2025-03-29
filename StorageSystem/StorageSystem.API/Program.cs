@@ -20,6 +20,12 @@ builder.Services.AddDbContext<DataContext>(op => op.UseSqlServer("name=CadenaSto
 builder.Services.AddScoped(typeof(IGenericUnitOfWork<>), typeof(GenericUnitOfWork<>));
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
+builder.Services.AddScoped<IMeasurementUnitsRepository, MeasurementUnitsRepository>();
+builder.Services.AddScoped<ICategoriesRepository, CategoriesRepository>();
+
+builder.Services.AddScoped<IMeasurementUnitsUnitOfWork, MeasurementUnitsUnitOfWork>();
+builder.Services.AddScoped<ICategoriesUnitOfWork, CategoriesUnitOfWork>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -8,11 +8,17 @@ namespace StorageSystem.API.Controllers
     [Route("api/[controller]")]
     public class CategoriesController : GenericController<Category>
     {
-        private readonly IGenericUnitOfWork<Category> _unitOfWork;
+        private readonly ICategoriesUnitOfWork _categoriesUnitOfWork;
 
-        public CategoriesController(IGenericUnitOfWork<Category> unitOfWork) : base(unitOfWork)
+        public CategoriesController(IGenericUnitOfWork<Category> unitOfWork, ICategoriesUnitOfWork categoriesUnitOfWork) : base(unitOfWork)
         {
-            _unitOfWork = unitOfWork;
+            _categoriesUnitOfWork = categoriesUnitOfWork;
+        }
+
+        [HttpGet("combo")]
+        public async Task<IActionResult> GetComboAsync()
+        {
+            return Ok(await _categoriesUnitOfWork.GetComboAsync());
         }
     }
 }

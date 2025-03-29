@@ -77,18 +77,18 @@ namespace StorageSystem.API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("MeasurementUnitId")
+                    b.Property<int>("RawMaterialId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("RegisterDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("SupplierId")
+                    b.Property<int>("SupplierId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("MeasurementUnitId");
+                    b.HasIndex("RawMaterialId");
 
                     b.HasIndex("SupplierId");
 
@@ -103,9 +103,6 @@ namespace StorageSystem.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("CategoryId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Code")
                         .IsRequired()
                         .HasMaxLength(10)
@@ -119,21 +116,14 @@ namespace StorageSystem.API.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int?>("RawMaterialId")
-                        .HasColumnType("int");
-
                     b.Property<string>("State")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CategoryId");
-
                     b.HasIndex("Code")
                         .IsUnique();
-
-                    b.HasIndex("RawMaterialId");
 
                     b.ToTable("MeasurementUnits");
                 });
@@ -146,6 +136,9 @@ namespace StorageSystem.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Code")
                         .IsRequired()
                         .HasMaxLength(10)
@@ -153,6 +146,9 @@ namespace StorageSystem.API.Migrations
 
                     b.Property<DateTime>("DateRegister")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("MeasurementUnitId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -165,8 +161,12 @@ namespace StorageSystem.API.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CategoryId");
+
                     b.HasIndex("Code")
                         .IsUnique();
+
+                    b.HasIndex("MeasurementUnitId");
 
                     b.ToTable("RawMaterials");
                 });
@@ -214,51 +214,55 @@ namespace StorageSystem.API.Migrations
 
             modelBuilder.Entity("StorageSystem.Shared.Entities.InputInventory", b =>
                 {
-                    b.HasOne("StorageSystem.Shared.Entities.MeasurementUnit", "MeasurementUnit")
+                    b.HasOne("StorageSystem.Shared.Entities.RawMaterial", "RawMaterial")
                         .WithMany("InputInventories")
-                        .HasForeignKey("MeasurementUnitId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("RawMaterialId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("StorageSystem.Shared.Entities.Supplier", "Supplier")
                         .WithMany("InputInventories")
                         .HasForeignKey("SupplierId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
-                    b.Navigation("MeasurementUnit");
+                    b.Navigation("RawMaterial");
 
                     b.Navigation("Supplier");
                 });
 
-            modelBuilder.Entity("StorageSystem.Shared.Entities.MeasurementUnit", b =>
+            modelBuilder.Entity("StorageSystem.Shared.Entities.RawMaterial", b =>
                 {
                     b.HasOne("StorageSystem.Shared.Entities.Category", "Category")
-                        .WithMany("MeasurementUnits")
+                        .WithMany("RawMaterials")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
-                    b.HasOne("StorageSystem.Shared.Entities.RawMaterial", "RawMaterial")
-                        .WithMany("MeasurementUnits")
-                        .HasForeignKey("RawMaterialId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                    b.HasOne("StorageSystem.Shared.Entities.MeasurementUnit", "MeasurementUnit")
+                        .WithMany("RawMaterials")
+                        .HasForeignKey("MeasurementUnitId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Category");
 
-                    b.Navigation("RawMaterial");
+                    b.Navigation("MeasurementUnit");
                 });
 
             modelBuilder.Entity("StorageSystem.Shared.Entities.Category", b =>
                 {
-                    b.Navigation("MeasurementUnits");
+                    b.Navigation("RawMaterials");
                 });
 
             modelBuilder.Entity("StorageSystem.Shared.Entities.MeasurementUnit", b =>
                 {
-                    b.Navigation("InputInventories");
+                    b.Navigation("RawMaterials");
                 });
 
             modelBuilder.Entity("StorageSystem.Shared.Entities.RawMaterial", b =>
                 {
-                    b.Navigation("MeasurementUnits");
+                    b.Navigation("InputInventories");
                 });
 
             modelBuilder.Entity("StorageSystem.Shared.Entities.Supplier", b =>

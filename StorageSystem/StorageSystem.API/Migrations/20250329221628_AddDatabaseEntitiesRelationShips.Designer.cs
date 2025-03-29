@@ -12,8 +12,8 @@ using StorageSystem.API.Data;
 namespace StorageSystem.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250315210021_AddDatabaseInitialized")]
-    partial class AddDatabaseInitialized
+    [Migration("20250329221628_AddDatabaseEntitiesRelationShips")]
+    partial class AddDatabaseEntitiesRelationShips
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace StorageSystem.API.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Shared.Entities.Category", b =>
+            modelBuilder.Entity("StorageSystem.Shared.Entities.Category", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -58,7 +58,7 @@ namespace StorageSystem.API.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("Shared.Entities.InputInventory", b =>
+            modelBuilder.Entity("StorageSystem.Shared.Entities.InputInventory", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -80,15 +80,25 @@ namespace StorageSystem.API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("RawMaterialId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("RegisterDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("SupplierId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("RawMaterialId");
+
+                    b.HasIndex("SupplierId");
 
                     b.ToTable("InputInventories");
                 });
 
-            modelBuilder.Entity("Shared.Entities.MeasurementUnit", b =>
+            modelBuilder.Entity("StorageSystem.Shared.Entities.MeasurementUnit", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -121,13 +131,16 @@ namespace StorageSystem.API.Migrations
                     b.ToTable("MeasurementUnits");
                 });
 
-            modelBuilder.Entity("Shared.Entities.RawMaterial", b =>
+            modelBuilder.Entity("StorageSystem.Shared.Entities.RawMaterial", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Code")
                         .IsRequired()
@@ -136,6 +149,9 @@ namespace StorageSystem.API.Migrations
 
                     b.Property<DateTime>("DateRegister")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("MeasurementUnitId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -148,13 +164,17 @@ namespace StorageSystem.API.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CategoryId");
+
                     b.HasIndex("Code")
                         .IsUnique();
+
+                    b.HasIndex("MeasurementUnitId");
 
                     b.ToTable("RawMaterials");
                 });
 
-            modelBuilder.Entity("Shared.Entities.Supplier", b =>
+            modelBuilder.Entity("StorageSystem.Shared.Entities.Supplier", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -193,6 +213,64 @@ namespace StorageSystem.API.Migrations
                         .IsUnique();
 
                     b.ToTable("Suppliers");
+                });
+
+            modelBuilder.Entity("StorageSystem.Shared.Entities.InputInventory", b =>
+                {
+                    b.HasOne("StorageSystem.Shared.Entities.RawMaterial", "RawMaterial")
+                        .WithMany("InputInventories")
+                        .HasForeignKey("RawMaterialId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("StorageSystem.Shared.Entities.Supplier", "Supplier")
+                        .WithMany("InputInventories")
+                        .HasForeignKey("SupplierId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("RawMaterial");
+
+                    b.Navigation("Supplier");
+                });
+
+            modelBuilder.Entity("StorageSystem.Shared.Entities.RawMaterial", b =>
+                {
+                    b.HasOne("StorageSystem.Shared.Entities.Category", "Category")
+                        .WithMany("RawMaterials")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("StorageSystem.Shared.Entities.MeasurementUnit", "MeasurementUnit")
+                        .WithMany("RawMaterials")
+                        .HasForeignKey("MeasurementUnitId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+
+                    b.Navigation("MeasurementUnit");
+                });
+
+            modelBuilder.Entity("StorageSystem.Shared.Entities.Category", b =>
+                {
+                    b.Navigation("RawMaterials");
+                });
+
+            modelBuilder.Entity("StorageSystem.Shared.Entities.MeasurementUnit", b =>
+                {
+                    b.Navigation("RawMaterials");
+                });
+
+            modelBuilder.Entity("StorageSystem.Shared.Entities.RawMaterial", b =>
+                {
+                    b.Navigation("InputInventories");
+                });
+
+            modelBuilder.Entity("StorageSystem.Shared.Entities.Supplier", b =>
+                {
+                    b.Navigation("InputInventories");
                 });
 #pragma warning restore 612, 618
         }

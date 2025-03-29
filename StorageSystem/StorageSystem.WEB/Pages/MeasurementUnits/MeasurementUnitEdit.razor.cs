@@ -20,7 +20,7 @@ namespace StorageSystem.WEB.Pages.MeasurementUnits
 
         protected async override Task OnParametersSetAsync()
         {
-            var responseHttp = await Repository.GetAsync<MeasurementUnit>($"/api/measurementUnits/{Id}");
+            var responseHttp = await Repository.GetAsync<MeasurementUnit>($"/api/MeasurementUnits/{Id}");
             if (responseHttp.Error)
             {
                 if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
@@ -41,7 +41,7 @@ namespace StorageSystem.WEB.Pages.MeasurementUnits
 
         private async Task EditAsync()
         {
-            var responseHttp = await Repository.PutAsync($"/api/measurementUnits", measurementUnit);
+            var responseHttp = await Repository.PutAsync($"/api/MeasurementUnits", measurementUnit);
             if (responseHttp.Error)
             {
                 var message = await responseHttp.GetErrorMessageAsync();

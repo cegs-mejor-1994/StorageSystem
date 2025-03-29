@@ -18,9 +18,6 @@ namespace StorageSystem.Shared.Entities
         public string State { get; set; } = "Disponible";
         public DateTime DateRegister { get; set; }
 
-        public Category? Category { get; set; }
-        public RawMaterial? RawMaterial  { get; set; }
-
-        public ICollection<InputInventory>? InputInventories { get; set; }
+        public ICollection<RawMaterial>? RawMaterials { get; set; }
     }
 }

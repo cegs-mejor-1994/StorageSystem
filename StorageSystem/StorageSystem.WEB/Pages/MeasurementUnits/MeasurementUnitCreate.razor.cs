@@ -19,7 +19,7 @@ namespace StorageSystem.WEB.Pages.MeasurementUnits
         private async Task CreateAsync()
         {
             //measurementUnit.DateRegister = DateTime.Now;
-            var responseHttp = await repository.PostAsync("/api/measurementUnits", measurementUnit);
+            var responseHttp = await repository.PostAsync("/api/MeasurementUnits", measurementUnit);
             if (responseHttp.Error)
             {
                 var message = await responseHttp.GetErrorMessageAsync();

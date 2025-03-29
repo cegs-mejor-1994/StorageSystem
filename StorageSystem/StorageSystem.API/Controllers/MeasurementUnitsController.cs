@@ -8,11 +8,17 @@ namespace StorageSystem.API.Controllers
     [Route("api/[controller]")]
     public class MeasurementUnitsController : GenericController<MeasurementUnit>
     {
-        private readonly IGenericUnitOfWork<MeasurementUnit> _unitOfWork;
+        private readonly IMeasurementUnitsUnitOfWork _measurementUnitsUnitOfWork;
 
-        public MeasurementUnitsController(IGenericUnitOfWork<MeasurementUnit> unitOfWork) : base(unitOfWork)
+        public MeasurementUnitsController(IGenericUnitOfWork<MeasurementUnit> unitOfWork, IMeasurementUnitsUnitOfWork measurementUnitsUnitOfWork) : base(unitOfWork)
         {
-            _unitOfWork = unitOfWork;
+            _measurementUnitsUnitOfWork = measurementUnitsUnitOfWork;
+        }
+
+        [HttpGet("combo")]
+        public async Task<IActionResult> GetComboAsync()
+        {
+            return Ok(await _measurementUnitsUnitOfWork.GetComboAsync());
         }
     }
 }

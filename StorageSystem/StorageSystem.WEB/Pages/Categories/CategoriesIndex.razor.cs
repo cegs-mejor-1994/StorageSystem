@@ -20,7 +20,7 @@ namespace StorageSystem.WEB.Pages.Categories
 
         private async Task LoadAsync()
         {
-            var responseHttp = await Repository.GetAsync<List<Category>>("api/categories");
+            var responseHttp = await Repository.GetAsync<List<Category>>("api/Categories");
             if (responseHttp.Error)
             {
                 var message = await responseHttp.GetErrorMessageAsync();
@@ -45,7 +45,7 @@ namespace StorageSystem.WEB.Pages.Categories
             {
                 return;
             }
-            var responseHttp = await Repository.DeleteAsync<Category>($"api/categories/{category.Id}");
+            var responseHttp = await Repository.DeleteAsync<Category>($"api/Categories/{category.Id}");
             if (responseHttp.Error)
             {
                 if(responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)

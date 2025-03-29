@@ -20,6 +20,12 @@ namespace StorageSystem.Shared.Entities
         public string State { get; set; } = "Disponible";
         public DateTime DateRegister { get; set; }
 
-        public ICollection<MeasurementUnit>? MeasurementUnits { get; set; }
+        public int CategoryId { get; set; }
+        public Category? Category { get; set; }
+
+        public int MeasurementUnitId { get; set; }
+        public MeasurementUnit? MeasurementUnit { get; set; }
+
+        public ICollection<InputInventory>? InputInventories { get; set; }
     }
 }

@@ -10,7 +10,8 @@ namespace StorageSystem.WEB.Pages.RawMaterials
     public partial class RawMaterialEdit
     {
         private RawMaterial? rawMaterial;
-        private FormWithFields<RawMaterial>? rawMaterialForm;
+        private List<Category>? categories;
+        private List<MeasurementUnit>? measurementUnits;
 
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
@@ -18,6 +19,11 @@ namespace StorageSystem.WEB.Pages.RawMaterials
 
         [EditorRequired, Parameter] public int Id { get; set; }
 
+        protected override async Task OnInitializedAsync()
+        {
+            await LoadCategoriesAsync();
+            await LoadMeasurementUnitsAsync();
+        }
         protected async override Task OnParametersSetAsync()
         {
             var responseHttp = await Repository.GetAsync<RawMaterial>($"/api/rawMaterials/{Id}");
@@ -48,7 +54,7 @@ namespace StorageSystem.WEB.Pages.RawMaterials
                 await SweetAlertService.FireAsync("Error", message);
                 return;
             }
-            Return();
+            NavigationManager.NavigateTo("/rawMaterials");
             var toast = SweetAlertService.Mixin(new SweetAlertOptions
             {
                 Toast = true,
@@ -59,10 +65,28 @@ namespace StorageSystem.WEB.Pages.RawMaterials
             await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Cambios guardados con exito");
         }
 
-        private void Return()
+        private async Task LoadCategoriesAsync()
         {
-            rawMaterialForm!.FormPostedSuccessfully = true;
-            NavigationManager.NavigateTo("/rawMaterials");
+            var responseHttp = await Repository.GetAsync<List<Category>>("/api/Categories/combo");
+            if (responseHttp.Error)
+            {
+                var message = await responseHttp.GetErrorMessageAsync();
+                await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+                return;
+            }
+            categories = responseHttp.Response;
+        }
+
+        private async Task LoadMeasurementUnitsAsync()
+        {
+            var responseHttp = await Repository.GetAsync<List<MeasurementUnit>>("/api/MeasurementUnits/combo");
+            if (responseHttp.Error)
+            {
+                var message = await responseHttp.GetErrorMessageAsync();
+                await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+                return;
+            }
+            measurementUnits = responseHttp.Response;
         }
     }
 }

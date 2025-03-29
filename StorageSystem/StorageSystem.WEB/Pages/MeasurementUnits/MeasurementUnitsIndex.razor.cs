@@ -20,7 +20,7 @@ namespace StorageSystem.WEB.Pages.MeasurementUnits
 
         private async Task LoadAsync()
         {
-            var responseHttp = await Repository.GetAsync<List<MeasurementUnit>>("api/measurementUnits");
+            var responseHttp = await Repository.GetAsync<List<MeasurementUnit>>("api/MeasurementUnits");
             if (responseHttp.Error)
             {
                 var message = await responseHttp.GetErrorMessageAsync();
@@ -45,7 +45,7 @@ namespace StorageSystem.WEB.Pages.MeasurementUnits
             {
                 return;
             }
-            var responseHttp = await Repository.DeleteAsync<MeasurementUnit>($"api/measurementUnits/{measurementUnit.Id}");
+            var responseHttp = await Repository.DeleteAsync<MeasurementUnit>($"api/MeasurementUnits/{measurementUnit.Id}");
             if (responseHttp.Error)
             {
                 if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)

@@ -8,25 +8,30 @@ namespace StorageSystem.WEB.Pages.RawMaterials
 {
     public partial class RawMaterialCreate
     {
-        private RawMaterial rawMaterial = new();
-        private FormWithFields<RawMaterial>? rawMaterialForm;
+        private RawMaterial rawMaterial = new();        
+        private List<Category>? categories;
+        private List<MeasurementUnit>? measurementUnits;
 
-        [Inject] private IRepository repository { get; set; } = null!;
-        [Inject] private SweetAlertService sweetAlertService { get; set; } = null!;
-        [Inject] private NavigationManager navigationManager { get; set; } = null!;
+        [Inject] private IRepository Repository { get; set; } = null!;
+        [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
+        [Inject] private NavigationManager NavigationManager { get; set; } = null!;
 
+        protected override async Task OnInitializedAsync()
+        {
+            await LoadCategoriesAsync();
+            await LoadMeasurementUnitsAsync();
+        }
         private async Task CreateAsync()
         {
             //measurementUnit.DateRegister = DateTime.Now;
-            var responseHttp = await repository.PostAsync("/api/rawMaterials", rawMaterial);
+            var responseHttp = await Repository.PostAsync("/api/RawMaterials", rawMaterial);
             if (responseHttp.Error)
             {
                 var message = await responseHttp.GetErrorMessageAsync();
-                await sweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+                await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
                 return;
-            }
-            Return();
-            var toast = sweetAlertService.Mixin(new SweetAlertOptions
+            }            
+            var toast = SweetAlertService.Mixin(new SweetAlertOptions
             {
                 Toast = true,
                 Position = SweetAlertPosition.BottomEnd,
@@ -34,11 +39,31 @@ namespace StorageSystem.WEB.Pages.RawMaterials
                 Timer = 3000
             });
             await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro creado con éxito.");
+            NavigationManager.NavigateTo("/rawMaterials");
         }
-        private void Return()
+
+        private async Task LoadCategoriesAsync()
         {
-            rawMaterialForm!.FormPostedSuccessfully = true;
-            navigationManager.NavigateTo("/rawMaterials");
+            var responseHttp = await Repository.GetAsync<List<Category>>("/api/Categories/combo");
+            if (responseHttp.Error)
+            {
+                var message = await responseHttp.GetErrorMessageAsync();
+                await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+                return;
+            }
+            categories = responseHttp.Response;
+        }
+
+        private async Task LoadMeasurementUnitsAsync()
+        {
+            var responseHttp = await Repository.GetAsync<List<MeasurementUnit>>("/api/MeasurementUnits/combo");
+            if (responseHttp.Error)
+            {
+                var message = await responseHttp.GetErrorMessageAsync();
+                await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+                return;
+            }
+            measurementUnits = responseHttp.Response;
         }
     }
 }
