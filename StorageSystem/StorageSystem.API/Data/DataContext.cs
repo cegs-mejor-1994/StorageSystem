@@ -23,7 +23,18 @@ namespace StorageSystem.API.Data
             modelBuilder.Entity<RawMaterial>().HasIndex(r => r.Code).IsUnique();
             modelBuilder.Entity<Supplier>().HasIndex(s => s.Nit).IsUnique();
             modelBuilder.Entity<MeasurementUnit>().HasIndex(m => m.Code).IsUnique(); 
-            modelBuilder.Entity<InputInventory>();           
+            modelBuilder.Entity<InputInventory>();
+            DisableCascadingDelete(modelBuilder);
         }
+
+        private void DisableCascadingDelete(ModelBuilder modelBuilder)
+        {
+            var relationships = modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys());
+            foreach (var relationship in relationships)
+            {
+                relationship.DeleteBehavior = DeleteBehavior.Restrict;
+            }
+        }
+
     }
 }

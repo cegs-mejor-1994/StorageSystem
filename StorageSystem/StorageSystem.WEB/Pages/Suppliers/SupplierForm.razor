@@ -1,0 +1,44 @@
+﻿<NavigationLock OnBeforeInternalNavigation="OnBeforeInternalNavigation" />
+
+<EditForm EditContext="editContext" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator />
+    <div class="mb-3">
+        <label>Codigo de Proveedor:</label>
+        <div>
+            <InputText class="form-control" @bind-Value="@Supplier.Nit" />
+            <ValidationMessage For="@(() => Supplier.Nit)" />
+        </div>
+    </div>
+    <div class="mb-3">
+        <label>Nombre de Proveedor</label>
+        <div>
+            <InputText class="form-control" @bind-Value="@Supplier.Name" />
+            <ValidationMessage For="@(() => Supplier.Name)" />
+        </div>
+    </div>
+    <div class="mb-3">
+        <label>Direccion de Proveedor</label>
+        <div>
+            <InputText class="form-control" @bind-Value="@Supplier.Address" />
+            <ValidationMessage For="@(() => Supplier.Address)" />
+        </div>
+    </div>
+    <div class="mb-3">
+        <label>Telefono de Proveedor</label>
+        <div>
+            <InputText class="form-control" @bind-Value="@Supplier.Phone" />
+            <ValidationMessage For="@(() => Supplier.Phone)" />
+        </div>
+    </div>
+    <div class="mb-3">
+        <label>Ciudad de Proveedor</label>
+        <div>
+            <InputText class="form-control" @bind-Value="@Supplier.City" />
+            <ValidationMessage For="@(() => Supplier.City)" />
+        </div>
+    </div>
+    <button class="btn btn-primary" type="submit">Guardar Cambios</button>
+    <button class="btn btn-success" @onclick="ReturnAction">Regresar</button>
+</EditForm>
+
+

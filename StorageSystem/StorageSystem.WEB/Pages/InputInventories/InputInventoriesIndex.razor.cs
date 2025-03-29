@@ -4,14 +4,14 @@ using StorageSystem.Shared.Entities;
 using StorageSystem.WEB.Repositories;
 using System.Net;
 
-namespace StorageSystem.WEB.Pages.Suppliers
+namespace StorageSystem.WEB.Pages.InputInventories
 {
-    public partial class SuppliersIndex
+    public partial class InputInventoriesIndex
     {
         [Inject] private IRepository Repository { get; set; } = null!;
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
-        public List<Supplier>? Suppliers { get; set; }
+        public List<InputInventory>? InputInventories { get; set; }
 
         protected async override Task OnInitializedAsync()
         {
@@ -20,22 +20,22 @@ namespace StorageSystem.WEB.Pages.Suppliers
 
         private async Task LoadAsync()
         {
-            var responseHttp = await Repository.GetAsync<List<Supplier>>("api/suppliers");
+            var responseHttp = await Repository.GetAsync<List<InputInventory>>("api/inputInventories");
             if (responseHttp.Error)
             {
                 var message = await responseHttp.GetErrorMessageAsync();
                 await SweetAlertService.FireAsync("Error!", message, SweetAlertIcon.Error);
                 return;
             }
-            Suppliers = responseHttp.Response;
+            InputInventories = responseHttp.Response;
         }
 
-        private async Task DeleteAsync(Supplier supplier)
+        private async Task DeleteAsync(InputInventory inputInventory)
         {
             var result = await SweetAlertService.FireAsync(new SweetAlertOptions
             {
                 Title = "Confirmacion",
-                Text = $"¿Estas seguro de querer eliminar el proveedor: {supplier.Name}?",
+                Text = $"¿Estas seguro de querer eliminar el proveedor: {inputInventory.Amount}?",
                 Icon = SweetAlertIcon.Question,
                 ShowCancelButton = true,
             });
@@ -45,7 +45,7 @@ namespace StorageSystem.WEB.Pages.Suppliers
             {
                 return;
             }
-            var responseHttp = await Repository.DeleteAsync<Category>($"api/suppliers/{supplier.Id}");
+            var responseHttp = await Repository.DeleteAsync<Category>($"api/suppliers/{inputInventory.Id}");
             if (responseHttp.Error)
             {
                 if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)

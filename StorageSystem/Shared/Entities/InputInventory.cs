@@ -22,7 +22,7 @@ namespace StorageSystem.Shared.Entities
 
         public DateTime RegisterDate { get; set; }
 
-        //public Supplier? Supplier { get; set; }
-        //public MeasurementUnit? MeasurementUnit { get; set; }
+        public Supplier? Supplier { get; set; }
+        public MeasurementUnit? MeasurementUnit { get; set; }
     }
 }

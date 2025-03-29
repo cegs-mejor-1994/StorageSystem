@@ -26,7 +26,7 @@ namespace StorageSystem.WEB.Pages.Categories
                 var message = await responseHttp.GetErrorMessageAsync();
                 await SweetAlertService.FireAsync("Error!", message, SweetAlertIcon.Error);
                 return;
-            }
+            }            
             Categories = responseHttp.Response;          
         }
 

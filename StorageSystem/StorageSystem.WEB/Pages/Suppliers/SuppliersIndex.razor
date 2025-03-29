@@ -1,3 +1,40 @@
-﻿<h3>SuppliersIndex</h3>
+﻿@page "/suppliers"
+
+<h3>Proveedores</h3>
+<div class="mb-3">
+    <a class="btn btn-primary" href="/suppliers/create">Nuevo Proveedor</a>
+</div>
+<GenericList MyList="Suppliers">
+    <Body>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Nit</th>
+                    <th>Nombre</th>
+                    <th>Direccion</th>
+                    <th>Telefono</th>
+                    <th>Ciudad</th>
+                    <th style="width:168px">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var supplier in Suppliers!)
+                {
+                    <tr>
+                        <td>@supplier.Nit</td>
+                        <td>@supplier.Name</td>
+                        <td>@supplier.Address</td>
+                        <td>@supplier.Phone</td>
+                        <td>@supplier.City</td>
+                        <td>
+                            <a href="/suppliers/edit/@supplier.Id" class="btn btn-warning">Editar</a>
+                            <button class="btn btn-danger" @onclick="@(() => DeleteAsync(supplier))">Borrar</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </Body>
+</GenericList>
 
 

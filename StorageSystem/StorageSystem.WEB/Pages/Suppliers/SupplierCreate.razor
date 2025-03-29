@@ -1,3 +1,5 @@
-﻿<h3>SupplierCreate</h3>
+﻿@page "/suppliers/create"
+
+<SupplierForm @ref="supplierForm" Supplier="supplier" OnValidSubmit="CreateAsync" ReturnAction="Return"/>
 
 
