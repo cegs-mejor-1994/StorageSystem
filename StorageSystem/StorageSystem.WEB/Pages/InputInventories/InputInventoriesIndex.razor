@@ -8,8 +8,8 @@
     <Body>
         <table class="table table-striped">
             <thead>
-                <tr>
-                    <th>Materia Prima</th>
+                <tr>      
+                    <th>Materia prima</th>
                     <th>Cantidad</th>
                     <th>Lote</th>
                     <th>Fecha de Vencimiento</th>
@@ -19,13 +19,13 @@
             <tbody>
                 @foreach (var inputInventory in InputInventories!)
                 {
-                    <tr>
+                    <tr>               
                         <td>@inputInventory.RawMaterial!.Name</td>
                         <td>@inputInventory.Amount</td>
                         <td>@inputInventory.Batch</td>
                         <td>@inputInventory.MatutingDate</td>
                         <td>
-                            <a href="/rawMaterials/edit/@inputInventory.Id" class="btn btn-warning">Editar</a>
+                            <a href="/inputInventories/edit/@inputInventory.Id" class="btn btn-warning">Editar</a>
                             <button class="btn btn-danger" @onclick="@(() => DeleteAsync(inputInventory))">Borrar</button>
                         </td>
                     </tr>
