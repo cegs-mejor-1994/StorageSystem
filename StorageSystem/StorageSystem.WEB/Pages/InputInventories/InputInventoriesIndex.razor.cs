@@ -35,7 +35,7 @@ namespace StorageSystem.WEB.Pages.InputInventories
             var result = await SweetAlertService.FireAsync(new SweetAlertOptions
             {
                 Title = "Confirmacion",
-                Text = $"¿Estas seguro de querer eliminar el proveedor: {inputInventory.Amount}?",
+                Text = $"¿Estas seguro de querer eliminar el inventario de la materia prima: {inputInventory.RawMaterial!.Name}?",
                 Icon = SweetAlertIcon.Question,
                 ShowCancelButton = true,
             });
@@ -45,12 +45,12 @@ namespace StorageSystem.WEB.Pages.InputInventories
             {
                 return;
             }
-            var responseHttp = await Repository.DeleteAsync<Category>($"api/suppliers/{inputInventory.Id}");
+            var responseHttp = await Repository.DeleteAsync<InputInventory>($"api/inputInventory/{inputInventory.Id}");
             if (responseHttp.Error)
             {
                 if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
                 {
-                    NavigationManager.NavigateTo("/suppliers");
+                    NavigationManager.NavigateTo("/inputInventories");
                 }
                 else
                 {

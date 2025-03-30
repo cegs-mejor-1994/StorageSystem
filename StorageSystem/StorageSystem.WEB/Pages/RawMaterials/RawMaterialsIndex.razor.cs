@@ -20,7 +20,7 @@ namespace StorageSystem.WEB.Pages.RawMaterials
 
         private async Task LoadAsync()
         {
-            var responseHttp = await Repository.GetAsync<List<RawMaterial>>("api/rawMaterials");
+            var responseHttp = await Repository.GetAsync<List<RawMaterial>>("api/RawMaterials");
             if (responseHttp.Error)
             {
                 var message = await responseHttp.GetErrorMessageAsync();
@@ -45,7 +45,7 @@ namespace StorageSystem.WEB.Pages.RawMaterials
             {
                 return;
             }
-            var responseHttp = await Repository.DeleteAsync<RawMaterial>($"api/rawMaterials/{rawMaterial.Id}");
+            var responseHttp = await Repository.DeleteAsync<RawMaterial>($"api/RawMaterials/{rawMaterial.Id}");
             if (responseHttp.Error)
             {
                 if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
