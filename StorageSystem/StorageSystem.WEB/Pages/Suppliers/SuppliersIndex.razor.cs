@@ -20,7 +20,7 @@ namespace StorageSystem.WEB.Pages.Suppliers
 
         private async Task LoadAsync()
         {
-            var responseHttp = await Repository.GetAsync<List<Supplier>>("api/suppliers");
+            var responseHttp = await Repository.GetAsync<List<Supplier>>("api/Suppliers");
             if (responseHttp.Error)
             {
                 var message = await responseHttp.GetErrorMessageAsync();
@@ -45,7 +45,7 @@ namespace StorageSystem.WEB.Pages.Suppliers
             {
                 return;
             }
-            var responseHttp = await Repository.DeleteAsync<Category>($"api/suppliers/{supplier.Id}");
+            var responseHttp = await Repository.DeleteAsync<Category>($"api/Suppliers/{supplier.Id}");
             if (responseHttp.Error)
             {
                 if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)

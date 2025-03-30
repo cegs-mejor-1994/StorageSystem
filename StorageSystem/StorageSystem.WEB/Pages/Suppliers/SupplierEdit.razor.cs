@@ -20,7 +20,7 @@ namespace StorageSystem.WEB.Pages.Suppliers
 
         protected async override Task OnParametersSetAsync()
         {
-            var responseHttp = await Repository.GetAsync<Supplier>($"/api/suppliers/{Id}");
+            var responseHttp = await Repository.GetAsync<Supplier>($"/api/Suppliers/{Id}");
             if (responseHttp.Error)
             {
                 if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
@@ -41,7 +41,7 @@ namespace StorageSystem.WEB.Pages.Suppliers
 
         private async Task EditAsync()
         {
-            var responseHttp = await Repository.PutAsync($"/api/suppliers", supplier);
+            var responseHttp = await Repository.PutAsync($"/api/Suppliers", supplier);
             if (responseHttp.Error)
             {
                 var message = await responseHttp.GetErrorMessageAsync();

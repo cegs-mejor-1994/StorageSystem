@@ -17,7 +17,7 @@ namespace StorageSystem.WEB.Pages.Suppliers
 
         private async Task CreateAsync()
         {            
-            var responseHttp = await repository.PostAsync("/api/suppliers", supplier);
+            var responseHttp = await repository.PostAsync("/api/Suppliers", supplier);
             if (responseHttp.Error)
             {
                 var message = await responseHttp.GetErrorMessageAsync();

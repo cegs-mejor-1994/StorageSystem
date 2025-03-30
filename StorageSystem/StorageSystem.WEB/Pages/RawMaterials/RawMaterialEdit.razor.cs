@@ -26,7 +26,7 @@ namespace StorageSystem.WEB.Pages.RawMaterials
         }
         protected async override Task OnParametersSetAsync()
         {
-            var responseHttp = await Repository.GetAsync<RawMaterial>($"/api/rawMaterials/{Id}");
+            var responseHttp = await Repository.GetAsync<RawMaterial>($"/api/RawMaterials/{Id}");
             if (responseHttp.Error)
             {
                 if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
@@ -47,7 +47,7 @@ namespace StorageSystem.WEB.Pages.RawMaterials
 
         private async Task EditAsync()
         {
-            var responseHttp = await Repository.PutAsync($"/api/rawMaterials", rawMaterial);
+            var responseHttp = await Repository.PutAsync($"/api/RawMaterials", rawMaterial);
             if (responseHttp.Error)
             {
                 var message = await responseHttp.GetErrorMessageAsync();
