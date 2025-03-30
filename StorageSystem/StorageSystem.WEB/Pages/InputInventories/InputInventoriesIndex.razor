@@ -14,7 +14,8 @@
                     <th>Cantidad</th>
                     <th>Lote</th>
                     <th>Fecha de Vencimiento</th>
-                    <th>Acciones</th>
+                    <th>Proveedor</th>
+                    <th style="width: 168px">Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -25,6 +26,7 @@
                         <td>@inputInventory.Amount</td>
                         <td>@inputInventory.Batch</td>
                         <td>@inputInventory.MatutingDate</td>
+                        <td>@inputInventory.Supplier!.Name</td>
                         <td>
                             <a href="/inputInventories/edit/@inputInventory.Id" class="btn btn-warning">Editar</a>
                             <button class="btn btn-danger" @onclick="@(() => DeleteAsync(inputInventory))">Borrar</button>
