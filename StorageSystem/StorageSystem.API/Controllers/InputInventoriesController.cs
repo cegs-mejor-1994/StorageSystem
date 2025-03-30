@@ -7,10 +7,18 @@ namespace StorageSystem.API.Controllers
     [ApiController]
     [Route("api/[controller]")]
     public class InputInventoriesController : GenericController<InputInventory>
-    {        
-        public InputInventoriesController(IGenericUnitOfWork<InputInventory> unitOfWork): base(unitOfWork)
+    {
+        private readonly IInputInventoriesUnitOfWork _inputInventoriesUnitOfWork;
+
+        public InputInventoriesController(IGenericUnitOfWork<InputInventory> unitOfWork, IInputInventoriesUnitOfWork inputInventoriesUnitOfWork): base(unitOfWork)
         {
-            
+            _inputInventoriesUnitOfWork = inputInventoriesUnitOfWork;
+        }
+
+        [HttpGet("InputInventoryWithRawMaterialsAndSuppliers")]
+        public async Task<IActionResult> GetInputInventoryWithRSAsync()
+        {
+            return Ok(await _inputInventoriesUnitOfWork.GetWithRawMaterialsAndSuppliersAsync());
         }
     }
 }

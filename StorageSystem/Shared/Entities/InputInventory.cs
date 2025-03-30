@@ -26,6 +26,6 @@ namespace StorageSystem.Shared.Entities
         public Supplier? Supplier { get; set; }
 
         public int RawMaterialId { get; set; }
-        public RawMaterial? RawMaterial { get; set; }
+        public RawMaterial? RawMaterial { get; set; }        
     }
 }

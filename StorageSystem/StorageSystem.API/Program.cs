@@ -24,11 +24,13 @@ builder.Services.AddScoped<IMeasurementUnitsRepository, MeasurementUnitsReposito
 builder.Services.AddScoped<ICategoriesRepository, CategoriesRepository>();
 builder.Services.AddScoped<ISuppliersRepository, SuppliersRepository>();
 builder.Services.AddScoped<IRawMaterialsRepository, RawMaterialsRepository>();
+builder.Services.AddScoped<IInputInventoriesRepository, InputInventoriesRepository>();
 
 builder.Services.AddScoped<IMeasurementUnitsUnitOfWork, MeasurementUnitsUnitOfWork>();
 builder.Services.AddScoped<ICategoriesUnitOfWork, CategoriesUnitOfWork>();
 builder.Services.AddScoped<ISuppliersUnitOfWork, SuppliersUnitOfWork>();
 builder.Services.AddScoped<IRawMaterialsUnitOfWork, RawMaterialsUnitOfWork>();
+builder.Services.AddScoped<IInputInventoriesUnitOfWork, InputInventoriesUnitOfWork>();
 
 var app = builder.Build();
 

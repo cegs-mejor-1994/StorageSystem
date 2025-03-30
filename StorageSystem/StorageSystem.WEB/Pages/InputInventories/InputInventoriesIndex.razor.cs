@@ -20,7 +20,7 @@ namespace StorageSystem.WEB.Pages.InputInventories
 
         private async Task LoadAsync()
         {
-            var responseHttp = await Repository.GetAsync<List<InputInventory>>("api/inputInventories");
+            var responseHttp = await Repository.GetAsync<List<InputInventory>>("api/InputInventories/InputInventoryWithRawMaterialsAndSuppliers");
             if (responseHttp.Error)
             {
                 var message = await responseHttp.GetErrorMessageAsync();
