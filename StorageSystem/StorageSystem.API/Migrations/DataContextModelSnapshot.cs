@@ -73,9 +73,8 @@ namespace StorageSystem.API.Migrations
                         .HasMaxLength(25)
                         .HasColumnType("nvarchar(25)");
 
-                    b.Property<string>("MatutingDate")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("MatutingDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("RawMaterialId")
                         .HasColumnType("int");

@@ -19,6 +19,7 @@ namespace StorageSystem.API.Repositories.Implementations
                 .OrderBy(i => i.Id)
                 .Include(i => i.RawMaterial)
                 .Include(i => i.Supplier)
+                .Include(i => i.RawMaterial!.MeasurementUnit)
                 .ToListAsync();
         }
     }

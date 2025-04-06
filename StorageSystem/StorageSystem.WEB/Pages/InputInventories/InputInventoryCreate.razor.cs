@@ -24,35 +24,14 @@ namespace StorageSystem.WEB.Pages.InputInventories
 
         private async Task CreateAsync()
         {
-            if (inputInventory.Amount != null && inputInventory.Batch != null && inputInventory.MatutingDate != null && inputInventory.RawMaterialId != 0 && inputInventory.SupplierId != 0)
+            try
             {
-                if (inputInventories.Count == 0)
+                if (!string.IsNullOrWhiteSpace(inputInventory.Amount) && !string.IsNullOrWhiteSpace(inputInventory.Batch) && inputInventory.MatutingDate != DateTime.MinValue && inputInventory.RawMaterialId != 0 && inputInventory.SupplierId != 0)
                 {
-                    var responseHttp = await Repository.PostAsync("/api/inputInventories", inputInventory);
-                    if (responseHttp.Error)
-                    {
-                        var message = await responseHttp.GetErrorMessageAsync();
-
-                        if (message!.Contains("requerido"))
-                        {
-                            await SweetAlertService.FireAsync("Error", "Debes llenar el formulario para guardar", SweetAlertIcon.Error);
-                            return;
-                        }
-
-                        await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
-                        return;
-                    }
-                    var toast = SweetAlertService.Mixin(new SweetAlertOptions
-                    {
-                        Toast = true,
-                        Position = SweetAlertPosition.BottomEnd,
-                        ShowConfirmButton = true,
-                        Timer = 3000
-                    });
-                    await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro creado con éxito.");
-                    NavigationManager.NavigateTo("/inputInventories");
+                    AddAsync(inputInventory);
                 }
-                else
+                
+                if (inputInventories.Count > 0)
                 {
                     foreach (var inputInventory in inputInventories)
                     {
@@ -76,38 +55,35 @@ namespace StorageSystem.WEB.Pages.InputInventories
                     NavigationManager.NavigateTo("/inputInventories");
                 }
             }
-            else
+            catch (Exception ex)
             {
-                await SweetAlertService.FireAsync("Error", "Debes digitar por lo menos un registro para Guardar Cambios", SweetAlertIcon.Error);
+                await SweetAlertService.FireAsync("Error", ex.Message, SweetAlertIcon.Error);
                 return;
-            }
+            }                       
         }
 
         private async void AddAsync(InputInventory input)
         {
-            if (inputInventory.Amount != null && inputInventory.Batch != null && inputInventory.MatutingDate != null && inputInventory.RawMaterialId != 0 && inputInventory.SupplierId != 0)
+            try
             {
-                if (inputInventories.Count <= 4)
+                if (string.IsNullOrWhiteSpace(inputInventory.Amount) || string.IsNullOrWhiteSpace(inputInventory.Batch) || inputInventory.MatutingDate == DateTime.MinValue || inputInventory.RawMaterialId == 0 || inputInventory.SupplierId == 0)
                 {
-                    inputInventories.Add(input);
-                    inputInventory = new();
-                    GetInputInventories();
+                    throw new Exception("Debes llenar el formulario para guardar");
                 }
-                else
-                {
-                    await SweetAlertService.FireAsync("Informacion", $"Guarda cambios con los {inputInventories.Count} registros y haz otro proceso.", SweetAlertIcon.Info);
-                }
+                inputInventories.Add(input);
+                inputInventory = new();
+                //GetInputInventories();                  
             }
-            else
+            catch (Exception ex)
             {
-                await SweetAlertService.FireAsync("Error", "Debes digitar por lo menos un registro para agregar", SweetAlertIcon.Error);
-            }
+                await SweetAlertService.FireAsync("Error", ex.Message, SweetAlertIcon.Error);
+            }           
         }
 
         private void DeleteAsync(InputInventory input)
         {
             inputInventories.Remove(input);
-            GetInputInventories();            
+            //GetInputInventories();            
         }
 
         private string GetRawMaterialName(int rawMaterialId)
@@ -146,10 +122,9 @@ namespace StorageSystem.WEB.Pages.InputInventories
             suppliers = responseHttp.Response;
         }
 
-        private List<InputInventory> GetInputInventories()
+       /* private List<InputInventory> GetInputInventories()
         {
             return inputInventories;
-        }
-        
+        }*/        
     }
 }

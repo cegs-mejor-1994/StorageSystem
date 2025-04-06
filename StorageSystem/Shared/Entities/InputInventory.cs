@@ -16,15 +16,18 @@ namespace StorageSystem.Shared.Entities
         [Required(ErrorMessage = "El campo {0} es requerido")]
         public string Batch { get; set; } = null!;
 
+        [DataType(DataType.Date, ErrorMessage = "El campo {0} no tiene el formato especifico")]
         [Display(Name = "Fecha de Vencimiento")]        
         [Required(ErrorMessage = "El campo {0} es requerido")]
-        public string MatutingDate { get; set; } = null!;
+        public DateTime MatutingDate { get; set; }
 
         public DateTime RegisterDate { get; set; }
 
+        [DataType(DataType.PhoneNumber)]
         public int SupplierId { get; set; }
         public Supplier? Supplier { get; set; }
 
+        [DataType(DataType.PhoneNumber)]
         public int RawMaterialId { get; set; }
         public RawMaterial? RawMaterial { get; set; }        
     }

@@ -12,8 +12,8 @@ using StorageSystem.API.Data;
 namespace StorageSystem.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250329221628_AddDatabaseEntitiesRelationShips")]
-    partial class AddDatabaseEntitiesRelationShips
+    [Migration("20250406211345_AddEntitiesDatabase")]
+    partial class AddEntitiesDatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -76,9 +76,8 @@ namespace StorageSystem.API.Migrations
                         .HasMaxLength(25)
                         .HasColumnType("nvarchar(25)");
 
-                    b.Property<string>("MatutingDate")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("MatutingDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("RawMaterialId")
                         .HasColumnType("int");

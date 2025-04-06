@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace StorageSystem.API.Migrations
 {
     /// <inheritdoc />
-    public partial class AddDatabaseEntitiesRelationShips : Migration
+    public partial class AddEntitiesDatabase : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -98,7 +98,7 @@ namespace StorageSystem.API.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Amount = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
                     Batch = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: false),
-                    MatutingDate = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    MatutingDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     RegisterDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     SupplierId = table.Column<int>(type: "int", nullable: false),
                     RawMaterialId = table.Column<int>(type: "int", nullable: false)
