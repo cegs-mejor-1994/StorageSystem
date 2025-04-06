@@ -1,0 +1,61 @@
+﻿@page "/rawMaterials/create"
+
+<h3>Crear Materia Prima</h3>
+<EditForm Model="rawMaterial" OnValidSubmit="CreateAsync">
+    <DataAnnotationsValidator/>
+
+    <div class="row">
+        <div class="col-6">
+            <div class="mb-3">
+                <label>Codigo:</label>
+                <div>
+                    <InputText class="form-control" @bind-Value="rawMaterial.Code" />
+                    <ValidationMessage For="@(() => rawMaterial.Code)" />
+                </div>
+            </div>
+            <div class="mb-3">
+                <label>Name</label>
+                <div>
+                    <InputText class="form-control" @bind-Value="rawMaterial.Name" />
+                    <ValidationMessage For="@(() => rawMaterial.Name)" />
+                </div>
+            </div>
+            <div class="mb-3">
+                <label>Categoria:</label>
+                <div>
+                    <select class="form-select" @bind="rawMaterial.CategoryId">
+                        <option value="0">-- Seleccione una categoria --</option>
+                        @if (categories != null)
+                        {
+                            @foreach (var category in categories)
+                            {
+                                <option value="@category.Id">@category.Name</option>
+                            }
+                        })
+                    </select>
+                    <ValidationMessage For="@(() => rawMaterial.CategoryId)" />
+                </div>
+            </div>
+            <div class="mb-3">
+                <label>Unidad de medida:</label>
+                <div>
+                    <select class="form-select" @bind="rawMaterial.MeasurementUnitId">
+                        <option value="0">--Seleccione una unidad de medida</option>
+                        @if(measurementUnits != null)
+                        {
+                            @foreach (var measurementUnit in measurementUnits)
+                            {
+                                <option value="@measurementUnit.Id">@measurementUnit.Name</option>
+                            }
+                        }
+                    </select>
+                    <ValidationMessage For="@(() => rawMaterial.MeasurementUnitId)" />
+                </div>
+            </div>
+            <button class="btn btn-primary" type="submit">Guardar Cambios</button>
+            <a href="/rawMaterials" class="btn btn-success">Regresar</a>
+        </div>
+    </div>
+</EditForm>
+
+

@@ -1,0 +1,37 @@
+﻿@page "/measurementUnits"
+
+<h3>Unidades de Medida</h3>
+<div class="mb-3">
+    <a class="btn btn-primary" href="/measurementUnits/create">Nueva Unidad de Medida</a>
+</div>
+<GenericList MyList="MeasurementUnits">
+    <Body>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Codigo</th>
+                    <th>Nombre</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var measurementUnit in MeasurementUnits!)
+                {
+                    <tr>
+                        <td>@measurementUnit.Code</td>
+                        <td>@measurementUnit.Name</td>
+                        <td>@measurementUnit.State</td>
+                        <td>
+                            <a href="/measurementUnits/edit/@measurementUnit.Id" class="btn btn-warning">Editar</a>
+                            <button class="btn btn-danger" @onclick="@(() => DeleteAsync(measurementUnit))">Borrar</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </Body>
+</GenericList>
+
+
+

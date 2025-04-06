@@ -1,0 +1,100 @@
+﻿@page "/inputInventories/create"
+
+<h3>Crear Inventario</h3>
+<EditForm Model="inputInventory">
+    <DataAnnotationsValidator />
+    <div class="row">
+        <div class="col-6">
+            <div class="mb-3">
+                <label>Materia Prima:</label>
+                <div>
+                    <select class="form-select" @bind="inputInventory.RawMaterialId">
+                        <option value="0">--Seleccione una materia prima</option>
+                        @if (rawMaterials != null)
+                        {
+                            @foreach (var rawMaterial in rawMaterials)
+                            {
+                                <option value="@rawMaterial.Id">@rawMaterial.Name</option>
+                            }
+                        }
+                    </select>
+                    <ValidationMessage For="@(() => inputInventory.RawMaterialId)" />                    
+                </div>
+            </div>
+            <div class="mb-3">
+                <label>Cantidad:</label>
+                <div>
+                    <InputText class="form-control" @bind-Value="inputInventory.Amount" />
+                    <ValidationMessage For="@(() => inputInventory.Amount)" />
+                </div>
+            </div>
+            <div class="mb-3">
+                <label>Lote:</label>
+                <div>
+                    <InputText class="form-control" @bind-Value="inputInventory.Batch" />
+                    <ValidationMessage For="@(() => inputInventory.Batch)" />
+                </div>
+            </div>
+            <div class="mb-3">
+                <label>Fecha de Vencimiento:</label>
+                <div>
+                    <InputDate class="form-control" @bind-Value="inputInventory.MatutingDate" />
+                    <ValidationMessage For="@(() => inputInventory.MatutingDate)" />
+                </div>
+            </div>
+            <div class="mb-3">
+                <label>Proveedor:</label>
+                <div>
+                    <select class="form-select" @bind="inputInventory.SupplierId">
+                        <option value="0">-- Seleccione un proveedor --</option>
+                        @if (suppliers != null)
+                        {
+                            @foreach (var supplier in suppliers)
+                            {
+                                <option value="@supplier.Id">@supplier.Name</option>
+                            }
+                        })
+                    </select>
+                    <ValidationMessage For="@(() => inputInventory.SupplierId)" />
+                </div>
+            </div>            
+            <button class="btn btn-info" type="button" @onclick="@(() => AddAsync(inputInventory))">Agregar</button>
+            <a href="/inputInventories" class="btn btn-success">Regresar</a>
+        </div>
+    </div>
+</EditForm>
+@if (inputInventories != null)
+{
+    <GenericList MyList="inputInventories">
+        <Body>
+            <button class="btn btn-primary text-center" type="button" @onclick="@(() => CreateAsync())">Guardar Cambios</button>
+            <table class="table table-striped">
+                <thead>
+                    <tr>        
+                        <th>Materia Prima</th>
+                        <th>Cantidad</th>
+                        <th>Lote</th>
+                        <th>Fecha de Vencimiento</th>
+                        <th>Proveedor</th>
+                        <th style="width: 168px">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var inputInventory in inputInventories!)
+                    {
+                        <tr>                            
+                            <td>@GetRawMaterialName(inputInventory.RawMaterialId)</td>
+                            <td>@inputInventory.Amount</td>
+                            <td>@inputInventory.Batch</td>
+                            <td>@inputInventory.MatutingDate</td>
+                            <td>@GetSupplierName(inputInventory.SupplierId)</td>
+                            <td>                                
+                                <button class="btn btn-danger" @onclick="@(() => DeleteAsync(inputInventory))">Borrar</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </Body>
+    </GenericList>
+}

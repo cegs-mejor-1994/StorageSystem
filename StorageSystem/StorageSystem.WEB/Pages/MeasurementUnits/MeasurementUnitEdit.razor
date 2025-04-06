@@ -1,0 +1,11 @@
+﻿@page "/measurementUnits/edit/{Id:int}"
+
+
+@if(measurementUnit is null)
+{
+    <Loading/>
+}
+else
+{
+    <FormWithFields @ref="measurementUnitForm" Label="Unidad de Medida:" Model="measurementUnit" OnValidSubmit="EditAsync" ReturnAction="Return"/>
+}

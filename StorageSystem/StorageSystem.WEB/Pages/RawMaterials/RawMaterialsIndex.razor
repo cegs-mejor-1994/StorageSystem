@@ -1,0 +1,36 @@
+﻿@page "/rawMaterials"
+
+<h3>Materias Primas</h3>
+<div class="mb-3">
+    <a class="btn btn-primary" href="/rawMaterials/create">Nueva Materia Prima</a>
+</div>
+<GenericList MyList="RawMaterials">
+    <Body>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Codigo</th>
+                    <th>Nombre</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var rawMaterial in RawMaterials!)
+                {
+                    <tr>
+                        <td>@rawMaterial.Code</td>
+                        <td>@rawMaterial.Name</td>
+                        <td>@rawMaterial.State</td>
+                        <td>
+                            <a href="/rawMaterials/edit/@rawMaterial.Id" class="btn btn-warning">Editar</a>
+                            <button class="btn btn-danger" @onclick="@(() => DeleteAsync(rawMaterial))">Borrar</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </Body>
+</GenericList>
+
+

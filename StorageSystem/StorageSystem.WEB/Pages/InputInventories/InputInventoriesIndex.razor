@@ -1,0 +1,40 @@
+﻿@page "/inputInventories"
+
+<h3>Inventarios</h3>
+<div class="mb-3">
+    <a class="btn btn-primary" href="/inputInventories/create">Nuevo Inventario</a>
+</div>
+<GenericList MyList="InputInventories">
+    <Body>
+        <table class="table table-striped">
+            <thead>
+                <tr>      
+                    <th>Materia prima</th>
+                    <th>Cantidad</th>
+                    <th>Lote</th>
+                    <th>Fecha de Vencimiento</th>
+                    <th>Proveedor</th>
+                    <th style="width: 168px">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var inputInventory in InputInventories!)
+                {
+                    <tr>               
+                        <td>@inputInventory.RawMaterial!.Name</td>
+                        <td>@inputInventory.Amount @inputInventory.RawMaterial.MeasurementUnit!.Code</td>
+                        <td>@inputInventory.Batch</td>
+                        <td>@inputInventory.MatutingDate</td>
+                        <td>@inputInventory.Supplier!.Name</td>
+                        <td>
+                            <a href="/inputInventories/edit/@inputInventory.Id" class="btn btn-warning">Editar</a>
+                            <button class="btn btn-danger" @onclick="@(() => DeleteAsync(inputInventory))">Borrar</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </Body>
+</GenericList>
+
+
