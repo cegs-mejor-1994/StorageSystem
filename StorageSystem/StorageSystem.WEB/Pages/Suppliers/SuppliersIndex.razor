@@ -2,7 +2,7 @@
 
 <h3>Proveedores</h3>
 <div class="mb-3">
-    <a class="btn btn-primary" href="/suppliers/create">Nuevo Proveedor</a>
+    <a class="btn btn-primary btn-sm float-end" @onclick="@(() => ShowModalAsync())">Nuevo Proveedor</a>
 </div>
 <GenericList MyList="Suppliers">
     <Body>
@@ -27,7 +27,7 @@
                         <td>@supplier.Phone</td>
                         <td>@supplier.City</td>
                         <td>
-                            <a href="/suppliers/edit/@supplier.Id" class="btn btn-warning">Editar</a>
+                            <a @onclick="@(() => ShowModalAsync(supplier.Id, true))" class="btn btn-warning">Editar</a>
                             <button class="btn btn-danger" @onclick="@(() => DeleteAsync(supplier))">Borrar</button>
                         </td>
                     </tr>

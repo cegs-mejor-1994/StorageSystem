@@ -15,7 +15,7 @@ namespace StorageSystem.WEB.Pages.InputInventories
 
         protected async override Task OnInitializedAsync()
         {
-            await LoadAsync();
+            await LoadAsync();            
         }
 
         private async Task LoadAsync()

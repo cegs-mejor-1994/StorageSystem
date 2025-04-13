@@ -1,3 +1,5 @@
+using Blazored.Modal;
+using Blazored.Modal.Services;
 using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components;
 using StorageSystem.Shared.Entities;
@@ -12,6 +14,7 @@ namespace StorageSystem.WEB.Pages.MeasurementUnits
         private MeasurementUnit? measurementUnit;
         private FormWithFields<MeasurementUnit>? measurementUnitForm;
 
+        [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
         [Inject] private IRepository Repository { get; set; } = null!;
@@ -48,6 +51,8 @@ namespace StorageSystem.WEB.Pages.MeasurementUnits
                 await SweetAlertService.FireAsync("Error", message);
                 return;
             }
+
+            await BlazoredModal.CloseAsync(ModalResult.Ok());
             Return();
             var toast = SweetAlertService.Mixin(new SweetAlertOptions
             {

@@ -1,3 +1,5 @@
+using Blazored.Modal;
+using Blazored.Modal.Services;
 using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components;
 using StorageSystem.Shared.Entities;
@@ -8,6 +10,7 @@ namespace StorageSystem.WEB.Pages.Categories
 {
     public partial class CategoriesIndex
     {
+        [CascadingParameter] IModalService Modal { get; set; } = default!;
         [Inject] private IRepository Repository { get; set; } = null!;
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
@@ -28,6 +31,25 @@ namespace StorageSystem.WEB.Pages.Categories
                 return;
             }            
             Categories = responseHttp.Response;          
+        }
+
+        private async Task ShowModalAsync(int id = 0, bool isEdit = false)
+        {
+            IModalReference modalReference;
+            if (isEdit)
+            {
+                modalReference = Modal.Show<CategoryEdit>(string.Empty, new ModalParameters().Add("Id", id));
+            }
+            else
+            {
+                modalReference = Modal.Show<CategoryCreate>();
+            }
+            
+            var result = await modalReference.Result;
+            if (result.Confirmed)
+            {
+                await LoadAsync();
+            }
         }
 
         private async Task DeleteAsync(Category category)

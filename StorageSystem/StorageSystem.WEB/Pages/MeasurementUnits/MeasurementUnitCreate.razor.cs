@@ -1,3 +1,5 @@
+using Blazored.Modal;
+using Blazored.Modal.Services;
 using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components;
 using StorageSystem.Shared.Entities;
@@ -12,6 +14,7 @@ namespace StorageSystem.WEB.Pages.MeasurementUnits
         private MeasurementUnit measurementUnit = new();
         private FormWithFields<MeasurementUnit>? measurementUnitForm;
 
+        [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
         [Inject] private IRepository repository { get; set; } = null!;
         [Inject] private SweetAlertService sweetAlertService { get; set; } = null!;
         [Inject] private NavigationManager navigationManager { get; set; } = null!;
@@ -26,7 +29,10 @@ namespace StorageSystem.WEB.Pages.MeasurementUnits
                 await sweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
                 return;
             }
+
+            await BlazoredModal.CloseAsync(ModalResult.Ok());
             Return();
+
             var toast = sweetAlertService.Mixin(new SweetAlertOptions
             {
                 Toast = true,
@@ -36,6 +42,7 @@ namespace StorageSystem.WEB.Pages.MeasurementUnits
             });
             await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro creado con éxito.");
         }
+        
         private void Return()
         {
             measurementUnitForm!.FormPostedSuccessfully = true;

@@ -2,7 +2,7 @@
 
 <h3>Materias Primas</h3>
 <div class="mb-3">
-    <a class="btn btn-primary" href="/rawMaterials/create">Nueva Materia Prima</a>
+    <a class="btn btn-primary btn-sm float-end" @onclick="@(() => ShowModalAsync())">Nueva Materia Prima</a>
 </div>
 <GenericList MyList="RawMaterials">
     <Body>
@@ -23,7 +23,7 @@
                         <td>@rawMaterial.Name</td>
                         <td>@rawMaterial.State</td>
                         <td>
-                            <a href="/rawMaterials/edit/@rawMaterial.Id" class="btn btn-warning">Editar</a>
+                            <a @onclick="@(() => ShowModalAsync(rawMaterial.Id, true))" class="btn btn-warning">Editar</a>
                             <button class="btn btn-danger" @onclick="@(() => DeleteAsync(rawMaterial))">Borrar</button>
                         </td>
                     </tr>

@@ -1,3 +1,5 @@
+using Blazored.Modal;
+using Blazored.Modal.Services;
 using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components;
 using StorageSystem.Shared.Entities;
@@ -8,6 +10,7 @@ namespace StorageSystem.WEB.Pages.Suppliers
 {
     public partial class SuppliersIndex
     {
+        [CascadingParameter] IModalService Modal { get; set; } = default!;
         [Inject] private IRepository Repository { get; set; } = null!;
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
@@ -28,6 +31,25 @@ namespace StorageSystem.WEB.Pages.Suppliers
                 return;
             }
             Suppliers = responseHttp.Response;
+        }
+
+        private async Task ShowModalAsync(int id = 0, bool isEdit = false)
+        {
+            IModalReference modalReference;
+            if (isEdit)
+            {
+                modalReference = Modal.Show<SupplierEdit>(string.Empty, new ModalParameters().Add("Id", id));
+            }
+            else
+            {
+                modalReference = Modal.Show<SupplierCreate>();
+            }
+
+            var result = await modalReference.Result;
+            if (result.Confirmed)
+            {
+                await LoadAsync();
+            }
         }
 
         private async Task DeleteAsync(Supplier supplier)

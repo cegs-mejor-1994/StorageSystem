@@ -1,3 +1,5 @@
+using Blazored.Modal;
+using Blazored.Modal.Services;
 using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components;
 using StorageSystem.Shared.Entities;
@@ -8,6 +10,8 @@ namespace StorageSystem.WEB.Pages.MeasurementUnits
 {
     public partial class MeasurementUnitsIndex
     {
+
+        [CascadingParameter] IModalService Modal { get; set; } = default!; 
         [Inject] private IRepository Repository { get; set; } = null!;
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
@@ -28,6 +32,25 @@ namespace StorageSystem.WEB.Pages.MeasurementUnits
                 return;
             }
             MeasurementUnits = responseHttp.Response;
+        }
+
+        private async Task ShowModalAsync(int id = 0, bool isEdit = false)
+        {
+            IModalReference modalReference;
+            if (isEdit)
+            {
+                modalReference = Modal.Show<MeasurementUnitEdit>(string.Empty, new ModalParameters().Add("Id", id));
+            }
+            else
+            {
+                modalReference = Modal.Show<MeasurementUnitCreate>();
+            }
+
+            var result = await modalReference.Result;
+            if (result.Confirmed)
+            {
+                await LoadAsync();
+            }
         }
 
         private async Task DeleteAsync(MeasurementUnit measurementUnit)
