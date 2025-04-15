@@ -18,8 +18,10 @@
             <ValidationMessage For="@(() => Model.Name)" />
         </div>
     </div>
-    <button class="btn btn-primary" type="submit">Guardar Cambios</button>
-    <button class="btn btn-success" @onclick="ReturnAction">Regresar</button>
+    <div class="d-grid gap-2 d-md-block">
+        <button class="btn btn-primary" type="submit">Guardar Cambios</button>
+        <button class="btn btn-success" @onclick="ReturnAction">Regresar</button>
+    </div>
 </EditForm>
 
 

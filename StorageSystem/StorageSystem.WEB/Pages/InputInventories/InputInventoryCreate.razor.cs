@@ -82,8 +82,7 @@ namespace StorageSystem.WEB.Pages.InputInventories
 
         private void DeleteAsync(InputInventory input)
         {
-            inputInventories.Remove(input);
-            //GetInputInventories();            
+            inputInventories.Remove(input);                       
         }
 
         private string GetRawMaterialName(int rawMaterialId)

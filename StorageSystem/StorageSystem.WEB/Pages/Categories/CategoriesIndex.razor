@@ -2,7 +2,7 @@
 
 <h3>Categorias</h3>
 <div class="mb-3">
-    <a class="btn btn-sm float-end" @onclick="@(() => ShowModalAsync())">Nueva Categoria</a> 
+    <a class="btn btn-sm btn-outline-primary float-end" @onclick="@(() => ShowModalAsync())"><i class="bi bi-card-list"></i> Nueva Categoria</a> 
 </div>
 <GenericList MyList="Categories">
     <Body>
@@ -12,7 +12,7 @@
                     <th>Codigo</th>
                     <th>Nombre</th>
                     <th>Estado</th>
-                    <th>Acciones</th>
+                    <th style="width: 210px">Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -23,8 +23,8 @@
                         <td>@category.Name</td>                        
                         <td>@category.State</td>
                         <td>
-                            <a @onclick="@(() => ShowModalAsync(category.Id, true))" class="btn btn-warning">Editar</a>
-                            <button class="btn btn-danger" @onclick="@(() => DeleteAsync(category))">Borrar</button>
+                            <a @onclick="@(() => ShowModalAsync(category.Id, true))" class="btn btn-warning"><i class="bi bi-pencil-square"></i> Editar</a>
+                            <button class="btn btn-danger" @onclick="@(() => DeleteAsync(category))"><i class="bi bi-trash-fill"></i> Borrar</button>
                         </td>
                     </tr>
                 }
