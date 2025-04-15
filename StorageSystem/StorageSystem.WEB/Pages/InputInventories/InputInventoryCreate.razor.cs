@@ -1,16 +1,27 @@
+using Blazored.Modal;
+using Blazored.Modal.Services;
 using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components;
 using StorageSystem.Shared.Entities;
+using StorageSystem.WEB.Pages.RawMaterials;
+using StorageSystem.WEB.Pages.Suppliers;
 using StorageSystem.WEB.Repositories;
 
 namespace StorageSystem.WEB.Pages.InputInventories
 {
     public partial class InputInventoryCreate
     {
+        [CascadingParameter] IModalService Modal { get; set; } = default!;
+
         private List<InputInventory> inputInventories = new();
         private InputInventory inputInventory = new();
         private List<Supplier>? suppliers;
         private List<RawMaterial>? rawMaterials;
+        private string rawMaterialName { get; set;  } = null!;
+        private string supplierName { get; set; } = null!;
+
+        [Parameter] public int rawMaterialId { get; set; }
+        [Parameter] public int supplierId { get; set; }
 
         [Inject] private IRepository Repository { get; set; } = null!;
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
@@ -19,7 +30,17 @@ namespace StorageSystem.WEB.Pages.InputInventories
         protected override async Task OnInitializedAsync()
         {
             await LoadSuppliersAsync();
-            await LoadRawMaterialsAsync();
+            await LoadRawMaterialsAsync();            
+        }
+
+        private void ShowRawMaterialListModalAsync()
+        {
+            IModalReference modalReference = Modal.Show<RawMaterialsSelect>();
+        }
+
+        private void ShowSupplierListModalAsync()
+        {
+            IModalReference modalReference = Modal.Show<SuppliersSelect>();
         }
 
         private async Task CreateAsync()
@@ -88,12 +109,14 @@ namespace StorageSystem.WEB.Pages.InputInventories
         private string GetRawMaterialName(int rawMaterialId)
         {
             var rawMaterial = rawMaterials?.FirstOrDefault(r => r.Id == rawMaterialId);
+            rawMaterialName = rawMaterial?.Name!;
             return rawMaterial?.Name!;
         }
 
         private string GetSupplierName(int supplierId)
         {
             var supplier = suppliers?.FirstOrDefault(s => s.Id == supplierId);
+            supplierName = supplier?.Name!;
             return supplier?.Name!;
         }
 
@@ -119,11 +142,18 @@ namespace StorageSystem.WEB.Pages.InputInventories
                 return;
             }
             suppliers = responseHttp.Response;
+        }     
+        
+        private void HandleRawMaterialChanged(ChangeEventArgs e)
+        {           
+            string nuevoValor = GetRawMaterialName(Convert.ToInt32(e.Value?.ToString()));
+            rawMaterialName = nuevoValor;            
         }
 
-       /* private List<InputInventory> GetInputInventories()
+        private void HandleSupplierChanged(ChangeEventArgs e)
         {
-            return inputInventories;
-        }*/        
+            string nuevoValor = GetSupplierName(Convert.ToInt32(e.Value?.ToString()));
+            supplierName = nuevoValor;
+        }
     }
 }

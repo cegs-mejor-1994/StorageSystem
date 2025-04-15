@@ -1,0 +1,28 @@
+﻿<GenericList MyList="RawMaterials">
+    <Body>
+        <table class="table table-striped">
+            <thead>
+                <tr>                    
+                    <th>Nombre</th>                    
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var rawMaterial in RawMaterials!)
+                {
+                    <tr>                        
+                        <td>@rawMaterial.Name</td>                        
+                        <td>
+                            <a class="btn btn-secondary" href="/inputInventories/create/rawMaterial/@rawMaterial.Id">Seleccionar</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </Body>
+</GenericList>
+
+
+
+
+

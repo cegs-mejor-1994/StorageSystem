@@ -1,11 +1,7 @@
-using Blazored.Modal;
-using Blazored.Modal.Services;
 using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components;
 using StorageSystem.Shared.Entities;
-using StorageSystem.WEB.Pages.RawMaterials;
 using StorageSystem.WEB.Repositories;
-using StorageSystem.WEB.Shared;
 using System.Net;
 
 namespace StorageSystem.WEB.Pages.InputInventories

@@ -1,4 +1,6 @@
 ﻿@page "/inputInventories/create"
+@page "/inputInventories/create/rawMaterial/{rawMaterialId:int}"
+@page "/inputInventories/create/supplier/{supplierId:int}"
 
 <h3>Crear Inventario</h3>
 <EditForm Model="inputInventory">
@@ -7,19 +9,12 @@
         <div class="col-6">
             <div class="mb-3">
                 <label>Materia Prima:</label>
-                <div>
-                    <select class="form-select" @bind="inputInventory.RawMaterialId">
-                        <option value="0">--Seleccione una materia prima</option>
-                        @if (rawMaterials != null)
-                        {
-                            @foreach (var rawMaterial in rawMaterials)
-                            {
-                                <option value="@rawMaterial.Id">@rawMaterial.Name</option>
-                            }
-                        }
-                    </select>
-                    <ValidationMessage For="@(() => inputInventory.RawMaterialId)" />                    
-                </div>
+                <a class="btn btn-secondary btn-sm float-end" @onclick="@(() => ShowRawMaterialListModalAsync())">
+                    Buscar Materia Prima
+                </a>                
+                <input type="number" value="@rawMaterialId" @onchange="@HandleRawMaterialChanged" />
+                <ValidationMessage For="@(() => inputInventory.RawMaterialId)" />
+                <InputText @bind-Value="rawMaterialName" />
             </div>
             <div class="mb-3">
                 <label>Cantidad:</label>
@@ -45,17 +40,12 @@
             <div class="mb-3">
                 <label>Proveedor:</label>
                 <div>
-                    <select class="form-select" @bind="inputInventory.SupplierId">
-                        <option value="0">-- Seleccione un proveedor --</option>
-                        @if (suppliers != null)
-                        {
-                            @foreach (var supplier in suppliers)
-                            {
-                                <option value="@supplier.Id">@supplier.Name</option>
-                            }
-                        })
-                    </select>
+                    <a class="btn btn-secondary btn-sm float-end" @onclick="@(() => ShowSupplierListModalAsync())">
+                        Buscar Materia Prima
+                    </a>
+                    <input type="number" value="@supplierId" @onchange="@HandleSupplierChanged" />
                     <ValidationMessage For="@(() => inputInventory.SupplierId)" />
+                    <InputText @bind-Value="supplierName" />
                 </div>
             </div>            
             <button class="btn btn-info" type="button" @onclick="@(() => AddAsync(inputInventory))">Agregar</button>

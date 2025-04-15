@@ -1,0 +1,28 @@
+﻿<GenericList MyList="Suppliers">
+    <Body>
+        <table class="table table-striped">
+            <thead>
+                <tr>                    
+                    <th>Nombre</th>
+                    <th style="width:168px">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var supplier in Suppliers!)
+                {
+                    <tr>                        
+                        <td>@supplier.Name</td>
+                        <td>
+                            <a class="btn btn-secondary" href="/inputInventories/create/supplier/@supplier.Id">Seleccionar</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </Body>
+</GenericList>
+
+
+
+
+
