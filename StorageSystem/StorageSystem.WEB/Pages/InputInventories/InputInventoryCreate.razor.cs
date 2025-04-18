@@ -3,15 +3,12 @@ using Blazored.Modal.Services;
 using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components;
 using StorageSystem.Shared.Entities;
-using StorageSystem.WEB.Pages.RawMaterials;
-using StorageSystem.WEB.Pages.Suppliers;
 using StorageSystem.WEB.Repositories;
 
 namespace StorageSystem.WEB.Pages.InputInventories
 {
     public partial class InputInventoryCreate
-    {
-        [CascadingParameter] IModalService Modal { get; set; } = default!;
+    {        
 
         private List<InputInventory> inputInventories = new();
         private InputInventory inputInventory = new();
@@ -20,8 +17,8 @@ namespace StorageSystem.WEB.Pages.InputInventories
         private string rawMaterialName { get; set;  } = null!;
         private string supplierName { get; set; } = null!;
 
-        [Parameter] public int rawMaterialId { get; set; }
-        [Parameter] public int supplierId { get; set; }
+        private int rawMaterialId { get; set; } 
+        private int supplierId { get; set; }
 
         [Inject] private IRepository Repository { get; set; } = null!;
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
@@ -30,26 +27,20 @@ namespace StorageSystem.WEB.Pages.InputInventories
         protected override async Task OnInitializedAsync()
         {
             await LoadSuppliersAsync();
-            await LoadRawMaterialsAsync();            
-        }
-
-        private void ShowRawMaterialListModalAsync()
-        {
-            IModalReference modalReference = Modal.Show<RawMaterialsSelect>();
-        }
-
-        private void ShowSupplierListModalAsync()
-        {
-            IModalReference modalReference = Modal.Show<SuppliersSelect>();
-        }
+            await LoadRawMaterialsAsync();
+            supplierId = 0;
+            rawMaterialId = 0;
+        }        
 
         private async Task CreateAsync()
         {
             try
             {
-                if (!string.IsNullOrWhiteSpace(inputInventory.Amount) && !string.IsNullOrWhiteSpace(inputInventory.Batch) && inputInventory.MatutingDate != DateTime.MinValue && inputInventory.RawMaterialId != 0 && inputInventory.SupplierId != 0)
+                if (!string.IsNullOrWhiteSpace(inputInventory.Amount) && !string.IsNullOrWhiteSpace(inputInventory.Batch) && inputInventory.MatutingDate != DateTime.MinValue && rawMaterialId != 0 && supplierId != 0)
                 {
-                    AddAsync(inputInventory);
+                    inputInventory.SupplierId = supplierId;
+                    inputInventory.RawMaterialId = rawMaterialId;
+                    AddAsync(inputInventory);                    
                 }
                 
                 if (inputInventories.Count > 0)
@@ -75,6 +66,7 @@ namespace StorageSystem.WEB.Pages.InputInventories
                     await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro creado con éxito.");
                     NavigationManager.NavigateTo("/inputInventories");
                 }
+                
             }
             catch (Exception ex)
             {
@@ -87,13 +79,15 @@ namespace StorageSystem.WEB.Pages.InputInventories
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(inputInventory.Amount) || string.IsNullOrWhiteSpace(inputInventory.Batch) || inputInventory.MatutingDate == DateTime.MinValue || inputInventory.RawMaterialId == 0 || inputInventory.SupplierId == 0)
+                if (string.IsNullOrWhiteSpace(inputInventory.Amount) || string.IsNullOrWhiteSpace(inputInventory.Batch) || inputInventory.MatutingDate == DateTime.MinValue || rawMaterialId == 0 || supplierId == 0)
                 {
                     throw new Exception("Debes llenar el formulario para guardar");
                 }
+                input.SupplierId = supplierId;
+                input.RawMaterialId = rawMaterialId;
                 inputInventories.Add(input);
                 inputInventory = new();
-                //GetInputInventories();                  
+                Clear();
             }
             catch (Exception ex)
             {
@@ -106,16 +100,18 @@ namespace StorageSystem.WEB.Pages.InputInventories
             inputInventories.Remove(input);                       
         }
 
-        private string GetRawMaterialName(int rawMaterialId)
+        private string GetRawMaterialName(int id)
         {
-            var rawMaterial = rawMaterials?.FirstOrDefault(r => r.Id == rawMaterialId);
+            var rawMaterial = rawMaterials?.FirstOrDefault(r => r.Id == id);
             rawMaterialName = rawMaterial?.Name!;
+            rawMaterialId = id;
             return rawMaterial?.Name!;
         }
 
-        private string GetSupplierName(int supplierId)
+        private string GetSupplierName(int id)
         {
-            var supplier = suppliers?.FirstOrDefault(s => s.Id == supplierId);
+            var supplier = suppliers?.FirstOrDefault(s => s.Id == id);
+            supplierId = id;
             supplierName = supplier?.Name!;
             return supplier?.Name!;
         }
@@ -142,18 +138,12 @@ namespace StorageSystem.WEB.Pages.InputInventories
                 return;
             }
             suppliers = responseHttp.Response;
-        }     
-        
-        private void HandleRawMaterialChanged(ChangeEventArgs e)
-        {           
-            string nuevoValor = GetRawMaterialName(Convert.ToInt32(e.Value?.ToString()));
-            rawMaterialName = nuevoValor;            
-        }
-
-        private void HandleSupplierChanged(ChangeEventArgs e)
+        }    
+       
+        private void Clear()
         {
-            string nuevoValor = GetSupplierName(Convert.ToInt32(e.Value?.ToString()));
-            supplierName = nuevoValor;
+            supplierId = default;
+            rawMaterialId = default;
         }
     }
 }

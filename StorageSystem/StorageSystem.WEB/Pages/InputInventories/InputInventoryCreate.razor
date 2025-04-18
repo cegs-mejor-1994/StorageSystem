@@ -1,20 +1,20 @@
 ﻿@page "/inputInventories/create"
-@page "/inputInventories/create/rawMaterial/{rawMaterialId:int}"
-@page "/inputInventories/create/supplier/{supplierId:int}"
 
 <h3>Crear Inventario</h3>
 <EditForm Model="inputInventory">
     <DataAnnotationsValidator />
     <div class="row">
         <div class="col-6">
-            <div class="mb-3">
+            <div class="md-3">
                 <label>Materia Prima:</label>
-                <a class="btn btn-secondary btn-sm float-end" @onclick="@(() => ShowRawMaterialListModalAsync())">
-                    Buscar Materia Prima
-                </a>                
-                <input type="number" value="@rawMaterialId" @onchange="@HandleRawMaterialChanged" />
+                <InputNumber class="form-control" @bind-Value="rawMaterialId"  />
                 <ValidationMessage For="@(() => inputInventory.RawMaterialId)" />
-                <InputText @bind-Value="rawMaterialName" />
+                <InputText class="form-control" @bind-Value="rawMaterialName" />
+                <div>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#rawMaterialId">
+                        Seleccionar Materia Prima
+                    </button>
+                </div>                
             </div>
             <div class="mb-3">
                 <label>Cantidad:</label>
@@ -39,20 +39,93 @@
             </div>
             <div class="mb-3">
                 <label>Proveedor:</label>
+                <InputNumber class="form-control" @bind-Value="supplierId" />
+                <ValidationMessage For="@(() => inputInventory.SupplierId)" />
+                <InputText class="form-control" @bind-Value="supplierName" />
                 <div>
-                    <a class="btn btn-secondary btn-sm float-end" @onclick="@(() => ShowSupplierListModalAsync())">
-                        Buscar Materia Prima
-                    </a>
-                    <input type="number" value="@supplierId" @onchange="@HandleSupplierChanged" />
-                    <ValidationMessage For="@(() => inputInventory.SupplierId)" />
-                    <InputText @bind-Value="supplierName" />
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#supplierId">
+                        Seleccionar Proveedor
+                    </button>
                 </div>
-            </div>            
+            </div>       
             <button class="btn btn-info" type="button" @onclick="@(() => AddAsync(inputInventory))">Agregar</button>
             <a href="/inputInventories" class="btn btn-success">Regresar</a>
         </div>
     </div>
 </EditForm>
+
+<div class="modal fade" id="supplierId" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Proveedores </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"/>
+            </div>
+            <div class="modal-body">
+                <GenericList MyList="suppliers">
+                    <Body>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th style="width:168px">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var supplier in suppliers!)
+                                {
+                                    <tr>
+                                        <td>@supplier.Name</td>
+                                        <td>
+                                            <button type="button" class="btn btn-secondary" @onclick="@(() => GetSupplierName(supplier.Id))" data-bs-dismiss="modal">Seleccionar</button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </Body>
+                </GenericList>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="rawMaterialId" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Materias Primas </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" />
+            </div>
+            <div class="modal-body">
+                <GenericList MyList="rawMaterials">
+                    <Body>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th style="width:168px">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var rawMaterial in rawMaterials!)
+                                {
+                                    <tr>
+                                        <td>@rawMaterial.Name</td>
+                                        <td>
+                                            <button type="button" class="btn btn-secondary" @onclick="@(() => GetRawMaterialName(rawMaterial.Id))" data-bs-dismiss="modal">Seleccionar</button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </Body>
+                </GenericList>
+            </div>
+        </div>
+    </div>
+</div>
+
 @if (inputInventories != null)
 {
     <GenericList MyList="inputInventories">
