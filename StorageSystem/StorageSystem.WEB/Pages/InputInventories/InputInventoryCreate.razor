@@ -10,6 +10,7 @@
             <div class="md-3">
                 <label>Materia Prima:</label>                              
                 <InputText class="form-control" @bind-Value="rawMaterialName" disabled/>
+                <ValidationMessage For="@(() => inputInventory.RawMaterialId)"/>
                 <div>
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#rawMaterialId">
                         Seleccionar
@@ -33,9 +34,9 @@
         </div>
         <div class="col-6">
             <div class="mb-3">
-                <label>Proveedor:</label>
-                <ValidationMessage For="@(() => inputInventory.SupplierId)" />
+                <label>Proveedor:</label>                
                 <InputText class="form-control" @bind-Value="supplierName" disabled />
+                <ValidationMessage For="@(() => inputInventory.SupplierId)" />
                 <div>
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#supplierId">
                         Seleccionar

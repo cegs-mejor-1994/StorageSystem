@@ -11,6 +11,8 @@ namespace StorageSystem.WEB.Pages.InputInventories
         private InputInventory? inputInventory;
         private List<Supplier>? suppliers;
         private List<RawMaterial>? rawMaterials;
+        private string supplierName { get; set; } = null!;
+        private string rawMaterialName { get; set; } = null!;
 
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
@@ -23,6 +25,7 @@ namespace StorageSystem.WEB.Pages.InputInventories
             await LoadSuppliersAsync();
             await LoadRawMaterialsAsync();
         }
+
         protected async override Task OnParametersSetAsync()
         {
             var responseHttp = await Repository.GetAsync<InputInventory>($"/api/inputInventories/{Id}");
@@ -41,6 +44,8 @@ namespace StorageSystem.WEB.Pages.InputInventories
             else
             {
                 inputInventory = responseHttp.Response;
+                supplierName = GetSupplierName(inputInventory!.SupplierId);
+                rawMaterialName = GetRawMaterialName(inputInventory!.RawMaterialId);
             }
         }
 
@@ -86,6 +91,18 @@ namespace StorageSystem.WEB.Pages.InputInventories
                 return;
             }
             suppliers = responseHttp.Response;
+        }
+
+        private string GetSupplierName(int id)
+        {
+            var supplier = suppliers!.FirstOrDefault(x => x.Id == id);
+            return supplier!.Name;
+        }
+
+        private string GetRawMaterialName(int id)
+        {
+            var rawMaterial = rawMaterials!.FirstOrDefault(x => x.Id == id);
+            return rawMaterial!.Name;
         }
     }
 }
