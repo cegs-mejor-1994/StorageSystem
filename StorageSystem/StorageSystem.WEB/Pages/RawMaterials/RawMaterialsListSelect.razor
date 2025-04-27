@@ -1,0 +1,24 @@
+﻿<GenericList MyList="rawMaterials">
+    <Body>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th style="width:168px">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var rawMaterial in rawMaterials!)
+                {
+                    <tr>
+                        <td>@rawMaterial.Name</td>
+                        <td>
+                            <button type="button" class="btn btn-secondary" @onclick="@(() => OnSelectedRawMaterialChanged.InvokeAsync($"{rawMaterial.Id}"))" data-bs-dismiss="modal">Seleccionar</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </Body>
+</GenericList>
+

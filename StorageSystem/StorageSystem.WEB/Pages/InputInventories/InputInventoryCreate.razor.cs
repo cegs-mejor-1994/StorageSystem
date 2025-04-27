@@ -1,5 +1,3 @@
-using Blazored.Modal;
-using Blazored.Modal.Services;
 using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components;
 using StorageSystem.Shared.Entities;
@@ -9,13 +7,12 @@ namespace StorageSystem.WEB.Pages.InputInventories
 {
     public partial class InputInventoryCreate
     {        
-
         private List<InputInventory> inputInventories = new();
-        private InputInventory inputInventory = new();
-        private List<Supplier>? suppliers;
-        private List<RawMaterial>? rawMaterials;
-        private string rawMaterialName { get; set;  } = null!;
-        private string supplierName { get; set; } = null!;
+        private InputInventory inputInventory = new();       
+        private string supplierName = "Proveedor";
+        private string rawMaterialName = "Materia prima";        
+        private List<RawMaterial>? rawMaterials { get; set; }
+        private List<Supplier>? suppliers { get; set; }
 
         private int rawMaterialId { get; set; } 
         private int supplierId { get; set; }
@@ -26,11 +23,46 @@ namespace StorageSystem.WEB.Pages.InputInventories
 
         protected override async Task OnInitializedAsync()
         {
-            await LoadSuppliersAsync();
             await LoadRawMaterialsAsync();
-            supplierId = 0;
-            rawMaterialId = 0;
-        }        
+            await LoadSuppliersAsync();
+        }
+
+        private async Task LoadRawMaterialsAsync()
+        {
+            var responseHttp = await Repository.GetAsync<List<RawMaterial>>("/api/RawMaterials/combo");
+            if (responseHttp.Error)
+            {
+                var message = await responseHttp.GetErrorMessageAsync();
+                await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+                return;
+            }
+
+            rawMaterials = responseHttp.Response!;
+        }
+
+        private async Task LoadSuppliersAsync()
+        {
+            var responseHttp = await Repository.GetAsync<List<Supplier>>("/api/Suppliers/combo");
+            if (responseHttp.Error)
+            {
+                var message = await responseHttp.GetErrorMessageAsync();
+                await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+                return;
+            }
+            suppliers = responseHttp.Response;
+        }
+
+        void ClickSupplierCallBack (string supplier)
+        {            
+            supplierId = int.Parse(supplier);   
+            supplierName = GetSupplierName(supplierId);
+        }
+
+        void ClickRawMaterialCallBack(string rawMaterial)
+        {
+            rawMaterialId = int.Parse(rawMaterial);
+            rawMaterialName = GetRawMaterialName(rawMaterialId);
+        }      
 
         private async Task CreateAsync()
         {
@@ -87,7 +119,8 @@ namespace StorageSystem.WEB.Pages.InputInventories
                 input.RawMaterialId = rawMaterialId;
                 inputInventories.Add(input);
                 inputInventory = new();
-                Clear();
+                rawMaterialName = "Materia prima";
+                supplierName = "Proveedor";
             }
             catch (Exception ex)
             {
@@ -97,53 +130,19 @@ namespace StorageSystem.WEB.Pages.InputInventories
 
         private void DeleteAsync(InputInventory input)
         {
-            inputInventories.Remove(input);                       
-        }
-
-        private string GetRawMaterialName(int id)
-        {
-            var rawMaterial = rawMaterials?.FirstOrDefault(r => r.Id == id);
-            rawMaterialName = rawMaterial?.Name!;
-            rawMaterialId = id;
-            return rawMaterial?.Name!;
+            inputInventories.Remove(input);                     
         }
 
         private string GetSupplierName(int id)
         {
-            var supplier = suppliers?.FirstOrDefault(s => s.Id == id);
-            supplierId = id;
-            supplierName = supplier?.Name!;
-            return supplier?.Name!;
+            var supplier = suppliers!.FirstOrDefault(x => x.Id == id);
+            return supplier!.Name;
         }
 
-        private async Task LoadRawMaterialsAsync()
+        private string GetRawMaterialName(int id)
         {
-            var responseHttp = await Repository.GetAsync<List<RawMaterial>>("/api/RawMaterials/combo");
-            if (responseHttp.Error)
-            {
-                var message = await responseHttp.GetErrorMessageAsync();
-                await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
-                return;
-            }
-            rawMaterials = responseHttp.Response;
-        }
-
-        private async Task LoadSuppliersAsync()
-        {
-            var responseHttp = await Repository.GetAsync<List<Supplier>>("/api/Suppliers/combo");
-            if (responseHttp.Error)
-            {
-                var message = await responseHttp.GetErrorMessageAsync();
-                await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
-                return;
-            }
-            suppliers = responseHttp.Response;
-        }    
-       
-        private void Clear()
-        {
-            supplierId = default;
-            rawMaterialId = default;
+            var rawMaterial = rawMaterials!.FirstOrDefault(x => x.Id == id);
+            return rawMaterial!.Name;
         }
     }
 }
