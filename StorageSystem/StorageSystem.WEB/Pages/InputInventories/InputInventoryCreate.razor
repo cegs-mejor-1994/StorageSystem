@@ -92,37 +92,39 @@
 @if (inputInventories != null)
 {    
     <GenericList MyList="inputInventories">
-        <Body>
-            <div class="text-center">
-                <button class="btn btn-primary form-control" type="button" @onclick="@(() => CreateAsync())">Guardar Cambios</button>
-            </div>            
-            <table class="table table-striped">
-                <thead>
-                    <tr>                        
-                        <th>Materia Prima</th>
-                        <th>Cantidad</th>
-                        <th>Lote</th>
-                        <th>Fecha de Vencimiento</th>
-                        <th>Proveedor</th>
-                        <th style="width: 168px">Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var inputInventory in inputInventories!)
-                    {
-                        <tr>                               
-                            <td>@GetRawMaterialName(inputInventory.RawMaterialId)</td>
-                            <td>@inputInventory.Amount</td>
-                            <td>@inputInventory.Batch</td>
-                            <td>@inputInventory.MatutingDate</td>
-                            <td>@GetSupplierName(inputInventory.SupplierId)</td>
-                            <td>                                
-                                <button class="btn btn-danger" @onclick="@(() => DeleteAsync(inputInventory))">Borrar</button>
-                            </td>
+        <Body>         
+            <div class="table-responsive-md">
+                <table class="table table-striped overflow-auto">
+                    <thead>
+                        <tr>
+                            <th>Materia Prima</th>
+                            <th>Cantidad</th>
+                            <th>Lote</th>
+                            <th>Fecha de Vencimiento</th>
+                            <th>Proveedor</th>
+                            <th style="width: 168px">Acciones</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach (var inputInventory in inputInventories!)
+                        {
+                            <tr>
+                                <td>@GetRawMaterialName(inputInventory.RawMaterialId)</td>
+                                <td>@inputInventory.Amount</td>
+                                <td>@inputInventory.Batch</td>
+                                <td>@inputInventory.MatutingDate</td>
+                                <td>@GetSupplierName(inputInventory.SupplierId)</td>
+                                <td>
+                                    <button class="btn btn-danger" @onclick="@(() => DeleteAsync(inputInventory))">Borrar</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <div class="text-center">
+                    <button class="btn btn-primary form-control" type="button" @onclick="@(() => CreateAsync())">Guardar Cambios</button>
+                </div>
+            </div>
         </Body>
     </GenericList>
 }

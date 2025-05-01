@@ -28,7 +28,7 @@ builder.Services.AddScoped<IInputInventoriesRepository, InputInventoriesReposito
 
 builder.Services.AddScoped<IMeasurementUnitsUnitOfWork, MeasurementUnitsUnitOfWork>();
 builder.Services.AddScoped<ICategoriesUnitOfWork, CategoriesUnitOfWork>();
-builder.Services.AddScoped<ISuppliersUnitOfWork, SuppliersUnitOfWork>();
+builder.Services.AddScoped<IClientsUnitOfWork, SuppliersUnitOfWork>();
 builder.Services.AddScoped<IRawMaterialsUnitOfWork, RawMaterialsUnitOfWork>();
 builder.Services.AddScoped<IInputInventoriesUnitOfWork, InputInventoriesUnitOfWork>();
 

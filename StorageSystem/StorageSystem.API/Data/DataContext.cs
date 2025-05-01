@@ -15,6 +15,8 @@ namespace StorageSystem.API.Data
         public DbSet<MeasurementUnit> MeasurementUnits { get; set; }
         public DbSet<Supplier> Suppliers { get; set; }
         public DbSet<InputInventory> InputInventories { get; set; }
+        public DbSet<Client> Clients { get; set; }
+        public DbSet<Product> Products { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -25,6 +27,7 @@ namespace StorageSystem.API.Data
             modelBuilder.Entity<MeasurementUnit>().HasIndex(m => m.Code).IsUnique(); 
             modelBuilder.Entity<InputInventory>();
             DisableCascadingDelete(modelBuilder);
+            modelBuilder.Entity<Client>().HasIndex(c => c.Nit).IsUnique();
         }
 
         private void DisableCascadingDelete(ModelBuilder modelBuilder)

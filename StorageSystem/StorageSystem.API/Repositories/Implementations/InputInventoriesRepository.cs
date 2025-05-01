@@ -16,7 +16,7 @@ namespace StorageSystem.API.Repositories.Implementations
         public async Task<IEnumerable<InputInventory>> GetWithRawMaterialsAndSuppliersAsync()
         {
             return await _context.InputInventories
-                .OrderBy(i => i.Id)
+                .OrderBy(i => i.RegisterDate)
                 .Include(i => i.RawMaterial)
                 .Include(i => i.Supplier)
                 .Include(i => i.RawMaterial!.MeasurementUnit)
