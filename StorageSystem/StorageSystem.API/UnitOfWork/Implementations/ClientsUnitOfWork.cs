@@ -4,7 +4,7 @@ using StorageSystem.Shared.Entities;
 
 namespace StorageSystem.API.UnitOfWork.Implementations
 {
-    public class ClientsUnitOfWork : GenericUnitOfWork<Client>, IClientsRepository
+    public class ClientsUnitOfWork : GenericUnitOfWork<Client>, IClientsUnitOfWork
     {
         private readonly IClientsRepository _clientsRepository;
 

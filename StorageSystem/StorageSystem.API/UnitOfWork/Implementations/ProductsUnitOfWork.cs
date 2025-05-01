@@ -1,9 +1,10 @@
 ﻿using StorageSystem.API.Repositories.Interfaces;
+using StorageSystem.API.UnitOfWork.Interfaces;
 using StorageSystem.Shared.Entities;
 
 namespace StorageSystem.API.UnitOfWork.Implementations
 {
-    public class ProductsUnitOfWork : GenericUnitOfWork<Product>, IProductsRepository
+    public class ProductsUnitOfWork : GenericUnitOfWork<Product>, IProductsUnitOfWork
     {
         private readonly IProductsRepository _productsRepository;
 

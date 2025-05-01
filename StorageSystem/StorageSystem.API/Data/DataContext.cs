@@ -28,6 +28,7 @@ namespace StorageSystem.API.Data
             modelBuilder.Entity<InputInventory>();
             DisableCascadingDelete(modelBuilder);
             modelBuilder.Entity<Client>().HasIndex(c => c.Nit).IsUnique();
+            modelBuilder.Entity<Product>().HasIndex(p => p.Name).IsUnique();
         }
 
         private void DisableCascadingDelete(ModelBuilder modelBuilder)

@@ -4,7 +4,7 @@ using StorageSystem.Shared.Entities;
 
 namespace StorageSystem.API.UnitOfWork.Implementations
 {
-    public class SuppliersUnitOfWork : GenericUnitOfWork<Supplier>, ISuppliersRepository
+    public class SuppliersUnitOfWork : GenericUnitOfWork<Supplier>, ISuppliersUnitOfWork
     {
         private readonly ISuppliersRepository _suppliersRepository;
 

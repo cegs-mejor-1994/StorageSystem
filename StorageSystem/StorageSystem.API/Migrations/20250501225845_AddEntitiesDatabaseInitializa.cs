@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace StorageSystem.API.Migrations
 {
     /// <inheritdoc />
-    public partial class AddEntitiesDatabase : Migration
+    public partial class AddEntitiesDatabaseInitializa : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -28,6 +28,24 @@ namespace StorageSystem.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Clients",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Code = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
+                    Nit = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    Phone = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    City = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Clients", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "MeasurementUnits",
                 columns: table => new
                 {
@@ -41,6 +59,21 @@ namespace StorageSystem.API.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_MeasurementUnits", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Products",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Type = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Products", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -127,6 +160,12 @@ namespace StorageSystem.API.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Clients_Nit",
+                table: "Clients",
+                column: "Nit",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_InputInventories_RawMaterialId",
                 table: "InputInventories",
                 column: "RawMaterialId");
@@ -140,6 +179,12 @@ namespace StorageSystem.API.Migrations
                 name: "IX_MeasurementUnits_Code",
                 table: "MeasurementUnits",
                 column: "Code",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Products_Name",
+                table: "Products",
+                column: "Name",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -169,7 +214,13 @@ namespace StorageSystem.API.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "Clients");
+
+            migrationBuilder.DropTable(
                 name: "InputInventories");
+
+            migrationBuilder.DropTable(
+                name: "Products");
 
             migrationBuilder.DropTable(
                 name: "RawMaterials");

@@ -13,6 +13,7 @@ namespace StorageSystem.API.Repositories.Implementations
         {
             _context = context;
         }
+
         public async Task<IEnumerable<Category>> GetComboAsync()
         {
             return await _context.Categories
