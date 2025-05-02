@@ -1,0 +1,39 @@
+﻿@page "/products"
+
+<h3>Productos</h3>
+<div class="mb-3">
+    <a class="btn btn-primary btn-sm float-end" @onclick="@(() => ShowModalAsync())">Nuevo Producto</a>
+</div>
+<GenericList MyList="Products">
+    <Body>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Codigo</th>
+                    <th>Nombre</th>
+                    <th>Tipo de Producto</th>
+                    <th style="width:168px">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var product in Products!)
+                {
+                    <tr>
+                        <td>@product.Code</td>
+                        <td>@product.Name</td>
+                        <td>@product.Type</td>
+                        <td>
+                            <a @onclick="@(() => ShowModalAsync(product.Id, true))" class="btn btn-warning">Editar</a>
+                            <button class="btn btn-danger" @onclick="@(() => DeleteAsync(product))">Borrar</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </Body>
+</GenericList>
+
+
+
+
+

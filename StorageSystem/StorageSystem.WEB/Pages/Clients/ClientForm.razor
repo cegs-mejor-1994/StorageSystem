@@ -1,0 +1,54 @@
+﻿<NavigationLock OnBeforeInternalNavigation="OnBeforeInternalNavigation" />
+
+<EditForm EditContext="editContext" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator />
+    <div class="mb-3">
+        <label>Codigo de Cliente:</label>
+        <div>
+            <InputText class="form-control" @bind-Value="@Client.Code" />
+            <ValidationMessage For="@(() => Client.Code)" />
+        </div>
+    </div>
+    <div class="mb-3">
+        <label>Identificcion de Cliente:</label>
+        <div>
+            <InputText class="form-control" @bind-Value="@Client.Nit" />
+            <ValidationMessage For="@(() => Client.Nit)" />
+        </div>
+    </div>
+    <div class="mb-3">
+        <label>Nombre de Cliente:</label>
+        <div>
+            <InputText class="form-control" @bind-Value="@Client.Name" />
+            <ValidationMessage For="@(() => Client.Name)" />
+        </div>
+    </div>
+    <div class="mb-3">
+        <label>Direccion de Cliente:</label>
+        <div>
+            <InputText class="form-control" @bind-Value="@Client.Address" />
+            <ValidationMessage For="@(() => Client.Address)" />
+        </div>
+    </div>
+    <div class="mb-3">
+        <label>Telefono de Cliente:</label>
+        <div>
+            <InputText class="form-control" @bind-Value="@Client.Phone" />
+            <ValidationMessage For="@(() => Client.Phone)" />
+        </div>
+    </div>
+    <div class="mb-3">
+        <label>Ciudad de Cliente:</label>
+        <div>
+            <InputText class="form-control" @bind-Value="@Client.City" />
+            <ValidationMessage For="@(() => Client.City)" />
+        </div>
+    </div>
+    <button class="btn btn-primary" type="submit">Guardar Cambios</button>
+    <button class="btn btn-success" @onclick="ReturnAction">Regresar</button>
+</EditForm>
+
+
+
+
+

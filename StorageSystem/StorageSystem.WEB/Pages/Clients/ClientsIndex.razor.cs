@@ -3,18 +3,19 @@ using Blazored.Modal.Services;
 using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components;
 using StorageSystem.Shared.Entities;
+using StorageSystem.WEB.Pages.Suppliers;
 using StorageSystem.WEB.Repositories;
 using System.Net;
 
-namespace StorageSystem.WEB.Pages.Suppliers
+namespace StorageSystem.WEB.Pages.Clients
 {
-    public partial class SuppliersIndex
+    public partial class ClientsIndex
     {
         [CascadingParameter] IModalService Modal { get; set; } = default!;
         [Inject] private IRepository Repository { get; set; } = null!;
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
-        public List<Supplier>? Suppliers { get; set; }
+        public List<Client>? Clients { get; set; }
 
         protected async override Task OnInitializedAsync()
         {
@@ -23,14 +24,14 @@ namespace StorageSystem.WEB.Pages.Suppliers
 
         private async Task LoadAsync()
         {
-            var responseHttp = await Repository.GetAsync<List<Supplier>>("api/Suppliers");
+            var responseHttp = await Repository.GetAsync<List<Client>>("api/Clients");
             if (responseHttp.Error)
             {
                 var message = await responseHttp.GetErrorMessageAsync();
                 await SweetAlertService.FireAsync("Error!", message, SweetAlertIcon.Error);
                 return;
             }
-            Suppliers = responseHttp.Response;
+            Clients = responseHttp.Response;
         }
 
         private async Task ShowModalAsync(int id = 0, bool isEdit = false)
@@ -38,11 +39,11 @@ namespace StorageSystem.WEB.Pages.Suppliers
             IModalReference modalReference;
             if (isEdit)
             {
-                modalReference = Modal.Show<SupplierEdit>(string.Empty, new ModalParameters().Add("Id", id));
+                modalReference = Modal.Show<ClientEdit>(string.Empty, new ModalParameters().Add("Id", id));
             }
             else
             {
-                modalReference = Modal.Show<SupplierCreate>();
+                modalReference = Modal.Show<ClientCreate>();
             }
 
             var result = await modalReference.Result;
@@ -52,12 +53,12 @@ namespace StorageSystem.WEB.Pages.Suppliers
             }
         }
 
-        private async Task DeleteAsync(Supplier supplier)
+        private async Task DeleteAsync(Client client)
         {
             var result = await SweetAlertService.FireAsync(new SweetAlertOptions
             {
                 Title = "Confirmacion",
-                Text = $"¿Estas seguro de querer eliminar el proveedor: {supplier.Name}?",
+                Text = $"¿Estas seguro de querer eliminar el cliente: {client.Name}?",
                 Icon = SweetAlertIcon.Question,
                 ShowCancelButton = true,
             });
@@ -67,12 +68,12 @@ namespace StorageSystem.WEB.Pages.Suppliers
             {
                 return;
             }
-            var responseHttp = await Repository.DeleteAsync<Supplier>($"api/Suppliers/{supplier.Id}");
+            var responseHttp = await Repository.DeleteAsync<Client>($"api/Clients/{client.Id}");
             if (responseHttp.Error)
             {
                 if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
                 {
-                    NavigationManager.NavigateTo("/suppliers");
+                    NavigationManager.NavigateTo("/clients");
                 }
                 else
                 {

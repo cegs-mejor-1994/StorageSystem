@@ -19,9 +19,4 @@
     <ProjectReference Include="..\Shared\StorageSystem.Shared.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Pages\Clients\" />
-    <Folder Include="Pages\Products\" />
-  </ItemGroup>
-
 </Project>

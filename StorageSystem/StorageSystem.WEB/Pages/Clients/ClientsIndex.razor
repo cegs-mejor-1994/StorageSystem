@@ -1,0 +1,45 @@
+﻿@page "/clients"
+
+<h3>Clientes</h3>
+<div class="mb-3">
+    <a class="btn btn-primary btn-sm float-end" @onclick="@(() => ShowModalAsync())">Nuevo Cliente</a>
+</div>
+<GenericList MyList="Clients">
+    <Body>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Codigo</th>
+                    <th>Nit</th>
+                    <th>Nombre</th>
+                    <th>Direccion</th>
+                    <th>Telefono</th>
+                    <th>Ciudad</th>
+                    <th style="width:168px">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var client in Clients!)
+                {
+                    <tr>
+                        <td>@client.Code</td>
+                        <td>@client.Name</td>
+                        <td>@client.Nit</td>
+                        <td>@client.Address</td>
+                        <td>@client.Phone</td>
+                        <td>@client.City</td>
+                        <td>
+                            <a @onclick="@(() => ShowModalAsync(client.Id, true))" class="btn btn-warning">Editar</a>
+                            <button class="btn btn-danger" @onclick="@(() => DeleteAsync(client))">Borrar</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </Body>
+</GenericList>
+
+
+
+
+
