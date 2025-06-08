@@ -10,8 +10,8 @@ namespace StorageSystem.WEB.Pages.Products
     public partial class ProductCreate
     {
         private Product product = new();
-        private ProductForm? productForm;
 
+        IEnumerable<string> referencesNames = new string[] {};
         [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
         [Inject] private IRepository repository { get; set; } = null!;
         [Inject] private SweetAlertService sweetAlertService { get; set; } = null!;
@@ -26,8 +26,7 @@ namespace StorageSystem.WEB.Pages.Products
                 await sweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
                 return;
             }
-            await BlazoredModal.CloseAsync(ModalResult.Ok());
-            Return();
+            await BlazoredModal.CloseAsync(ModalResult.Ok());            
             var toast = sweetAlertService.Mixin(new SweetAlertOptions
             {
                 Toast = true,
@@ -36,11 +35,6 @@ namespace StorageSystem.WEB.Pages.Products
                 Timer = 3000
             });
             await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro creado con éxito.");
-        }
-        private void Return()
-        {
-            productForm!.FormPostedSuccessfully = true;
-            navigationManager.NavigateTo("/products");
         }
     }
 }

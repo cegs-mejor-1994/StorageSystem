@@ -11,8 +11,7 @@ namespace StorageSystem.WEB.Pages.Products
 {
     public partial class ProductEdit
     {
-        private Product? product;
-        private ProductForm? productForm;
+        private Product? product;        
 
         [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
@@ -52,7 +51,7 @@ namespace StorageSystem.WEB.Pages.Products
                 return;
             }
             await BlazoredModal.CloseAsync(ModalResult.Ok());
-            Return();
+            
             var toast = SweetAlertService.Mixin(new SweetAlertOptions
             {
                 Toast = true,
@@ -61,12 +60,6 @@ namespace StorageSystem.WEB.Pages.Products
                 Timer = 3000,
             });
             await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Cambios guardados con exito");
-        }
-
-        private void Return()
-        {
-            productForm!.FormPostedSuccessfully = true;
-            NavigationManager.NavigateTo("/products");
         }
     }
 }

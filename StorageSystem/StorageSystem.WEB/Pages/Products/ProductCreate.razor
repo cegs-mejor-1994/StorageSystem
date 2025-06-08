@@ -1,6 +1,47 @@
 ﻿@page "/products/create"
+@using StorageSystem.Shared.Enums
 
 <h3>Crear Producto</h3>
-<ProductForm @ref="productForm" Product="product" OnValidSubmit="CreateAsync" ReturnAction="Return"/>
+<EditForm Model="product">
+    <DataAnnotationsValidator />
+    <div class="mb-3">
+        <label>Codigo de Producto:</label>
+        <div>
+            <InputText class="form-control" @bind-Value="@product.Code" />
+            <ValidationMessage For="@(() => product.Code)" />
+        </div>
+    </div>
+    <div class="mb-3">
+        <label>Nombre de Producto:</label>
+        <div>
+            <InputText class="form-control" @bind-Value="@product.Name" />
+            <ValidationMessage For="@(() => product.Name)" />
+        </div>
+    </div>
+    <div class="mb-3">
+        <label>Tipo de Producto:</label>
+        <div>
+            <InputSelect @bind-Value="@product.Type" class="form-control">
+                <option value="">Seleccione un tipo de producto</option>
+                @foreach (var productType in Enum.GetValues(typeof(ProductType)))
+                {
+                    <option value="@productType">@productType</option>
+                }
+            </InputSelect>
+            <ValidationMessage For="@(() => product.Type)" />
+        </div>
+    </div>
+    <div>
+        
+    </div>
+   
+    <button class="btn btn-primary" type="button" @onclick="@(() => CreateAsync())">Guardar Cambios</button>
+</EditForm>
+
+
+
+
+
+
 
 

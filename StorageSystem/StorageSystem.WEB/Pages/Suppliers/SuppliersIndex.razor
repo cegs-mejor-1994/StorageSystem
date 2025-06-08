@@ -1,8 +1,10 @@
 ﻿@page "/suppliers"
+@using Havit.Blazor.Components.Web
 
 <h3>Proveedores</h3>
 <div class="mb-3">
     <a class="btn btn-primary btn-sm float-end" @onclick="@(() => ShowModalAsync())">Nuevo Proveedor</a>
+    <HxButton Text="Basic Button" Color="ThemeColor.Primary" style="border-radius: 50px" CssClass="float-end"/>
 </div>
 <GenericList MyList="Suppliers">
     <Body>

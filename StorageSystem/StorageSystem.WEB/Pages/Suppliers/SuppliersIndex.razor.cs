@@ -35,14 +35,23 @@ namespace StorageSystem.WEB.Pages.Suppliers
 
         private async Task ShowModalAsync(int id = 0, bool isEdit = false)
         {
+            var options = new ModalOptions()
+            {
+                Position = ModalPosition.Middle,
+                Size = ModalSize.Automatic,
+                HideHeader = true,
+                DisableBackgroundCancel = true,
+                AnimationType = ModalAnimationType.PopIn
+            };
+
             IModalReference modalReference;
             if (isEdit)
             {
-                modalReference = Modal.Show<SupplierEdit>(string.Empty, new ModalParameters().Add("Id", id));
+                modalReference = Modal.Show<SupplierEdit>(string.Empty, new ModalParameters().Add("Id", id), options);
             }
             else
             {
-                modalReference = Modal.Show<SupplierCreate>();
+                modalReference = Modal.Show<SupplierCreate>(options);
             }
 
             var result = await modalReference.Result;
