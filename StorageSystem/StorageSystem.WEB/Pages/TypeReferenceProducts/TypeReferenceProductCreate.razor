@@ -1,0 +1,22 @@
+﻿@page "/typeReferenceProducts/create"
+
+<h3>Crear Producto de Referencia</h3>
+<EditForm Model="typeReferenceProduct">
+    <DataAnnotationsValidator />
+    <div class="mb-3">
+        <label>Nombre de Producto de Referencia:</label>
+        <div>
+            <InputText class="form-control" @bind-Value="@typeReferenceProduct.Name" />
+            <ValidationMessage For="@(() => typeReferenceProduct.Name)" />
+        </div>
+    </div>
+    <button class="btn btn-primary" type="button" @onclick="@(() => CreateAsync())">Guardar Cambios</button>
+</EditForm>
+
+
+
+
+
+
+
+

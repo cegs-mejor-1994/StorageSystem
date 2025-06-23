@@ -5,12 +5,12 @@ using Microsoft.AspNetCore.Components;
 using StorageSystem.Shared.Entities;
 using StorageSystem.WEB.Repositories;
 
-namespace StorageSystem.WEB.Pages.References
+namespace StorageSystem.WEB.Pages.TypeReferenceProducts
 {
-    public partial class ReferenceCreate
+    public partial class TypeReferenceProductCreate
     {
-        private Reference reference = new();
-        
+        private TypeReferenceProduct typeReferenceProduct = new();
+
         [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
         [Inject] private IRepository repository { get; set; } = null!;
         [Inject] private SweetAlertService sweetAlertService { get; set; } = null!;
@@ -18,7 +18,7 @@ namespace StorageSystem.WEB.Pages.References
 
         private async Task CreateAsync()
         {
-            var responseHttp = await repository.PostAsync("/api/References", reference);
+            var responseHttp = await repository.PostAsync("/api/TypeReferenceProducts", typeReferenceProduct);
             if (responseHttp.Error)
             {
                 var message = await responseHttp.GetErrorMessageAsync();

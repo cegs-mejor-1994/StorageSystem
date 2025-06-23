@@ -1,0 +1,34 @@
+﻿@page "/typeReferenceProducts"
+
+<h3>Productos de Referencia</h3>
+<div class="mb-3">
+    <a class="btn btn-primary btn-sm float-end" @onclick="@(() => ShowModalAsync())">Nuevo Producto de Referencia</a>
+</div>
+<GenericList MyList="TypeReferenceProducts">
+    <Body>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Nombre</th>                    
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var typeReferenceProduct in TypeReferenceProducts!)
+                {
+                    <tr>
+
+                        <td>@typeReferenceProduct.Name</td>                        
+                        <td>
+                            <a @onclick="@(() => ShowModalAsync(typeReferenceProduct.Id, true))" class="btn btn-warning">Editar</a>
+                            <button class="btn btn-danger" @onclick="@(() => DeleteAsync(typeReferenceProduct))">Borrar</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </Body>
+</GenericList>
+
+
+
