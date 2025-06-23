@@ -2,7 +2,7 @@
 
 namespace StorageSystem.API.Repositories.Interfaces
 {
-    public interface IRerefencesRepository
+    public interface IReferencesRepository
     {
         Task<IEnumerable<Reference>> GetComboAsync();
     }

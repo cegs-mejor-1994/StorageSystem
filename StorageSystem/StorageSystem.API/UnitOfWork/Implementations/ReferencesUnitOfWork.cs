@@ -6,9 +6,9 @@ namespace StorageSystem.API.UnitOfWork.Implementations
 {
     public class ReferencesUnitOfWork : GenericUnitOfWork<Reference>, IReferencesUnitOfWork
     {
-        private readonly IRerefencesRepository _rerefencesRepository;
+        private readonly IReferencesRepository _rerefencesRepository;
 
-        public ReferencesUnitOfWork(IGenericRepository<Reference> repository, IRerefencesRepository rerefencesRepository) : base(repository)
+        public ReferencesUnitOfWork(IGenericRepository<Reference> repository, IReferencesRepository rerefencesRepository) : base(repository)
         {
             _rerefencesRepository = rerefencesRepository;
         }

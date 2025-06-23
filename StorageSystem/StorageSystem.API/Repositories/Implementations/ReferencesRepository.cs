@@ -5,7 +5,7 @@ using StorageSystem.Shared.Entities;
 
 namespace StorageSystem.API.Repositories.Implementations
 {
-    public class ReferencesRepository : GenericRepository<Reference>, IRerefencesRepository
+    public class ReferencesRepository : GenericRepository<Reference>, IReferencesRepository
     {
         private readonly DataContext _context;
 
