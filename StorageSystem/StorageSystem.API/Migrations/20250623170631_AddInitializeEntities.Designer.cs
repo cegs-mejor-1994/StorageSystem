@@ -12,8 +12,8 @@ using StorageSystem.API.Data;
 namespace StorageSystem.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250608002819_InitializeDatabase")]
-    partial class InitializeDatabase
+    [Migration("20250623170631_AddInitializeEntities")]
+    partial class AddInitializeEntities
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -186,25 +186,23 @@ namespace StorageSystem.API.Migrations
 
                     b.Property<string>("Code")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("ReferenceId")
-                        .HasColumnType("int");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Type")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("Name")
                         .IsUnique();
-
-                    b.HasIndex("ReferenceId");
 
                     b.ToTable("Products");
                 });
@@ -319,6 +317,27 @@ namespace StorageSystem.API.Migrations
                     b.ToTable("Suppliers");
                 });
 
+            modelBuilder.Entity("StorageSystem.Shared.Entities.TypeReferenceProduct", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("TypeReferenceProducts");
+                });
+
             modelBuilder.Entity("StorageSystem.Shared.Entities.InputInventory", b =>
                 {
                     b.HasOne("StorageSystem.Shared.Entities.RawMaterial", "RawMaterial")
@@ -336,17 +355,6 @@ namespace StorageSystem.API.Migrations
                     b.Navigation("RawMaterial");
 
                     b.Navigation("Supplier");
-                });
-
-            modelBuilder.Entity("StorageSystem.Shared.Entities.Product", b =>
-                {
-                    b.HasOne("StorageSystem.Shared.Entities.Reference", "Reference")
-                        .WithMany("Products")
-                        .HasForeignKey("ReferenceId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Reference");
                 });
 
             modelBuilder.Entity("StorageSystem.Shared.Entities.RawMaterial", b =>
@@ -381,11 +389,6 @@ namespace StorageSystem.API.Migrations
             modelBuilder.Entity("StorageSystem.Shared.Entities.RawMaterial", b =>
                 {
                     b.Navigation("InputInventories");
-                });
-
-            modelBuilder.Entity("StorageSystem.Shared.Entities.Reference", b =>
-                {
-                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("StorageSystem.Shared.Entities.Supplier", b =>

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace StorageSystem.API.Migrations
 {
     /// <inheritdoc />
-    public partial class InitializeDatabase : Migration
+    public partial class AddInitializeEntities : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -62,6 +62,21 @@ namespace StorageSystem.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Products",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Code = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Type = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Products", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "References",
                 columns: table => new
                 {
@@ -93,6 +108,19 @@ namespace StorageSystem.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "TypeReferenceProducts",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TypeReferenceProducts", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "RawMaterials",
                 columns: table => new
                 {
@@ -118,28 +146,6 @@ namespace StorageSystem.API.Migrations
                         name: "FK_RawMaterials_MeasurementUnits_MeasurementUnitId",
                         column: x => x.MeasurementUnitId,
                         principalTable: "MeasurementUnits",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Products",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ReferenceId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Products", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Products_References_ReferenceId",
-                        column: x => x.ReferenceId,
-                        principalTable: "References",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -209,11 +215,6 @@ namespace StorageSystem.API.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Products_ReferenceId",
-                table: "Products",
-                column: "ReferenceId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_RawMaterials_CategoryId",
                 table: "RawMaterials",
                 column: "CategoryId");
@@ -240,6 +241,12 @@ namespace StorageSystem.API.Migrations
                 table: "Suppliers",
                 column: "Nit",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TypeReferenceProducts_Name",
+                table: "TypeReferenceProducts",
+                column: "Name",
+                unique: true);
         }
 
         /// <inheritdoc />
@@ -255,13 +262,16 @@ namespace StorageSystem.API.Migrations
                 name: "Products");
 
             migrationBuilder.DropTable(
+                name: "References");
+
+            migrationBuilder.DropTable(
+                name: "TypeReferenceProducts");
+
+            migrationBuilder.DropTable(
                 name: "RawMaterials");
 
             migrationBuilder.DropTable(
                 name: "Suppliers");
-
-            migrationBuilder.DropTable(
-                name: "References");
 
             migrationBuilder.DropTable(
                 name: "Categories");

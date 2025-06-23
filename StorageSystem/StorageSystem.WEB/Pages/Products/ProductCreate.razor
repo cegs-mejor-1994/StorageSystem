@@ -1,5 +1,4 @@
 ﻿@page "/products/create"
-@using StorageSystem.Shared.Enums
 
 <h3>Crear Producto</h3>
 <EditForm Model="product">
@@ -21,16 +20,10 @@
     <div class="mb-3">
         <label>Tipo de Producto:</label>
         <div>
-            <InputSelect @bind-Value="@product.Type" class="form-control">
-                <option value="">Seleccione un tipo de producto</option>
-                @foreach (var productType in Enum.GetValues(typeof(ProductType)))
-                {
-                    <option value="@productType">@productType</option>
-                }
-            </InputSelect>
+            <InputText class="form-control" @bind-Value="@product.Type" />
             <ValidationMessage For="@(() => product.Type)" />
         </div>
-    </div>  
+    </div>
     <button class="btn btn-primary" type="button" @onclick="@(() => CreateAsync())">Guardar Cambios</button>
 </EditForm>
 

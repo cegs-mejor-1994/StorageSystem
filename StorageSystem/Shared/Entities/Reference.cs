@@ -19,8 +19,6 @@ namespace StorageSystem.Shared.Entities
         [Display(Name = "Tipo de Referencia")]
         [MaxLength(10, ErrorMessage = "El campo {0} no puede tener mas de {1} caracteres")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
-        public string ReferenceType { get; set; } = null!;
-
-        public ICollection<Product>? Products { get; set; }
+        public string ReferenceType { get; set; } = null!;        
     }
 }
