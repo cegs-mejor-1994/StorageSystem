@@ -1,3 +1,29 @@
-﻿<h3>ReferenceCreate</h3>
+﻿@page "/references/create"
+
+<h3>Crear Referencia</h3>
+<EditForm Model="reference">
+    <DataAnnotationsValidator />
+    <div class="mb-3">
+        <label>Nombre de Referencia:</label>
+        <div>
+            <InputText class="form-control" @bind-Value="@reference.Name" />
+            <ValidationMessage For="@(() => reference.Name)" />
+        </div>
+    </div>
+    <div class="mb-3">
+        <label>Producto de Referencia:</label>
+        <div>
+            <InputText class="form-control" @bind-Value="@reference.ReferenceType" />
+            <ValidationMessage For="@(() => reference.ReferenceType)" />
+        </div>
+    </div>
+    <button class="btn btn-primary" type="button" @onclick="@(() => CreateAsync())">Guardar Cambios</button>
+</EditForm>
+
+
+
+
+
+
 
 

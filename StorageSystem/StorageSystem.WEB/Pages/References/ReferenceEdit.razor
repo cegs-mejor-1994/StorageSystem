@@ -1,3 +1,32 @@
-﻿<h3>ReferenceEdit</h3>
+﻿@page "/references/edit/{Id:int}"
+
+<h3>Editar Referencia</h3>
+
+@if (reference is null)
+{
+    <Loading />
+}
+else
+{   
+    <EditForm Model="reference" OnValidSubmit="EditAsync">
+        <DataAnnotationsValidator />
+        <div class="mb-3">
+            <label>Nombre de Referencia:</label>
+            <div>
+                <InputText class="form-control" @bind-Value="@reference.Name" />
+                <ValidationMessage For="@(() => reference.Name)" />
+            </div>
+        </div>
+        <div class="mb-3">
+            <label>Producto de Referencia:</label>
+            <div>
+                <InputText class="form-control" @bind-Value="@reference.ReferenceType" />
+                <ValidationMessage For="@(() => reference.ReferenceType)" />
+            </div>
+        </div>
+        <button class="btn btn-primary" type="submit">Guardar Cambios</button>
+    </EditForm>
+
+}
 
 

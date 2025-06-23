@@ -3,7 +3,6 @@ using Blazored.Modal;
 using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components;
 using StorageSystem.Shared.Entities;
-using StorageSystem.WEB.Pages.Products;
 using StorageSystem.WEB.Repositories;
 using System.Net;
 
@@ -53,12 +52,12 @@ namespace StorageSystem.WEB.Pages.References
             }
         }
 
-        private async Task DeleteAsync(Product product)
+        private async Task DeleteAsync(Reference reference)
         {
             var result = await SweetAlertService.FireAsync(new SweetAlertOptions
             {
                 Title = "Confirmacion",
-                Text = $"¿Estas seguro de querer eliminar el producto: {product.Name}?",
+                Text = $"¿Estas seguro de querer eliminar la referencia: {reference.Name}?",
                 Icon = SweetAlertIcon.Question,
                 ShowCancelButton = true,
             });
@@ -68,12 +67,12 @@ namespace StorageSystem.WEB.Pages.References
             {
                 return;
             }
-            var responseHttp = await Repository.DeleteAsync<Product>($"api/Products/{product.Id}");
+            var responseHttp = await Repository.DeleteAsync<Reference>($"api/References/{reference.Id}");
             if (responseHttp.Error)
             {
                 if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
                 {
-                    NavigationManager.NavigateTo("/products");
+                    NavigationManager.NavigateTo("/references");
                 }
                 else
                 {

@@ -1,3 +1,36 @@
-﻿<h3>ReferencesIndex</h3>
+﻿@page "/references"
+
+<h3>Referencias</h3>
+<div class="mb-3">
+    <a class="btn btn-primary btn-sm float-end" @onclick="@(() => ShowModalAsync())">Nueva Referencia</a>
+</div>
+<GenericList MyList="References">
+    <Body>
+        <table class="table table-striped">
+            <thead>
+                <tr>                    
+                    <th>Nombre</th>
+                    <th>Producto de Referencia</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var reference in References!)
+                {
+                    <tr>
+                        
+                        <td>@reference.Name</td>
+                        <td>@reference.ReferenceType</td>
+                        <td>
+                            <a @onclick="@(() => ShowModalAsync(reference.Id, true))" class="btn btn-warning">Editar</a>
+                            <button class="btn btn-danger" @onclick="@(() => DeleteAsync(reference))">Borrar</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </Body>
+</GenericList>
+
 
 
