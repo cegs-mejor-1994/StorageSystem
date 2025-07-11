@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 //using Shared.DTOs;
 using StorageSystem.API.UnitOfWork.Interfaces;
+using StorageSystem.Shared.DTOs;
 
 namespace StorageSystem.API.Controllers
 {
@@ -13,8 +14,8 @@ namespace StorageSystem.API.Controllers
             _unitOfWork = unitOfWork;
         }
 
-        //[HttpGet("full")]
-        [HttpGet]
+        //[HttpGet]
+        [HttpGet("full")]
         public virtual async Task<IActionResult> GetAsync()
         {
             var action = await _unitOfWork.GetAsync();
@@ -25,7 +26,7 @@ namespace StorageSystem.API.Controllers
             return BadRequest();
         }
 
-        /*[HttpGet]
+        [HttpGet]
         public virtual async Task<IActionResult> GetAsync([FromQuery] PaginationDTO pagination)
         {
             var action = await _unitOfWork.GetAsync(pagination);
@@ -45,7 +46,7 @@ namespace StorageSystem.API.Controllers
                 return Ok(action.Result);
             }
             return BadRequest();
-        }*/
+        }
 
         [HttpGet("{id}")]
         public virtual async Task<IActionResult> GetAsync(int id)

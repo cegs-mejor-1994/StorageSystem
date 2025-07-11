@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StorageSystem.API.Data;
 using StorageSystem.API.Repositories.Interfaces;
+using StorageSystem.Shared.DTOs;
 using StorageSystem.Shared.Entities;
+using StorageSystem.Shared.Responses;
 
 namespace StorageSystem.API.Repositories.Implementations
 {
@@ -13,6 +15,17 @@ namespace StorageSystem.API.Repositories.Implementations
         {
             _context = context;
         }
+
+        public Task<ActionResponse<IEnumerable<InputInventory>>> GetAsync(PaginationDTO pagination)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ActionResponse<int>> GetTotalPagesAsync(PaginationDTO pagination)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<IEnumerable<InputInventory>> GetWithRawMaterialsAndSuppliersAsync()
         {
             return await _context.InputInventories

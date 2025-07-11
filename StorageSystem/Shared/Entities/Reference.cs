@@ -11,14 +11,17 @@ namespace StorageSystem.Shared.Entities
     {
         public int Id { get; set; }
 
-        [Display(Name = "Referencia")]
+        [Display(Name = "Valor de Referencia")]
         [MaxLength(10, ErrorMessage = "El campo {0} no puede tener mas de {1} caracteres")]
         [Required(ErrorMessage = "El campo {0} es requerido")]        
         public string Name { get; set; } = null!;
 
-        [Display(Name = "Tipo de Referencia")]
-        [MaxLength(10, ErrorMessage = "El campo {0} no puede tener mas de {1} caracteres")]
-        [Required(ErrorMessage = "El campo {0} es requerido")]
-        public string ReferenceType { get; set; } = null!;        
+        public int MeasurementUnitId { get; set; }
+        public MeasurementUnit? MeasurementUnit { get; set; }
+
+        public int TypeReferenceProductId { get; set; }
+        public TypeReferenceProduct? TypeReferenceProduct { get; set; }
+
+        public ICollection<Product>? Products { get; set; }
     }
 }

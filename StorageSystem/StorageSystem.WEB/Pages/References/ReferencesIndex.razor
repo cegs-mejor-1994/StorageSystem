@@ -20,7 +20,7 @@
                     <tr>
                         
                         <td>@reference.Name</td>
-                        <td>@reference.ReferenceType</td>
+                        @*<td>@reference.ReferenceType</td>*@
                         <td>
                             <a @onclick="@(() => ShowModalAsync(reference.Id, true))" class="btn btn-warning">Editar</a>
                             <button class="btn btn-danger" @onclick="@(() => DeleteAsync(reference))">Borrar</button>

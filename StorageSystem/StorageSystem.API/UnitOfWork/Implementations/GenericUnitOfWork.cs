@@ -1,6 +1,7 @@
 ﻿using StorageSystem.API.UnitOfWork.Interfaces;
 using StorageSystem.API.Repositories.Interfaces;
 using StorageSystem.Shared.Responses;
+using StorageSystem.Shared.DTOs;
 
 namespace StorageSystem.API.UnitOfWork.Implementations
 {
@@ -18,9 +19,9 @@ namespace StorageSystem.API.UnitOfWork.Implementations
         public virtual async Task<ActionResponse<T>> GetAsync(int id) => await _repository.GetAsync(id);
         public virtual async Task<ActionResponse<IEnumerable<T>>> GetAsync() => await _repository.GetAsync();
 
-        /*public virtual async Task<ActionResponse<IEnumerable<T>>> GetAsync(PaginationDTO pagination) => await _repository.GetAsync(pagination);
+        public virtual async Task<ActionResponse<IEnumerable<T>>> GetAsync(PaginationDTO pagination) => await _repository.GetAsync(pagination);
 
-        public virtual async Task<ActionResponse<int>> GetTotalPagesAsync(PaginationDTO pagination) => await _repository.GetTotalPagesAsync(pagination);*/
+        public virtual async Task<ActionResponse<int>> GetTotalPagesAsync(PaginationDTO pagination) => await _repository.GetTotalPagesAsync(pagination);
 
 
         public virtual async Task<ActionResponse<T>> UpdateAsync(T model) => await _repository.UpdateAsync(model);

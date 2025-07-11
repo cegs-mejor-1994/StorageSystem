@@ -1,6 +1,9 @@
-﻿using StorageSystem.API.Repositories.Interfaces;
+﻿using StorageSystem.API.Repositories.Implementations;
+using StorageSystem.API.Repositories.Interfaces;
 using StorageSystem.API.UnitOfWork.Interfaces;
+using StorageSystem.Shared.DTOs;
 using StorageSystem.Shared.Entities;
+using StorageSystem.Shared.Responses;
 
 namespace StorageSystem.API.UnitOfWork.Implementations
 {
@@ -14,5 +17,9 @@ namespace StorageSystem.API.UnitOfWork.Implementations
         }
 
         public async Task<IEnumerable<MeasurementUnit>> GetComboAsync() => await _measurementUnitsRepository.GetComboAsync();
+
+        public async Task<ActionResponse<IEnumerable<MeasurementUnit>>> GetAsync(PaginationDTO pagination) => await _measurementUnitsRepository.GetAsync(pagination);        
+
+        public async Task<ActionResponse<int>> GetTotalPagesAsync(PaginationDTO pagination) => await _measurementUnitsRepository.GetTotalPagesAsync(pagination);
     }
 }

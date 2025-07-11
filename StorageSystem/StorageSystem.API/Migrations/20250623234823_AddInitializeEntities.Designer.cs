@@ -12,7 +12,7 @@ using StorageSystem.API.Data;
 namespace StorageSystem.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250623170631_AddInitializeEntities")]
+    [Migration("20250623234823_AddInitializeEntities")]
     partial class AddInitializeEntities
     {
         /// <inheritdoc />
@@ -270,7 +270,7 @@ namespace StorageSystem.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name")
+                    b.HasIndex("ReferenceType", "Name")
                         .IsUnique();
 
                     b.ToTable("References");

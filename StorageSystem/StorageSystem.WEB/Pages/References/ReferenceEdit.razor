@@ -17,13 +17,13 @@ else
                 <ValidationMessage For="@(() => reference.Name)" />
             </div>
         </div>
-        <div class="mb-3">
+        @*<div class="mb-3">
             <label>Producto de Referencia:</label>
             <div>
                 <InputText class="form-control" @bind-Value="@reference.ReferenceType" />
                 <ValidationMessage For="@(() => reference.ReferenceType)" />
             </div>
-        </div>
+        </div>*@
         <button class="btn btn-primary" type="submit">Guardar Cambios</button>
     </EditForm>
 

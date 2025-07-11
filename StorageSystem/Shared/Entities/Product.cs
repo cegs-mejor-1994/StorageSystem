@@ -15,12 +15,9 @@ namespace StorageSystem.Shared.Entities
         [Required(ErrorMessage = "El campo {0} es requerido")]
         public string Name { get; set; } = null!;
 
-        [Display(Name = "Tipo")]
-        [MaxLength(50, ErrorMessage = "El campo {0} no puede tener mas de {1} caracteres")]
-        [Required(ErrorMessage = "El campo {0} es requerido")]        
-        public string Type { get; set; } = null!;
-        //public ICollection<Recipe>? Recipes { get; set; }         
-        //public int ReferenceId { get; set; }
-        //public Reference? Reference { get; set; }
+        public int ReferenceId { get; set; }
+        public Reference? Reference { get; set; }
+
+        public ICollection<Recipe>? Recipes { get; set; }
     }
 }

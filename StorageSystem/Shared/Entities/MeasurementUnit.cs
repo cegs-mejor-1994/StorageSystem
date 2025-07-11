@@ -19,5 +19,7 @@ namespace StorageSystem.Shared.Entities
         public DateTime DateRegister { get; set; }
 
         public ICollection<RawMaterial>? RawMaterials { get; set; }
+        public ICollection<Reference>? References { get; set; }
+
     }
 }

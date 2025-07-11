@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StorageSystem.API.Data;
+using StorageSystem.API.Helpers;
 using StorageSystem.API.Repositories.Interfaces;
+using StorageSystem.Shared.DTOs;
 using StorageSystem.Shared.Responses;
 
 namespace StorageSystem.API.Repositories.Implementations
@@ -104,7 +106,7 @@ namespace StorageSystem.API.Repositories.Implementations
             };
         }
 
-        /*public virtual async Task<ActionResponse<IEnumerable<T>>> GetAsync(PaginationDTO pagination)
+        public virtual async Task<ActionResponse<IEnumerable<T>>> GetAsync(PaginationDTO pagination)
         {
             var queryable = _entity.AsQueryable();
             return new ActionResponse<IEnumerable<T>>
@@ -124,7 +126,7 @@ namespace StorageSystem.API.Repositories.Implementations
                 WasSuccess = true,
                 Result = totalPages
             };
-        }*/
+        }
 
         public virtual async Task<ActionResponse<T>> UpdateAsync(T entity)
         {

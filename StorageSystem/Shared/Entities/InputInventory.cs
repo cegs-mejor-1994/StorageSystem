@@ -29,6 +29,8 @@ namespace StorageSystem.Shared.Entities
 
         [DataType(DataType.PhoneNumber)]
         public int RawMaterialId { get; set; }
-        public RawMaterial? RawMaterial { get; set; }        
+        public RawMaterial? RawMaterial { get; set; }
+
+        public ICollection<ProductionGap>? ProductionGaps { get; set; }
     }
 }

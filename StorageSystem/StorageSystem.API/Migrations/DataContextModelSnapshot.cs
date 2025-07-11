@@ -267,7 +267,7 @@ namespace StorageSystem.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name")
+                    b.HasIndex("ReferenceType", "Name")
                         .IsUnique();
 
                     b.ToTable("References");

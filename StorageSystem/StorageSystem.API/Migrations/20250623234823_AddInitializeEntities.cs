@@ -231,9 +231,9 @@ namespace StorageSystem.API.Migrations
                 column: "MeasurementUnitId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_References_Name",
+                name: "IX_References_ReferenceType_Name",
                 table: "References",
-                column: "Name",
+                columns: new[] { "ReferenceType", "Name" },
                 unique: true);
 
             migrationBuilder.CreateIndex(

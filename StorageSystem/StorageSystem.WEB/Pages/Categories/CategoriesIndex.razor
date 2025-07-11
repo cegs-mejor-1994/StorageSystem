@@ -1,36 +1,41 @@
 ﻿@page "/categories"
-
-<h3>Categorias</h3>
-<div class="mb-3">
-    <a class="btn btn-sm btn-outline-primary float-end" @onclick="@(() => ShowModalAsync())"><i class="bi bi-card-list"></i> Nueva Categoria</a> 
+<PageTitle>Categorias</PageTitle>
+<div class="card">
+    <div class="card-header">
+        <span>
+            <i class="bi bi-list-check"></i> Categorias
+            <a @onclick="@(() => ShowModalAsync())" class="btn btn-primary btn-sm float-end"><i class="bi bi-plus-square" /> Nueva Categoria</a>
+        </span>
+    </div>
+    <div class="card-body">
+        <Filter PlaceHolder="Buscar categoria..." Callback="@FilterCallBack" />
+        <GenericList MyList="Categories">
+            <Body>
+                <Pagination CurrentPage="currentPage" TotalPages="totalPages" SelectedPage="SelectedPageAsync" RecordsNumber="SelectedRecordsNumberAsync" />
+                <table class="table table-striped">
+                    <thead>
+                        <tr>    
+                            <th>Codigo</th>
+                            <th>Categoria</th>
+                            <th style="width:210px">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var category in Categories!)
+                        {
+                            <tr>
+                                <td>@category.Code</td>
+                                <td>@category.Name</td>
+                                <td>
+                                    <a @onclick="@(() => ShowModalAsync(category.Id, true))" class="btn btn-sm btn-warning"><i class="bi bi-pencil" /> Editar</a>
+                                    <button @onclick="() => DeleteAsync(category)" class="btn btn-sm btn-danger"><i class="bi bi-trash" /> Borrar</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </Body>
+        </GenericList>
+    </div>
 </div>
-<GenericList MyList="Categories">
-    <Body>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Codigo</th>
-                    <th>Nombre</th>
-                    <th>Estado</th>
-                    <th style="width: 210px">Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var category in Categories!)
-                {
-                    <tr>
-                        <td>@category.Code</td>                        
-                        <td>@category.Name</td>                        
-                        <td>@category.State</td>
-                        <td>
-                            <a @onclick="@(() => ShowModalAsync(category.Id, true))" class="btn btn-warning"><i class="bi bi-pencil-square"></i> Editar</a>
-                            <button class="btn btn-danger" @onclick="@(() => DeleteAsync(category))"><i class="bi bi-trash-fill"></i> Borrar</button>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </Body>
-</GenericList>
-
 

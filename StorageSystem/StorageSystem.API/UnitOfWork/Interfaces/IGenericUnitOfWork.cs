@@ -1,4 +1,5 @@
-﻿using StorageSystem.Shared.Responses;
+﻿using StorageSystem.Shared.DTOs;
+using StorageSystem.Shared.Responses;
 
 namespace StorageSystem.API.UnitOfWork.Interfaces
 {
@@ -6,8 +7,8 @@ namespace StorageSystem.API.UnitOfWork.Interfaces
     {
         Task<ActionResponse<T>> GetAsync(int id);
         Task<ActionResponse<IEnumerable<T>>> GetAsync();
-        /*Task<ActionResponse<IEnumerable<T>>> GetAsync(PaginationDTO pagination);
-        Task<ActionResponse<int>> GetTotalPagesAsync(PaginationDTO pagination);*/
+        Task<ActionResponse<IEnumerable<T>>> GetAsync(PaginationDTO pagination);
+        Task<ActionResponse<int>> GetTotalPagesAsync(PaginationDTO pagination);
         Task<ActionResponse<T>> AddAsync(T model);
         Task<ActionResponse<T>> UpdateAsync(T model);
         Task<ActionResponse<T>> DeleteAsync(int id);
