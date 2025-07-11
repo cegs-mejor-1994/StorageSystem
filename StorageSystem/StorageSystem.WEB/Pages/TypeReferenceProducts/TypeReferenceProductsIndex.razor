@@ -1,34 +1,43 @@
 ﻿@page "/typeReferenceProducts"
 
-<h3>Productos de Referencia</h3>
-<div class="mb-3">
-    <a class="btn btn-primary btn-sm float-end" @onclick="@(() => ShowModalAsync())">Nuevo Producto de Referencia</a>
+<PageTitle>Referencias de Productos</PageTitle>
+<div class="card">
+    <div class="card-header">
+        <span>
+            <i class="bi bi-list-check"></i> Referencias de Productos
+            <a @onclick="@(() => ShowModalAsync())" class="btn btn-primary btn-sm float-end"><i class="bi bi-plus-square" /> Nueva Referencia de Producto</a>
+        </span>
+    </div>
+    <div class="card-body">
+        <Filter PlaceHolder="Buscar Referencia de Producto..." Callback="@FilterCallBack" />
+        <GenericList MyList="TypeReferenceProducts">
+            <Body>
+                <Pagination CurrentPage="currentPage" TotalPages="totalPages" SelectedPage="SelectedPageAsync" RecordsNumber="SelectedRecordsNumberAsync" />
+                <table class="table table-striped">
+                    <thead>
+                        <tr>                            
+                            <th>Nombre</th>
+                            <th style="width:210px">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var typeReferenceProduct in TypeReferenceProducts!)
+                        {
+                            <tr>
+                                <td>@typeReferenceProduct.Name</td>
+                                <td>
+                                    <a @onclick="@(() => ShowModalAsync(typeReferenceProduct.Id, true))" class="btn btn-sm btn-warning"><i class="bi bi-pencil" /> Editar</a>
+                                    <button @onclick="() => DeleteAsync(typeReferenceProduct)" class="btn btn-sm btn-danger"><i class="bi bi-trash" /> Borrar</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </Body>
+        </GenericList>
+    </div>
 </div>
-<GenericList MyList="TypeReferenceProducts">
-    <Body>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Nombre</th>                    
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var typeReferenceProduct in TypeReferenceProducts!)
-                {
-                    <tr>
 
-                        <td>@typeReferenceProduct.Name</td>                        
-                        <td>
-                            <a @onclick="@(() => ShowModalAsync(typeReferenceProduct.Id, true))" class="btn btn-warning">Editar</a>
-                            <button class="btn btn-danger" @onclick="@(() => DeleteAsync(typeReferenceProduct))">Borrar</button>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </Body>
-</GenericList>
 
 
 

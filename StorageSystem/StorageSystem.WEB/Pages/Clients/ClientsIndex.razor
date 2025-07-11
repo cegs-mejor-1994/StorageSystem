@@ -1,45 +1,47 @@
 ﻿@page "/clients"
-
-<h3>Clientes</h3>
-<div class="mb-3">
-    <a class="btn btn-primary btn-sm float-end" @onclick="@(() => ShowModalAsync())">Nuevo Cliente</a>
+<PageTitle>Clientes</PageTitle>
+<div class="card">
+    <div class="card-header">
+        <span>
+            <i class="bi bi-list-check"></i> Clientes
+            <a @onclick="@(() => ShowModalAsync())" class="btn btn-primary btn-sm float-end"><i class="bi bi-plus-square" /> Nuevo Cliente</a>
+        </span>
+    </div>
+    <div class="card-body">
+        <Filter PlaceHolder="Buscar cliente..." Callback="@FilterCallBack" />
+        <GenericList MyList="Clients">
+            <Body>
+                <Pagination CurrentPage="currentPage" TotalPages="totalPages" SelectedPage="SelectedPageAsync" RecordsNumber="SelectedRecordsNumberAsync" />
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Nombre</th>
+                            <th>Direccion</th>
+                            <th>Telefono</th>
+                            <th>Ciudad</th>
+                            <th style="width:210px">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var client in Clients!)
+                        {
+                            <tr>
+                                <td>@client.Id</td>
+                                <td>@client.Name</td>
+                                <td>@client.Address</td>
+                                <td>@client.Phone</td>
+                                <td>@client.City</td>
+                                <td>
+                                    <a @onclick="@(() => ShowModalAsync(client.Id, true))" class="btn btn-sm btn-warning"><i class="bi bi-pencil" /> Editar</a>
+                                    <button @onclick="() => DeleteAsync(client)" class="btn btn-sm btn-danger"><i class="bi bi-trash" /> Borrar</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </Body>
+        </GenericList>
+    </div>
 </div>
-<GenericList MyList="Clients">
-    <Body>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Codigo</th>
-                    <th>Nit</th>
-                    <th>Nombre</th>
-                    <th>Direccion</th>
-                    <th>Telefono</th>
-                    <th>Ciudad</th>
-                    <th style="width:168px">Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var client in Clients!)
-                {
-                    <tr>
-                        <td>@client.Code</td>
-                        <td>@client.Name</td>
-                        <td>@client.Nit</td>
-                        <td>@client.Address</td>
-                        <td>@client.Phone</td>
-                        <td>@client.City</td>
-                        <td>
-                            <a @onclick="@(() => ShowModalAsync(client.Id, true))" class="btn btn-warning">Editar</a>
-                            <button class="btn btn-danger" @onclick="@(() => DeleteAsync(client))">Borrar</button>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </Body>
-</GenericList>
-
-
-
-
 

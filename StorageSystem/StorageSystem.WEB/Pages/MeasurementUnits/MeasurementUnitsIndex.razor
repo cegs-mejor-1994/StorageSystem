@@ -1,37 +1,43 @@
 ﻿@page "/measurementUnits"
-
-<h3>Unidades de Medida</h3>
-<div class="mb-3">
-    <a class="btn btn-primary btn-sm float-end" @onclick="@(() => ShowModalAsync())">Nueva Unidad de Medida</a>
+<PageTitle>Unidades de Medida</PageTitle>
+<div class="card">
+    <div class="card-header">
+        <span>
+            <i class="bi bi-list-check"></i> Unidades de Medida
+            <a @onclick="@(() => ShowModalAsync())" class="btn btn-primary btn-sm float-end"><i class="bi bi-plus-square" /> Nueva Unidad de Medida</a>
+        </span>
+    </div>
+    <div class="card-body">
+        <Filter PlaceHolder="Buscar unidad de Medida..." Callback="@FilterCallBack" />
+        <GenericList MyList="MeasurementUnits">
+            <Body>
+                <Pagination CurrentPage="currentPage" TotalPages="totalPages" SelectedPage="SelectedPageAsync" RecordsNumber="SelectedRecordsNumberAsync" />
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Codigo</th>
+                            <th>Nombre</th>
+                            <th>Estado</th>
+                            <th style="width:210px">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var measurementUnit in MeasurementUnits!)
+                        {
+                            <tr>
+                                <td>@measurementUnit.Code</td>
+                                <td>@measurementUnit.Name</td>
+                                <td>@measurementUnit.State</td>
+                                <td>
+                                    <a @onclick="@(() => ShowModalAsync(measurementUnit.Id, true))" class="btn btn-sm btn-warning"><i class="bi bi-pencil" /> Editar</a>
+                                    <button @onclick="() => DeleteAsync(measurementUnit)" class="btn btn-sm btn-danger"><i class="bi bi-trash" /> Borrar</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </Body>
+        </GenericList>
+    </div>
 </div>
-<GenericList MyList="MeasurementUnits">
-    <Body>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Codigo</th>
-                    <th>Nombre</th>
-                    <th>Estado</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var measurementUnit in MeasurementUnits!)
-                {
-                    <tr>
-                        <td>@measurementUnit.Code</td>
-                        <td>@measurementUnit.Name</td>
-                        <td>@measurementUnit.State</td>
-                        <td>
-                            <a @onclick="@(() => ShowModalAsync(measurementUnit.Id, true))" class="btn btn-warning">Editar</a>
-                            <button class="btn btn-danger" @onclick="@(() => DeleteAsync(measurementUnit))">Borrar</button>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </Body>
-</GenericList>
-
-
 
