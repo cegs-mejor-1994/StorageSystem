@@ -10,6 +10,7 @@
             <div class="md-3">
                 <label>Materia Prima:</label>                              
                 <InputText class="form-control" @bind-Value="rawMaterialName" disabled/>
+                <InputNumber @bind-Value="inputInventory.RawMaterialId" />
                 <ValidationMessage For="@(() => inputInventory.RawMaterialId)"/>
                 <div>
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#rawMaterialId">
@@ -37,6 +38,7 @@
                 <label>Proveedor:</label>                
                 <InputText class="form-control" @bind-Value="supplierName" disabled />
                 <ValidationMessage For="@(() => inputInventory.SupplierId)" />
+                <InputNumber @bind-Value="inputInventory.SupplierId" />
                 <div>
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#supplierId">
                         Seleccionar
@@ -64,10 +66,8 @@
                 <h5 class="modal-title">Proveedores </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" />
             </div>
-            <div class="modal-body">                
-                <CascadingValue Value="suppliers">
-                    <SuppliersListSelect OnSelectedSupplierChanged="ClickSupplierCallBack" />
-                </CascadingValue>                        
+            <div class="modal-body">                                
+            <SuppliersListSelect OnSelectedSupplierChanged="ClickSupplierCallBack" />                                     
             </div>
         </div>
     </div>
@@ -80,10 +80,8 @@
                 <h5 class="modal-title">Materias Primas </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" />
             </div>
-            <div class="modal-body">
-                <CascadingValue Value="rawMaterials">
-                    <RawMaterialsListSelect OnSelectedRawMaterialChanged="ClickRawMaterialCallBack" />
-                </CascadingValue>               
+            <div class="modal-body">                
+                <RawMaterialsListSelect OnSelectedRawMaterialChanged="ClickRawMaterialCallBack" />                            
             </div>
         </div>
     </div>
@@ -109,11 +107,11 @@
                         @foreach (var inputInventory in inputInventories!)
                         {
                             <tr>
-                                <td>@GetRawMaterialName(inputInventory.RawMaterialId)</td>
+                                <td>@inputInventory.RawMaterial!.Name</td>
                                 <td>@inputInventory.Amount</td>
                                 <td>@inputInventory.Batch</td>
                                 <td>@inputInventory.MatutingDate</td>
-                                <td>@GetSupplierName(inputInventory.SupplierId)</td>
+                                <td>@inputInventory.Supplier!.Name</td>
                                 <td>
                                     <button class="btn btn-danger" @onclick="@(() => DeleteAsync(inputInventory))">Borrar</button>
                                 </td>

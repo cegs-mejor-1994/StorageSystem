@@ -14,5 +14,7 @@ namespace StorageSystem.API.UnitOfWork.Implementations
         }
 
         public async Task<IEnumerable<Shared.Entities.Reference>> GetComboAsync() => await _rerefencesRepository.GetComboAsync();
+
+        public async Task<IEnumerable<Shared.Entities.Reference>> GetWithTypeReferencesAndMeasurementUnitAsync() => await _rerefencesRepository.GetWithTypeReferencesAndMeasurementUnitAsync();
     }
 }

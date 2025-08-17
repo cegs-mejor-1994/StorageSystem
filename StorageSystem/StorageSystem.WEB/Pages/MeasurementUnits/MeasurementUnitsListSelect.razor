@@ -1,4 +1,4 @@
-﻿<GenericList MyList="typeReferenceProducts">
+﻿<GenericList MyList="measurementUnits">
     <Body>
         <table class="table table-striped">
             <thead>
@@ -8,12 +8,13 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var typeReferenceProduct in typeReferenceProducts!)
+                @foreach (var measurementUnit in measurementUnits!)
                 {
                     <tr>
-                        <td>@typeReferenceProduct.Name</td>
+                        <td>@measurementUnit.Name</td>
                         <td>
-                            <button type="button" class="btn btn-secondary" @onclick="@(() => OnSelectedTypeReferenceProductChanged.InvokeAsync($"{typeReferenceProduct.Id}"))" data-bs-dismiss="modal">Seleccionar</button>
+                            <HxButton Color="ThemeColor.Secondary" data-bs-dismiss="modal" Text="Seleccionar" OnClick="@(() => OnSelectedMeasurementUnitChanged.InvokeAsync($"{measurementUnit.Id},{measurementUnit.Name}"))" />
+
                         </td>
                     </tr>
                 }
@@ -21,4 +22,3 @@
         </table>
     </Body>
 </GenericList>
-

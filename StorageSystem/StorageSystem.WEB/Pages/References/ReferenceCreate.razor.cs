@@ -10,23 +10,23 @@ namespace StorageSystem.WEB.Pages.References
     public partial class ReferenceCreate
     {
         private Reference reference = new();
-        
-        [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
+        private int measurementUnitId { get; set; }
+        private string? measurementUnitName { get; set; }
+
         [Inject] private IRepository Repository { get; set; } = null!;
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
-        [Inject] private NavigationManager navigationManager { get; set; } = null!;
+        [Inject] private NavigationManager NavigationManager { get; set; } = null!;
 
-        //private string typeReferenceProductName = "Producto de Referencia";
-        private List<TypeReferenceProduct>? typeReferenceProducts { get; set; }
-        private int typeReferenceProductId { get; set; }
-
-        protected override async Task OnInitializedAsync()
+        void ClickMeasurementUnitCallBack(string measurementUnit)
         {
-            await LoadTypeReferenceProductsAsync();
+            string[] valores = measurementUnit.Split(',');
+            measurementUnitId = int.Parse(valores[0]);
+            measurementUnitName = valores[1];
         }
 
         private async Task CreateAsync()
         {
+            reference.MeasurementUnitId = measurementUnitId;            
             var responseHttp = await Repository.PostAsync("/api/References", reference);
             if (responseHttp.Error)
             {
@@ -34,7 +34,7 @@ namespace StorageSystem.WEB.Pages.References
                 await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
                 return;
             }
-            await BlazoredModal.CloseAsync(ModalResult.Ok());
+            NavigationManager.NavigateTo("/references");
             var toast = SweetAlertService.Mixin(new SweetAlertOptions
             {
                 Toast = true,
@@ -44,30 +44,5 @@ namespace StorageSystem.WEB.Pages.References
             });
             await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro creado con éxito.");
         }
-
-        private async Task LoadTypeReferenceProductsAsync()
-        {
-            var responseHttp = await Repository.GetAsync<List<TypeReferenceProduct>>("/api/TypeReferenceProducts/combo");
-            if (responseHttp.Error)
-            {
-                var message = await responseHttp.GetErrorMessageAsync();
-                await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
-                return;
-            }
-
-            typeReferenceProducts = responseHttp.Response!;
-        }
-
-        /*void ClickTypeReferenceProductCallBack(string typeReferenceProduct)
-        {
-            typeReferenceProductId = int.Parse(typeReferenceProduct);
-            typeReferenceProductName = GetTypeReferenceProductName(typeReferenceProductId);
-        }
-
-        private string GetTypeReferenceProductName(int id)
-        {
-            var typeReferenceProduct = typeReferenceProducts!.FirstOrDefault(x => x.Id == id);
-            return typeReferenceProduct!.Name;
-        }*/
     }
 }

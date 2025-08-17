@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using StorageSystem.API.UnitOfWork.Implementations;
 using StorageSystem.API.UnitOfWork.Interfaces;
 using StorageSystem.Shared.Entities;
 
@@ -19,6 +20,12 @@ namespace StorageSystem.API.Controllers
         public async Task<IActionResult> GetComboAsync()
         {
             return Ok(await _referencesUnitOfWork.GetComboAsync());
+        }
+
+        [HttpGet("ReferenceWithMeasurementUnits")]
+        public async Task<IActionResult> GetWithTypeReferencesAndMeasurementUnitAsync()
+        {
+            return Ok(await _referencesUnitOfWork.GetWithTypeReferencesAndMeasurementUnitAsync());
         }
     }
 }

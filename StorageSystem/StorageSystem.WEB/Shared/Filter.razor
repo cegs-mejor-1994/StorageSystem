@@ -1,7 +1,5 @@
 ﻿<div class="mb-2" style="display: flex; flex-wrap: wrap; align-items: center;">
-    <input style="width: 400px;" type="text" class="form-control" placeholder="@PlaceHolder" @bind-value="TextToFilter" />
-    <button type="button" class="btn btn-outline-primary mx-1" @onclick="ApplyFilterAsync"><i class="bi bi-funnel" /> Filtrar</button>
-    <button type="button" class="btn btn-outline-danger" @onclick="CleanFilterAsync"><i class="bi bi-x-circle" /> Limpiar</button>
+    <HxInputText @bind-Value="TextToFilter" Placeholder="@PlaceHolder" style="width: 400px;"/>
+    <HxButton Text="Filtrar" Size="ButtonSize.Small" Color="ThemeColor.Primary" Icon="BootstrapIcon.Funnel" CssClass="mx-1" IconPlacement="ButtonIconPlacement.Start" OnClick="@(() => ApplyFilterAsync())" Outline="true"/>
+    <HxButton Text="Limpiar" Size="ButtonSize.Small" Color="ThemeColor.Danger" Icon="BootstrapIcon.XCircle" IconPlacement="ButtonIconPlacement.Start" OnClick="@(() => CleanFilterAsync())" Outline="true"/>
 </div>
-
-

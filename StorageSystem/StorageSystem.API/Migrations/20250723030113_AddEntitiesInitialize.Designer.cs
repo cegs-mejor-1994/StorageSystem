@@ -12,8 +12,8 @@ using StorageSystem.API.Data;
 namespace StorageSystem.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250623234823_AddInitializeEntities")]
-    partial class AddInitializeEntities
+    [Migration("20250723030113_AddEntitiesInitialize")]
+    partial class AddEntitiesInitialize
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -143,6 +143,29 @@ namespace StorageSystem.API.Migrations
                     b.ToTable("InputInventories");
                 });
 
+            modelBuilder.Entity("StorageSystem.Shared.Entities.Manufactury", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Amount")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<int>("ProductionGapId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductionGapId");
+
+                    b.ToTable("Manufacturies");
+                });
+
             modelBuilder.Entity("StorageSystem.Shared.Entities.MeasurementUnit", b =>
                 {
                     b.Property<int>("Id")
@@ -176,6 +199,34 @@ namespace StorageSystem.API.Migrations
                     b.ToTable("MeasurementUnits");
                 });
 
+            modelBuilder.Entity("StorageSystem.Shared.Entities.Order", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Amount")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<int>("ClientId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ManuFacturyId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClientId");
+
+                    b.HasIndex("ManuFacturyId");
+
+                    b.ToTable("Orders");
+                });
+
             modelBuilder.Entity("StorageSystem.Shared.Entities.Product", b =>
                 {
                     b.Property<int>("Id")
@@ -194,17 +245,45 @@ namespace StorageSystem.API.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                    b.Property<int>("ReferenceId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("Name")
                         .IsUnique();
 
+                    b.HasIndex("ReferenceId");
+
                     b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("StorageSystem.Shared.Entities.ProductionGap", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Amount")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<int>("InputInventoryId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RecipeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("InputInventoryId");
+
+                    b.HasIndex("RecipeId");
+
+                    b.ToTable("ProductionGaps");
                 });
 
             modelBuilder.Entity("StorageSystem.Shared.Entities.RawMaterial", b =>
@@ -250,6 +329,34 @@ namespace StorageSystem.API.Migrations
                     b.ToTable("RawMaterials");
                 });
 
+            modelBuilder.Entity("StorageSystem.Shared.Entities.Recipe", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Amount")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RawMaterialId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("RawMaterialId");
+
+                    b.ToTable("Recipes");
+                });
+
             modelBuilder.Entity("StorageSystem.Shared.Entities.Reference", b =>
                 {
                     b.Property<int>("Id")
@@ -258,19 +365,17 @@ namespace StorageSystem.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
+                    b.Property<int>("MeasurementUnitId")
+                        .HasColumnType("int");
 
-                    b.Property<string>("ReferenceType")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ReferenceType", "Name")
+                    b.HasIndex("MeasurementUnitId", "Name")
                         .IsUnique();
 
                     b.ToTable("References");
@@ -317,27 +422,6 @@ namespace StorageSystem.API.Migrations
                     b.ToTable("Suppliers");
                 });
 
-            modelBuilder.Entity("StorageSystem.Shared.Entities.TypeReferenceProduct", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.ToTable("TypeReferenceProducts");
-                });
-
             modelBuilder.Entity("StorageSystem.Shared.Entities.InputInventory", b =>
                 {
                     b.HasOne("StorageSystem.Shared.Entities.RawMaterial", "RawMaterial")
@@ -355,6 +439,66 @@ namespace StorageSystem.API.Migrations
                     b.Navigation("RawMaterial");
 
                     b.Navigation("Supplier");
+                });
+
+            modelBuilder.Entity("StorageSystem.Shared.Entities.Manufactury", b =>
+                {
+                    b.HasOne("StorageSystem.Shared.Entities.ProductionGap", "ProductionGap")
+                        .WithMany("Manufacturies")
+                        .HasForeignKey("ProductionGapId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("ProductionGap");
+                });
+
+            modelBuilder.Entity("StorageSystem.Shared.Entities.Order", b =>
+                {
+                    b.HasOne("StorageSystem.Shared.Entities.Client", "Client")
+                        .WithMany("Orders")
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("StorageSystem.Shared.Entities.Manufactury", "ManuFactury")
+                        .WithMany("Orders")
+                        .HasForeignKey("ManuFacturyId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Client");
+
+                    b.Navigation("ManuFactury");
+                });
+
+            modelBuilder.Entity("StorageSystem.Shared.Entities.Product", b =>
+                {
+                    b.HasOne("StorageSystem.Shared.Entities.Reference", "Reference")
+                        .WithMany("Products")
+                        .HasForeignKey("ReferenceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Reference");
+                });
+
+            modelBuilder.Entity("StorageSystem.Shared.Entities.ProductionGap", b =>
+                {
+                    b.HasOne("StorageSystem.Shared.Entities.InputInventory", "InputInventory")
+                        .WithMany("ProductionGaps")
+                        .HasForeignKey("InputInventoryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("StorageSystem.Shared.Entities.Recipe", "Recipe")
+                        .WithMany("ProductionGaps")
+                        .HasForeignKey("RecipeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("InputInventory");
+
+                    b.Navigation("Recipe");
                 });
 
             modelBuilder.Entity("StorageSystem.Shared.Entities.RawMaterial", b =>
@@ -376,19 +520,86 @@ namespace StorageSystem.API.Migrations
                     b.Navigation("MeasurementUnit");
                 });
 
+            modelBuilder.Entity("StorageSystem.Shared.Entities.Recipe", b =>
+                {
+                    b.HasOne("StorageSystem.Shared.Entities.Product", "Product")
+                        .WithMany("Recipes")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("StorageSystem.Shared.Entities.RawMaterial", "RawMaterial")
+                        .WithMany()
+                        .HasForeignKey("RawMaterialId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("RawMaterial");
+                });
+
+            modelBuilder.Entity("StorageSystem.Shared.Entities.Reference", b =>
+                {
+                    b.HasOne("StorageSystem.Shared.Entities.MeasurementUnit", "MeasurementUnit")
+                        .WithMany("References")
+                        .HasForeignKey("MeasurementUnitId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("MeasurementUnit");
+                });
+
             modelBuilder.Entity("StorageSystem.Shared.Entities.Category", b =>
                 {
                     b.Navigation("RawMaterials");
                 });
 
+            modelBuilder.Entity("StorageSystem.Shared.Entities.Client", b =>
+                {
+                    b.Navigation("Orders");
+                });
+
+            modelBuilder.Entity("StorageSystem.Shared.Entities.InputInventory", b =>
+                {
+                    b.Navigation("ProductionGaps");
+                });
+
+            modelBuilder.Entity("StorageSystem.Shared.Entities.Manufactury", b =>
+                {
+                    b.Navigation("Orders");
+                });
+
             modelBuilder.Entity("StorageSystem.Shared.Entities.MeasurementUnit", b =>
                 {
                     b.Navigation("RawMaterials");
+
+                    b.Navigation("References");
+                });
+
+            modelBuilder.Entity("StorageSystem.Shared.Entities.Product", b =>
+                {
+                    b.Navigation("Recipes");
+                });
+
+            modelBuilder.Entity("StorageSystem.Shared.Entities.ProductionGap", b =>
+                {
+                    b.Navigation("Manufacturies");
                 });
 
             modelBuilder.Entity("StorageSystem.Shared.Entities.RawMaterial", b =>
                 {
                     b.Navigation("InputInventories");
+                });
+
+            modelBuilder.Entity("StorageSystem.Shared.Entities.Recipe", b =>
+                {
+                    b.Navigation("ProductionGaps");
+                });
+
+            modelBuilder.Entity("StorageSystem.Shared.Entities.Reference", b =>
+                {
+                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("StorageSystem.Shared.Entities.Supplier", b =>

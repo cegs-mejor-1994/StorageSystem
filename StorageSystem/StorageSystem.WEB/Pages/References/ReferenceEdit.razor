@@ -1,4 +1,5 @@
 ﻿@page "/references/edit/{Id:int}"
+@using StorageSystem.WEB.Pages.MeasurementUnits
 
 <h3>Editar Referencia</h3>
 
@@ -8,25 +9,43 @@
 }
 else
 {   
-    <EditForm Model="reference" OnValidSubmit="EditAsync">
-        <DataAnnotationsValidator />
-        <div class="mb-3">
-            <label>Nombre de Referencia:</label>
-            <div>
-                <InputText class="form-control" @bind-Value="@reference.Name" />
-                <ValidationMessage For="@(() => reference.Name)" />
+    <EditForm Model="reference">
+    <DataAnnotationsValidator />
+    <div class="row">
+        <div class="col-6">
+            <div class="mb-3">                
+                <div>
+                    <HxInputText @bind-Value="@reference.Name" Label="Nombre de referencia" />
+                    <ValidationMessage For="@(() => reference.Name)" />
+                </div>
+            </div>
+            <div class="mb-3">           
+                <label>Materia Prima:</label>
+                <div>
+                    <HxInputText @bind-Value="measurementUnitName" Enabled="false" />
+                    <ValidationMessage For="@(() => reference.MeasurementUnitId)" />
+                    <HxButton Color="ThemeColor.Success" Text="Seleccionar" data-bs-toggle="modal" data-bs-target="#measurementUnitId" CssClass="mt-1"/>
+                    <br/>
+                </div>
+            </div>
+            <HxButton Text="Guardar Cambios" Color="ThemeColor.Primary" OnClick="@(() => EditAsync())" />            
+        </div>        
+    </div>
+</EditForm>
+
+<div class="modal fade" id="measurementUnitId" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Unidades de medida </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" />
+            </div>
+            <div class="modal-body">                
+                <MeasurementUnitsListSelect OnSelectedMeasurementUnitChanged="ClickMeasurementUnitCallBack" />
             </div>
         </div>
-        @*<div class="mb-3">
-            <label>Producto de Referencia:</label>
-            <div>
-                <InputText class="form-control" @bind-Value="@reference.ReferenceType" />
-                <ValidationMessage For="@(() => reference.ReferenceType)" />
-            </div>
-        </div>*@
-        <button class="btn btn-primary" type="submit">Guardar Cambios</button>
-    </EditForm>
-
+    </div>
+</div>
 }
 
 

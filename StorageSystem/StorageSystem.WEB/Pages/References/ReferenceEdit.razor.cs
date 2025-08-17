@@ -12,13 +12,21 @@ namespace StorageSystem.WEB.Pages.References
     public partial class ReferenceEdit
     {
         private Reference? reference;
+        private int measurementUnitId { get; set; }
+        private string? measurementUnitName { get; set; }
 
-        [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
         [Inject] private IRepository Repository { get; set; } = null!;
 
         [EditorRequired, Parameter] public int Id { get; set; }
+
+        void ClickMeasurementUnitCallBack(string measurementUnit)
+        {
+            string[] valores = measurementUnit.Split(',');
+            measurementUnitId = int.Parse(valores[0]);
+            measurementUnitName = valores[1];
+        }
 
         protected async override Task OnParametersSetAsync()
         {
@@ -50,7 +58,7 @@ namespace StorageSystem.WEB.Pages.References
                 await SweetAlertService.FireAsync("Error", message);
                 return;
             }
-            await BlazoredModal.CloseAsync(ModalResult.Ok());
+            NavigationManager.NavigateTo("/references");
 
             var toast = SweetAlertService.Mixin(new SweetAlertOptions
             {

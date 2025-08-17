@@ -21,8 +21,7 @@ namespace StorageSystem.API.Data
         public DbSet<RawMaterial> RawMaterials { get; set; }
         public DbSet<Recipe> Recipes { get; set; }
         public DbSet<Reference> References { get; set; }
-        public DbSet<Supplier> Suppliers { get; set; }
-        public DbSet<TypeReferenceProduct> TypeReferenceProducts { get; set; }            
+        public DbSet<Supplier> Suppliers { get; set; }                 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -37,9 +36,8 @@ namespace StorageSystem.API.Data
             modelBuilder.Entity<ProductionGap>();
             modelBuilder.Entity<RawMaterial>().HasIndex(r => r.Code).IsUnique();
             modelBuilder.Entity<Recipe>();
-            modelBuilder.Entity<Reference>().HasIndex(r => new { r.TypeReferenceProductId, r.MeasurementUnitId, r.Name }).IsUnique();
-            modelBuilder.Entity<Supplier>().HasIndex(s => s.Nit).IsUnique();
-            modelBuilder.Entity<TypeReferenceProduct>().HasIndex(p => p.Name).IsUnique();                        
+            modelBuilder.Entity<Reference>().HasIndex(r => new { r.MeasurementUnitId, r.Name }).IsUnique();
+            modelBuilder.Entity<Supplier>().HasIndex(s => s.Nit).IsUnique();                       
             DisableCascadingDelete(modelBuilder);                                                                           
         }
 

@@ -2,17 +2,16 @@ using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components;
 using StorageSystem.Shared.Entities;
 using StorageSystem.WEB.Repositories;
+using System.Net;
 
 namespace StorageSystem.WEB.Pages.InputInventories
 {
     public partial class InputInventoryCreate
-    {        
+    {
         private List<InputInventory> inputInventories = new();
         private InputInventory inputInventory = new();       
         private string supplierName = "Proveedor";
         private string rawMaterialName = "Materia prima";        
-        private List<RawMaterial>? rawMaterials { get; set; }
-        private List<Supplier>? suppliers { get; set; }
 
         private int rawMaterialId { get; set; } 
         private int supplierId { get; set; }
@@ -21,48 +20,20 @@ namespace StorageSystem.WEB.Pages.InputInventories
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
 
-        protected override async Task OnInitializedAsync()
-        {
-            await LoadRawMaterialsAsync();
-            await LoadSuppliersAsync();
-        }
-
-        private async Task LoadRawMaterialsAsync()
-        {
-            var responseHttp = await Repository.GetAsync<List<RawMaterial>>("/api/RawMaterials/combo");
-            if (responseHttp.Error)
-            {
-                var message = await responseHttp.GetErrorMessageAsync();
-                await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
-                return;
-            }
-
-            rawMaterials = responseHttp.Response!;
-        }
-
-        private async Task LoadSuppliersAsync()
-        {
-            var responseHttp = await Repository.GetAsync<List<Supplier>>("/api/Suppliers/combo");
-            if (responseHttp.Error)
-            {
-                var message = await responseHttp.GetErrorMessageAsync();
-                await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
-                return;
-            }
-            suppliers = responseHttp.Response;
-        }
 
         void ClickSupplierCallBack (string supplier)
         {            
-            supplierId = int.Parse(supplier);   
-            supplierName = GetSupplierName(supplierId);
+            string[] valores = supplier.Split(',');
+            supplierId = int.Parse(valores[0]);
+            supplierName = valores[1];             
         }
 
         void ClickRawMaterialCallBack(string rawMaterial)
-        {
-            rawMaterialId = int.Parse(rawMaterial);
-            rawMaterialName = GetRawMaterialName(rawMaterialId);
-        }      
+        {            
+            string[] valores = rawMaterial.Split(',');
+            rawMaterialId = int.Parse(valores[0]);
+            rawMaterialName = valores[1];              
+        }
 
         private async Task CreateAsync()
         {
@@ -78,8 +49,7 @@ namespace StorageSystem.WEB.Pages.InputInventories
                 if (inputInventories.Count > 0)
                 {
                     foreach (var inputInventory in inputInventories)
-                    {
-                        //measurementUnit.DateRegister = DateTime.Now;
+                    {                        
                         var responseHttp = await Repository.PostAsync("/api/inputInventories", inputInventory);
                         if (responseHttp.Error)
                         {
@@ -131,18 +101,6 @@ namespace StorageSystem.WEB.Pages.InputInventories
         private void DeleteAsync(InputInventory input)
         {
             inputInventories.Remove(input);                     
-        }
-
-        private string GetSupplierName(int id)
-        {
-            var supplier = suppliers!.FirstOrDefault(x => x.Id == id);
-            return supplier!.Name;
-        }
-
-        private string GetRawMaterialName(int id)
-        {
-            var rawMaterial = rawMaterials!.FirstOrDefault(x => x.Id == id);
-            return rawMaterial!.Name;
         }
     }
 }

@@ -13,7 +13,7 @@
                     <tr>
                         <td>@rawMaterial.Name</td>
                         <td>
-                            <button type="button" class="btn btn-secondary" @onclick="@(() => OnSelectedRawMaterialChanged.InvokeAsync($"{rawMaterial.Id}"))" data-bs-dismiss="modal">Seleccionar</button>
+                            <HxButton Color="ThemeColor.Secondary" data-bs-dismiss="modal" Text="Seleccionar" OnClick="@(() => OnSelectedRawMaterialChanged.InvokeAsync($"{rawMaterial.Id},{rawMaterial.Name}"))" />
                         </td>
                     </tr>
                 }

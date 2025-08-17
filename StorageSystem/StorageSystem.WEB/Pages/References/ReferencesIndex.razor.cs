@@ -10,46 +10,130 @@ namespace StorageSystem.WEB.Pages.References
 {
     public partial class ReferencesIndex
     {
-        [CascadingParameter] IModalService Modal { get; set; } = default!;
-        [Inject] private IRepository Repository { get; set; } = null!;
-        [Inject] private NavigationManager NavigationManager { get; set; } = null!;
-        [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
-        public List<Reference>? References { get; set; }
+        private int currentPage = 1;
+        private int totalPages;
 
-        protected async override Task OnInitializedAsync()
+        [Parameter, SupplyParameterFromQuery] public string Page { get; set; } = string.Empty;
+        [Parameter, SupplyParameterFromQuery] public string Filter { get; set; } = string.Empty;
+        [Parameter, SupplyParameterFromQuery] public int RecordsNumber { get; set; } = 8;
+
+        [Inject] private IRepository Repository { get; set; } = null!;
+        [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
+        [Inject] private NavigationManager NavigationManager { get; set; } = null!;
+
+        [CascadingParameter] IModalService Modal { get; set; } = default!;
+        public List<Reference>? References { get; set; }        
+        public List<MeasurementUnit>? MeasurementUnits { get; set; }
+
+        protected override async Task OnInitializedAsync()
         {
-            await LoadAsync();
+            await LoadAsync();            
+            await LoadMeasurementUnitsAsync();
         }
 
-        private async Task LoadAsync()
+        private async Task LoadMeasurementUnitsAsync()
         {
-            var responseHttp = await Repository.GetAsync<List<Reference>>("api/References");
+            var responseHttp = await Repository.GetAsync<List<MeasurementUnit>>("/api/MeasurementUnits/combo");
             if (responseHttp.Error)
             {
                 var message = await responseHttp.GetErrorMessageAsync();
-                await SweetAlertService.FireAsync("Error!", message, SweetAlertIcon.Error);
+                await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
                 return;
             }
-            References = responseHttp.Response;
+
+            MeasurementUnits = responseHttp.Response!;
         }
 
-        private async Task ShowModalAsync(int id = 0, bool isEdit = false)
+        private string GetMeasurementUnitsCod(int id)
         {
-            IModalReference modalReference;
-            if (isEdit)
-            {
-                modalReference = Modal.Show<ReferenceEdit>(string.Empty, new ModalParameters().Add("Id", id));
-            }
-            else
-            {
-                modalReference = Modal.Show<ReferenceCreate>();
-            }
+            var measurementUnit = MeasurementUnits!.FirstOrDefault(x => x.Id == id);
+            return measurementUnit!.Code;
+        }
 
-            var result = await modalReference.Result;
-            if (result.Confirmed)
+        private async Task FilterCallBack(string filter)
+        {
+            Filter = filter;
+            await ApplyFilterAsync();
+            StateHasChanged();
+        }
+
+        private async Task SelectedRecordsNumberAsync(int recordsnumber)
+        {
+            RecordsNumber = recordsnumber;
+            int page = 1;
+            await LoadAsync(page);
+            await SelectedPageAsync(page);
+        }
+
+        private async Task SelectedPageAsync(int page)
+        {
+            currentPage = page;
+            await LoadAsync(page);
+        }
+
+        private async Task LoadAsync(int page = 1)
+        {
+            if (!string.IsNullOrWhiteSpace(Page))
             {
-                await LoadAsync();
+                page = Convert.ToInt32(Page);
             }
+            var ok = await LoadListAsync(page);
+            if (ok)
+            {
+                await LoadPagesAsync();
+            }
+        }
+
+        private void ValidateRecordsNumber(int recordsnumber)
+        {
+            if (recordsnumber == 0)
+            {
+                RecordsNumber = 10;
+            }
+        }       
+
+        private async Task<bool> LoadListAsync(int page)
+        {
+            ValidateRecordsNumber(RecordsNumber);
+            var url = $"api/References/?page={page}&recordsnumber={RecordsNumber}";
+            if (!string.IsNullOrWhiteSpace(Filter))
+            {
+                url += $"&filter={Filter}";
+            }
+            var responseHttp = await Repository.GetAsync<List<Reference>>(url);
+            if (responseHttp.Error)
+            {
+                var messageError = await responseHttp.GetErrorMessageAsync();
+                await SweetAlertService.FireAsync("Error", messageError, SweetAlertIcon.Error);
+                return false;
+            }
+            References = responseHttp.Response;
+            return true;
+        }
+
+        private async Task LoadPagesAsync()
+        {
+            ValidateRecordsNumber(RecordsNumber);
+            var url = $"api/References/totalPages?recordsnumber={RecordsNumber}";
+            if (!string.IsNullOrWhiteSpace(Filter))
+            {
+                url += $"&filter={Filter}";
+            }
+            var responseHttp = await Repository.GetAsync<int>(url);
+            if (responseHttp.Error)
+            {
+                var messageError = await responseHttp.GetErrorMessageAsync();
+                await SweetAlertService.FireAsync("Error", messageError, SweetAlertIcon.Error);
+                return;
+            }
+            totalPages = responseHttp.Response;
+        }
+
+        private async Task ApplyFilterAsync()
+        {
+            int page = 1;
+            await LoadAsync(page);
+            await SelectedPageAsync(page);
         }
 
         private async Task DeleteAsync(Reference reference)
@@ -57,7 +141,7 @@ namespace StorageSystem.WEB.Pages.References
             var result = await SweetAlertService.FireAsync(new SweetAlertOptions
             {
                 Title = "Confirmacion",
-                Text = $"¿Estas seguro de querer eliminar la referencia: {reference.Name}?",
+                Text = $"¿Estas seguro que quieres borrar la referencia de producto: {reference.Name}?",
                 Icon = SweetAlertIcon.Question,
                 ShowCancelButton = true,
             });
@@ -70,9 +154,9 @@ namespace StorageSystem.WEB.Pages.References
             var responseHttp = await Repository.DeleteAsync<Reference>($"api/References/{reference.Id}");
             if (responseHttp.Error)
             {
-                if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
+                if (responseHttp.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
-                    NavigationManager.NavigateTo("/references");
+                    NavigationManager.NavigateTo("/");
                 }
                 else
                 {
@@ -82,7 +166,6 @@ namespace StorageSystem.WEB.Pages.References
                 return;
             }
             await LoadAsync();
-
             var toast = SweetAlertService.Mixin(new SweetAlertOptions
             {
                 Toast = true,
@@ -90,7 +173,7 @@ namespace StorageSystem.WEB.Pages.References
                 ShowConfirmButton = true,
                 Timer = 3000,
             });
-            await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro eliminado correctamente");
+            await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro borrado con exito");
         }
     }
 }

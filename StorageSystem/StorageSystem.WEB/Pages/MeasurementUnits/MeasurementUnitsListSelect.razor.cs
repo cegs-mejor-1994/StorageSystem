@@ -3,31 +3,31 @@ using Microsoft.AspNetCore.Components;
 using StorageSystem.Shared.Entities;
 using StorageSystem.WEB.Repositories;
 
-namespace StorageSystem.WEB.Pages.Suppliers
+namespace StorageSystem.WEB.Pages.MeasurementUnits
 {
-    public partial class SuppliersListSelect
+    public partial class MeasurementUnitsListSelect
     {
-        [CascadingParameter] List<Supplier>? suppliers { get; set; }
-        [Parameter] public EventCallback<string> OnSelectedSupplierChanged { get; set; }
+        private List<MeasurementUnit>? measurementUnits { get; set; }
+        [Parameter] public EventCallback<string> OnSelectedMeasurementUnitChanged { get; set; }
 
         [Inject] private IRepository Repository { get; set; } = null!;
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
 
         protected override async Task OnInitializedAsync()
         {
-            await LoadSuppliersAsync();
+            await LoadMeasurementUnitsAsync();
         }
 
-        private async Task LoadSuppliersAsync()
+        private async Task LoadMeasurementUnitsAsync()
         {
-            var responseHttp = await Repository.GetAsync<List<Supplier>>("/api/Suppliers/combo");
+            var responseHttp = await Repository.GetAsync<List<MeasurementUnit>>("/api/MeasurementUnits/combo");
             if (responseHttp.Error)
             {
                 var message = await responseHttp.GetErrorMessageAsync();
                 await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
                 return;
             }
-            suppliers = responseHttp.Response;
+            measurementUnits = responseHttp.Response;
         }
     }
 }

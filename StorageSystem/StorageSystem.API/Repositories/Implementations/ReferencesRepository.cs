@@ -59,5 +59,13 @@ namespace StorageSystem.API.Repositories.Implementations
                 Result = totalPages
             };
         }
+
+        public async Task<IEnumerable<Reference>> GetWithTypeReferencesAndMeasurementUnitAsync()
+        {
+            return await _context.References
+                .OrderBy(r => r.Name)                
+                .Include(r => r.MeasurementUnit)
+                .ToListAsync();
+        }
     }
 }

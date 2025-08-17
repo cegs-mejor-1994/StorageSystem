@@ -5,5 +5,6 @@ namespace StorageSystem.API.UnitOfWork.Interfaces
     public interface IReferencesUnitOfWork
     {
         Task<IEnumerable<Reference>> GetComboAsync();
+        Task<IEnumerable<Reference>> GetWithTypeReferencesAndMeasurementUnitAsync();
     }
 }

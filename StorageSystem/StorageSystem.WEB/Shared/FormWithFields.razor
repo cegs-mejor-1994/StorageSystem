@@ -4,23 +4,21 @@
 
 <EditForm EditContext="editContext" OnValidSubmit="OnValidSubmit">
     <DataAnnotationsValidator/>
-    <div class="mb-3">
-        <label>Codigo de @Label</label>
-        <div>
-            <InputText class="form-control" @bind-Value="@Model.Code" />
-            <ValidationMessage For="@(() => Model.Code)" />
-        </div>
+    <div class="mb-3">        
+        <label class="form-label">Codigo de @Label</label>
+        <HxInputText @bind-Value="@Model.Code"/>
+        <ValidationMessage For="@(() => Model.Code)" />
     </div>
     <div class="mb-3">
-        <label>Nombre de @Label</label>
+        <label class="form-label">Nombre de @Label</label>
         <div>
-            <InputText class="form-control" @bind-Value="@Model.Name" />
+            <HxInputText @bind-Value="@Model.Name" />
             <ValidationMessage For="@(() => Model.Name)" />
         </div>
     </div>
     <div class="d-grid gap-2 d-md-block">
-        <button class="btn btn-primary" type="submit">Guardar Cambios</button>
-        <button class="btn btn-success" @onclick="ReturnAction">Regresar</button>
+        <HxSubmit Color="ThemeColor.Primary" Text="Guardar Cambios" />
+        <HxButton Color="ThemeColor.Success" Text="Regresar" OnClick="ReturnAction"/>       
     </div>
 </EditForm>
 

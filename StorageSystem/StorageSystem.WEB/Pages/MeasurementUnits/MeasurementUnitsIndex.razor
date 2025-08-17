@@ -1,14 +1,12 @@
 ﻿@page "/measurementUnits"
 <PageTitle>Unidades de Medida</PageTitle>
-<div class="card">
-    <div class="card-header">
-        <span>
-            <i class="bi bi-list-check"></i> Unidades de Medida
-            <a @onclick="@(() => ShowModalAsync())" class="btn btn-primary btn-sm float-end"><i class="bi bi-plus-square" /> Nueva Unidad de Medida</a>
-        </span>
-    </div>
-    <div class="card-body">
-        <Filter PlaceHolder="Buscar unidad de Medida..." Callback="@FilterCallBack" />
+<HxCard>
+    <HeaderTemplate>
+        <HxIcon Icon="@BootstrapIcon.ListCheck" /> Unidades de Medida
+        <HxButton CssClass="float-end" Text="Nueva Unidad de Medida" Color="ThemeColor.Primary" Size="ButtonSize.Small" Icon="BootstrapIcon.PlusSquare" IconPlacement="ButtonIconPlacement.Start" OnClick="@(() => ShowModalAsync())" />
+    </HeaderTemplate>
+    <BodyTemplate>
+        <Filter PlaceHolder="Buscar Unidad de Medida..." Callback="@FilterCallBack" />
         <GenericList MyList="MeasurementUnits">
             <Body>
                 <Pagination CurrentPage="currentPage" TotalPages="totalPages" SelectedPage="SelectedPageAsync" RecordsNumber="SelectedRecordsNumberAsync" />
@@ -30,7 +28,7 @@
                                 <td>@measurementUnit.State</td>
                                 <td>
                                     <a @onclick="@(() => ShowModalAsync(measurementUnit.Id, true))" class="btn btn-sm btn-warning"><i class="bi bi-pencil" /> Editar</a>
-                                    <button @onclick="() => DeleteAsync(measurementUnit)" class="btn btn-sm btn-danger"><i class="bi bi-trash" /> Borrar</button>
+                                    <HxButton Text="Borrar" Icon="BootstrapIcon.Trash" IconPlacement="ButtonIconPlacement.Start" Color="ThemeColor.Danger" Size="ButtonSize.Small" OnClick="@(() => DeleteAsync(measurementUnit))" />
                                 </td>
                             </tr>
                         }
@@ -38,6 +36,6 @@
                 </table>
             </Body>
         </GenericList>
-    </div>
-</div>
+    </BodyTemplate>
+</HxCard>
 

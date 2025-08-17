@@ -1,20 +1,18 @@
 ﻿@page "/suppliers"
 <PageTitle>Proveedores</PageTitle>
-<div class="card">
-    <div class="card-header">
-        <span>
-            <i class="bi bi-list-check"></i> Proveedores
-            <a @onclick="@(() => ShowModalAsync())" class="btn btn-primary btn-sm float-end"><i class="bi bi-plus-square" /> Nuevo Proveedor</a>
-        </span>
-    </div>
-    <div class="card-body">
-        <Filter PlaceHolder="Buscar proveedor..." Callback="@FilterCallBack" />
+<HxCard>
+    <HeaderTemplate>
+        <HxIcon Icon="@BootstrapIcon.ListCheck" /> Proveedores
+        <HxButton CssClass="float-end" Text="Nuevo Proveedor" Color="ThemeColor.Primary" Size="ButtonSize.Small" Icon="BootstrapIcon.PlusSquare" IconPlacement="ButtonIconPlacement.Start" OnClick="@(() => ShowModalAsync())" />
+    </HeaderTemplate>
+    <BodyTemplate>
+        <Filter PlaceHolder="Buscar Proveedor..." Callback="@FilterCallBack" />
         <GenericList MyList="Suppliers">
             <Body>
                 <Pagination CurrentPage="currentPage" TotalPages="totalPages" SelectedPage="SelectedPageAsync" RecordsNumber="SelectedRecordsNumberAsync" />
                 <table class="table table-striped">
                     <thead>
-                        <tr>
+                        <tr>                            
                             <th>Nit</th>
                             <th>Nombre</th>
                             <th>Direccion</th>
@@ -26,7 +24,7 @@
                     <tbody>
                         @foreach (var supplier in Suppliers!)
                         {
-                            <tr>
+                            <tr>                                
                                 <td>@supplier.Nit</td>
                                 <td>@supplier.Name</td>
                                 <td>@supplier.Address</td>
@@ -34,7 +32,7 @@
                                 <td>@supplier.City</td>
                                 <td>
                                     <a @onclick="@(() => ShowModalAsync(supplier.Id, true))" class="btn btn-sm btn-warning"><i class="bi bi-pencil" /> Editar</a>
-                                    <button @onclick="() => DeleteAsync(supplier)" class="btn btn-sm btn-danger"><i class="bi bi-trash" /> Borrar</button>
+                                    <HxButton Text="Borrar" Icon="BootstrapIcon.Trash" IconPlacement="ButtonIconPlacement.Start" Color="ThemeColor.Danger" Size="ButtonSize.Small" OnClick="@(() => DeleteAsync(supplier))" />
                                 </td>
                             </tr>
                         }
@@ -42,6 +40,8 @@
                 </table>
             </Body>
         </GenericList>
-    </div>
-</div>
+    </BodyTemplate>
+</HxCard>
+
+
 

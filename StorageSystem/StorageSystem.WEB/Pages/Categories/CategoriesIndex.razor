@@ -1,20 +1,18 @@
 ﻿@page "/categories"
 <PageTitle>Categorias</PageTitle>
-<div class="card">
-    <div class="card-header">
-        <span>
-            <i class="bi bi-list-check"></i> Categorias
-            <a @onclick="@(() => ShowModalAsync())" class="btn btn-primary btn-sm float-end"><i class="bi bi-plus-square" /> Nueva Categoria</a>
-        </span>
-    </div>
-    <div class="card-body">
+<HxCard>
+    <HeaderTemplate>
+        <HxIcon Icon="@BootstrapIcon.ListCheck"/> Categorias
+        <HxButton CssClass="float-end" Text="Nueva Categoria" Color="ThemeColor.Primary" Size="ButtonSize.Small" Icon="BootstrapIcon.PlusSquare" IconPlacement="ButtonIconPlacement.Start" OnClick="@(() => ShowModalAsync())" />
+    </HeaderTemplate>
+    <BodyTemplate>
         <Filter PlaceHolder="Buscar categoria..." Callback="@FilterCallBack" />
         <GenericList MyList="Categories">
             <Body>
                 <Pagination CurrentPage="currentPage" TotalPages="totalPages" SelectedPage="SelectedPageAsync" RecordsNumber="SelectedRecordsNumberAsync" />
                 <table class="table table-striped">
                     <thead>
-                        <tr>    
+                        <tr>
                             <th>Codigo</th>
                             <th>Categoria</th>
                             <th style="width:210px">Acciones</th>
@@ -27,8 +25,8 @@
                                 <td>@category.Code</td>
                                 <td>@category.Name</td>
                                 <td>
-                                    <a @onclick="@(() => ShowModalAsync(category.Id, true))" class="btn btn-sm btn-warning"><i class="bi bi-pencil" /> Editar</a>
-                                    <button @onclick="() => DeleteAsync(category)" class="btn btn-sm btn-danger"><i class="bi bi-trash" /> Borrar</button>
+                                    <a @onclick="@(() => ShowModalAsync(category.Id, true))" class="btn btn-sm btn-warning"><i class="bi bi-pencil" /> Editar</a>                     
+                                    <HxButton Text="Borrar" Icon="BootstrapIcon.Trash" IconPlacement="ButtonIconPlacement.Start" Color="ThemeColor.Danger" Size="ButtonSize.Small" OnClick="@(() => DeleteAsync(category))"/>
                                 </td>
                             </tr>
                         }
@@ -36,6 +34,6 @@
                 </table>
             </Body>
         </GenericList>
-    </div>
-</div>
+    </BodyTemplate>
+</HxCard>
 

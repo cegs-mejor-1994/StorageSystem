@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace StorageSystem.Shared.Entities
 {
@@ -18,9 +13,6 @@ namespace StorageSystem.Shared.Entities
 
         public int MeasurementUnitId { get; set; }
         public MeasurementUnit? MeasurementUnit { get; set; }
-
-        public int TypeReferenceProductId { get; set; }
-        public TypeReferenceProduct? TypeReferenceProduct { get; set; }
 
         public ICollection<Product>? Products { get; set; }
     }

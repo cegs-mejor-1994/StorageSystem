@@ -3,42 +3,40 @@
 <EditForm EditContext="editContext" OnValidSubmit="OnValidSubmit">
     <DataAnnotationsValidator />
     <div class="mb-3">
-        <label>Codigo de Proveedor:</label>
+        <label class="form-label">Identificcion de Proveedor:</label>
         <div>
-            <InputText class="form-control" @bind-Value="@Supplier.Nit" />
+            <HxInputText @bind-Value="@Supplier.Nit" />
             <ValidationMessage For="@(() => Supplier.Nit)" />
         </div>
     </div>
     <div class="mb-3">
-        <label>Nombre de Proveedor</label>
+        <label class="form-label">Nombre de Proveedor:</label>
         <div>
-            <InputText class="form-control" @bind-Value="@Supplier.Name" />
+            <HxInputText @bind-Value="@Supplier.Name" />
             <ValidationMessage For="@(() => Supplier.Name)" />
         </div>
     </div>
     <div class="mb-3">
-        <label>Direccion de Proveedor</label>
+        <label class="form-label">Direccion de Proveedor:</label>
         <div>
-            <InputText class="form-control" @bind-Value="@Supplier.Address" />
+            <HxInputText @bind-Value="@Supplier.Address" />
             <ValidationMessage For="@(() => Supplier.Address)" />
         </div>
     </div>
     <div class="mb-3">
-        <label>Telefono de Proveedor</label>
+        <label class="form-label">Telefono de Proveedor:</label>
         <div>
-            <InputText class="form-control" @bind-Value="@Supplier.Phone" />
+            <HxInputText @bind-Value="@Supplier.Phone" />
             <ValidationMessage For="@(() => Supplier.Phone)" />
         </div>
     </div>
     <div class="mb-3">
-        <label>Ciudad de Proveedor</label>
+        <label class="form-label">Ciudad de Proveedor:</label>
         <div>
-            <InputText class="form-control" @bind-Value="@Supplier.City" />
+            <HxInputText @bind-Value="@Supplier.City" />
             <ValidationMessage For="@(() => Supplier.City)" />
         </div>
     </div>
-    <button class="btn btn-primary" type="submit">Guardar Cambios</button>
-    <button class="btn btn-success" @onclick="ReturnAction">Regresar</button>
+    <HxSubmit Color="ThemeColor.Primary" Text="Guardar Cambios" />
+    <HxButton Color="ThemeColor.Success" Text="Regresar" OnClick="ReturnAction" />
 </EditForm>
-
-
