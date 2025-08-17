@@ -28,7 +28,7 @@ namespace StorageSystem.WEB.Pages.InputInventories
 
         protected async override Task OnParametersSetAsync()
         {
-            var responseHttp = await Repository.GetAsync<InputInventory>($"/api/inputInventories/{Id}");
+            var responseHttp = await Repository.GetAsync<InputInventory>($"/api/InputInventories/{Id}");
             if (responseHttp.Error)
             {
                 if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
@@ -51,7 +51,7 @@ namespace StorageSystem.WEB.Pages.InputInventories
 
         private async Task EditAsync()
         {
-            var responseHttp = await Repository.PutAsync($"/api/inputInventories", inputInventory);
+            var responseHttp = await Repository.PutAsync($"/api/InputInventories", inputInventory);
             if (responseHttp.Error)
             {
                 var message = await responseHttp.GetErrorMessageAsync();

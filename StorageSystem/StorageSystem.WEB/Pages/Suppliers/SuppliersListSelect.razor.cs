@@ -7,7 +7,7 @@ namespace StorageSystem.WEB.Pages.Suppliers
 {
     public partial class SuppliersListSelect
     {
-        [CascadingParameter] List<Supplier>? suppliers { get; set; }
+        private List<Supplier>? suppliers { get; set; }
         [Parameter] public EventCallback<string> OnSelectedSupplierChanged { get; set; }
 
         [Inject] private IRepository Repository { get; set; } = null!;

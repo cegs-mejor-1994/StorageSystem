@@ -9,8 +9,7 @@
         <div class="col-6">
             <div class="md-3">
                 <label>Materia Prima:</label>                              
-                <InputText class="form-control" @bind-Value="rawMaterialName" disabled/>
-                <InputNumber @bind-Value="inputInventory.RawMaterialId" />
+                <InputText class="form-control" @bind-Value="rawMaterialName" disabled/>                
                 <ValidationMessage For="@(() => inputInventory.RawMaterialId)"/>
                 <div>
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#rawMaterialId">
@@ -37,8 +36,7 @@
             <div class="mb-3">
                 <label>Proveedor:</label>                
                 <InputText class="form-control" @bind-Value="supplierName" disabled />
-                <ValidationMessage For="@(() => inputInventory.SupplierId)" />
-                <InputNumber @bind-Value="inputInventory.SupplierId" />
+                <ValidationMessage For="@(() => inputInventory.SupplierId)" />                
                 <div>
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#supplierId">
                         Seleccionar
@@ -52,10 +50,9 @@
                     <ValidationMessage For="@(() => inputInventory.MatutingDate)" />
                 </div>
             </div>
-        </div>
-
-        <button class="btn btn-info" type="button" @onclick="@(() => AddAsync(inputInventory))">Agregar</button>
-        <a href="/inputInventories" class="btn btn-success">Regresar</a>
+        </div>       
+        <button class="btn btn-primary form-control" type="button" @onclick="@(() => CreateAsync())">Guardar Cambios</button>
+        <a href="/inputInventories" class="btn btn-success">Regresar</a>           
     </div>
 </EditForm>
 
@@ -81,48 +78,8 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" />
             </div>
             <div class="modal-body">                
-                <RawMaterialsListSelect OnSelectedRawMaterialChanged="ClickRawMaterialCallBack" />                            
+                <RawMaterialsListSelect OnSelectedRawMaterialChanged="ClickRawMaterialCallBack"/>                            
             </div>
         </div>
     </div>
 </div>
-
-@if (inputInventories != null)
-{    
-    <GenericList MyList="inputInventories">
-        <Body>         
-            <div class="table-responsive-md">
-                <table class="table table-striped overflow-auto">
-                    <thead>
-                        <tr>
-                            <th>Materia Prima</th>
-                            <th>Cantidad</th>
-                            <th>Lote</th>
-                            <th>Fecha de Vencimiento</th>
-                            <th>Proveedor</th>
-                            <th style="width: 168px">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var inputInventory in inputInventories!)
-                        {
-                            <tr>
-                                <td>@inputInventory.RawMaterial!.Name</td>
-                                <td>@inputInventory.Amount</td>
-                                <td>@inputInventory.Batch</td>
-                                <td>@inputInventory.MatutingDate</td>
-                                <td>@inputInventory.Supplier!.Name</td>
-                                <td>
-                                    <button class="btn btn-danger" @onclick="@(() => DeleteAsync(inputInventory))">Borrar</button>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-                <div class="text-center">
-                    <button class="btn btn-primary form-control" type="button" @onclick="@(() => CreateAsync())">Guardar Cambios</button>
-                </div>
-            </div>
-        </Body>
-    </GenericList>
-}

@@ -1,14 +1,14 @@
+using Blazored.Modal;
+using Blazored.Modal.Services;
 using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components;
 using StorageSystem.Shared.Entities;
 using StorageSystem.WEB.Repositories;
-using System.Net;
 
 namespace StorageSystem.WEB.Pages.InputInventories
 {
     public partial class InputInventoryCreate
-    {
-        private List<InputInventory> inputInventories = new();
+    {        
         private InputInventory inputInventory = new();       
         private string supplierName = "Proveedor";
         private string rawMaterialName = "Materia prima";        
@@ -21,14 +21,14 @@ namespace StorageSystem.WEB.Pages.InputInventories
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
 
 
-        void ClickSupplierCallBack (string supplier)
+        private void ClickSupplierCallBack (string supplier)
         {            
             string[] valores = supplier.Split(',');
             supplierId = int.Parse(valores[0]);
             supplierName = valores[1];             
         }
 
-        void ClickRawMaterialCallBack(string rawMaterial)
+        private void ClickRawMaterialCallBack(string rawMaterial)
         {            
             string[] valores = rawMaterial.Split(',');
             rawMaterialId = int.Parse(valores[0]);
@@ -43,20 +43,12 @@ namespace StorageSystem.WEB.Pages.InputInventories
                 {
                     inputInventory.SupplierId = supplierId;
                     inputInventory.RawMaterialId = rawMaterialId;
-                    AddAsync(inputInventory);                    
-                }
-                
-                if (inputInventories.Count > 0)
-                {
-                    foreach (var inputInventory in inputInventories)
-                    {                        
-                        var responseHttp = await Repository.PostAsync("/api/inputInventories", inputInventory);
-                        if (responseHttp.Error)
-                        {
-                            var message = await responseHttp.GetErrorMessageAsync();
-                            await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
-                            return;
-                        }
+                    var responseHttp = await Repository.PostAsync("/api/InputInventories", inputInventory);
+                    if (responseHttp.Error)
+                    {
+                        var message = await responseHttp.GetErrorMessageAsync();
+                        await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+                        return;
                     }
                     var toast = SweetAlertService.Mixin(new SweetAlertOptions
                     {
@@ -66,8 +58,14 @@ namespace StorageSystem.WEB.Pages.InputInventories
                         Timer = 3000
                     });
                     await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro creado con éxito.");
-                    NavigationManager.NavigateTo("/inputInventories");
+                    supplierName = "Proveedor";
+                    rawMaterialName = "Materia prima";
+                    inputInventory = new InputInventory();
+                } else {                     
+                    await SweetAlertService.FireAsync("Error", "Todos los campos son obligatorios.", SweetAlertIcon.Error);
+                    return;
                 }
+
                 
             }
             catch (Exception ex)
@@ -75,32 +73,6 @@ namespace StorageSystem.WEB.Pages.InputInventories
                 await SweetAlertService.FireAsync("Error", ex.Message, SweetAlertIcon.Error);
                 return;
             }                       
-        }
-
-        private async void AddAsync(InputInventory input)
-        {
-            try
-            {
-                if (string.IsNullOrWhiteSpace(inputInventory.Amount) || string.IsNullOrWhiteSpace(inputInventory.Batch) || inputInventory.MatutingDate == DateTime.MinValue || rawMaterialId == 0 || supplierId == 0)
-                {
-                    throw new Exception("Debes llenar el formulario para guardar");
-                }
-                input.SupplierId = supplierId;
-                input.RawMaterialId = rawMaterialId;
-                inputInventories.Add(input);
-                inputInventory = new();
-                rawMaterialName = "Materia prima";
-                supplierName = "Proveedor";
-            }
-            catch (Exception ex)
-            {
-                await SweetAlertService.FireAsync("Error", ex.Message, SweetAlertIcon.Error);
-            }           
-        }
-
-        private void DeleteAsync(InputInventory input)
-        {
-            inputInventories.Remove(input);                     
         }
     }
 }

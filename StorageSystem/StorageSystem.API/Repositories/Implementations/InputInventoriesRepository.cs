@@ -30,9 +30,9 @@ namespace StorageSystem.API.Repositories.Implementations
         {
             return await _context.InputInventories
                 .OrderBy(i => i.RegisterDate)
-                .Include(i => i.RawMaterial)
-                .Include(i => i.Supplier)
-                .Include(i => i.RawMaterial!.MeasurementUnit)
+                .Include(i => i.RawMaterial!)
+                .ThenInclude(i => i.MeasurementUnit)
+                .Include(i => i.Supplier!)                
                 .ToListAsync();
         }
     }

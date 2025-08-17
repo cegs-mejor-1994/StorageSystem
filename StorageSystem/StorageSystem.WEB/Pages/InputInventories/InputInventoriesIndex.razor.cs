@@ -45,7 +45,7 @@ namespace StorageSystem.WEB.Pages.InputInventories
             {
                 return;
             }
-            var responseHttp = await Repository.DeleteAsync<InputInventory>($"api/inputInventory/{inputInventory.Id}");
+            var responseHttp = await Repository.DeleteAsync<InputInventory>($"api/InputInventories/{inputInventory.Id}");
             if (responseHttp.Error)
             {
                 if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)

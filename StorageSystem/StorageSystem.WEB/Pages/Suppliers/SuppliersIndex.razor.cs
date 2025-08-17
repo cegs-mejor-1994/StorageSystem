@@ -150,7 +150,7 @@ namespace StorageSystem.WEB.Pages.Suppliers
             {
                 return;
             }
-            var responseHttp = await Repository.DeleteAsync<Client>($"api/Suppliers/{supplier.Id}");
+            var responseHttp = await Repository.DeleteAsync<Supplier>($"api/Suppliers/{supplier.Id}");
             if (responseHttp.Error)
             {
                 if (responseHttp.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
