@@ -1,5 +1,4 @@
 ﻿@page "/references/edit/{Id:int}"
-@using StorageSystem.WEB.Pages.MeasurementUnits
 
 <h3>Editar Referencia</h3>
 
@@ -20,32 +19,16 @@ else
                 </div>
             </div>
             <div class="mb-3">           
-                <label>Materia Prima:</label>
+                <label>Unidad de Medida</label>
                 <div>
-                    <HxInputText @bind-Value="measurementUnitName" Enabled="false" />
-                    <ValidationMessage For="@(() => reference.MeasurementUnitId)" />
-                    <HxButton Color="ThemeColor.Success" Text="Seleccionar" data-bs-toggle="modal" data-bs-target="#measurementUnitId" CssClass="mt-1"/>
-                    <br/>
+                    <HxInputText @bind-Value="measurementUnitName" disabled/>
+                    <ValidationMessage For="@(() => reference.MeasurementUnitId)" />    
                 </div>
             </div>
             <HxButton Text="Guardar Cambios" Color="ThemeColor.Primary" OnClick="@(() => EditAsync())" />            
         </div>        
     </div>
 </EditForm>
-
-<div class="modal fade" id="measurementUnitId" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Unidades de medida </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" />
-            </div>
-            <div class="modal-body">                
-                <MeasurementUnitsListSelect OnSelectedMeasurementUnitChanged="ClickMeasurementUnitCallBack" />
-            </div>
-        </div>
-    </div>
-</div>
 }
 
 

@@ -1,3 +1,4 @@
+
 using Blazored.Modal;
 using Blazored.Modal.Services;
 using CurrieTechnologies.Razor.SweetAlert2;
@@ -14,6 +15,7 @@ namespace StorageSystem.WEB.Pages.References
         private Reference? reference;
         private int measurementUnitId { get; set; }
         private string? measurementUnitName { get; set; }
+        private List<MeasurementUnit>? measurementUnits;
 
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
@@ -21,11 +23,9 @@ namespace StorageSystem.WEB.Pages.References
 
         [EditorRequired, Parameter] public int Id { get; set; }
 
-        void ClickMeasurementUnitCallBack(string measurementUnit)
-        {
-            string[] valores = measurementUnit.Split(',');
-            measurementUnitId = int.Parse(valores[0]);
-            measurementUnitName = valores[1];
+        protected override async Task OnInitializedAsync()
+        {            
+            await LoadMeasurementUnitsAsync();
         }
 
         protected async override Task OnParametersSetAsync()
@@ -46,6 +46,7 @@ namespace StorageSystem.WEB.Pages.References
             else
             {
                 reference = responseHttp.Response;
+                measurementUnitName = GetMeasurementUnitName(reference!.MeasurementUnitId);
             }
         }
 
@@ -68,6 +69,24 @@ namespace StorageSystem.WEB.Pages.References
                 Timer = 3000,
             });
             await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Cambios guardados con exito");
+        }
+
+        private async Task LoadMeasurementUnitsAsync()
+        {
+            var responseHttp = await Repository.GetAsync<List<MeasurementUnit>>("/api/MeasurementUnits/combo");
+            if (responseHttp.Error)
+            {
+                var message = await responseHttp.GetErrorMessageAsync();
+                await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+                return;
+            }
+            measurementUnits = responseHttp.Response;
+        }
+
+        private string GetMeasurementUnitName(int id)
+        {
+            var measurementUnit = measurementUnits!.FirstOrDefault(x => x.Id == id);
+            return measurementUnit!.Name;
         }
     }
 }

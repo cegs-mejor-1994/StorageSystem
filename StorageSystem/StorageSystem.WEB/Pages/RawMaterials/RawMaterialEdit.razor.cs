@@ -1,10 +1,7 @@
-using Blazored.Modal;
-using Blazored.Modal.Services;
 using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components;
 using StorageSystem.Shared.Entities;
 using StorageSystem.WEB.Repositories;
-using StorageSystem.WEB.Shared;
 using System.Net;
 
 namespace StorageSystem.WEB.Pages.RawMaterials
@@ -28,6 +25,7 @@ namespace StorageSystem.WEB.Pages.RawMaterials
             await LoadCategoriesAsync();
             await LoadMeasurementUnitsAsync();
         }
+
         protected async override Task OnParametersSetAsync()
         {
             var responseHttp = await Repository.GetAsync<RawMaterial>($"/api/RawMaterials/{Id}");
