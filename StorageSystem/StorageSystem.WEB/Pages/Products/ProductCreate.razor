@@ -1,31 +1,52 @@
 ﻿@page "/products/create"
+@using StorageSystem.WEB.Pages.References
 
 <h3>Crear Producto</h3>
 <EditForm Model="product">
     <DataAnnotationsValidator />
-    <div class="mb-3">
-        <label>Codigo de Producto:</label>
-        <div>
-            <InputText class="form-control" @bind-Value="@product.Code" />
-            <ValidationMessage For="@(() => product.Code)" />
+    <div class="row">
+        <div class="col-6">
+            <div class="mb-3">
+                <label>Codigo de Producto:</label>
+                <div>
+                    <InputText class="form-control" @bind-Value="@productCode" />
+                    <ValidationMessage For="@(() => product.Code)" />
+                </div>
+            </div>
+            <div class="mb-3">
+                <label>Nombre de Producto:</label>
+                <div>
+                    <InputText class="form-control" @bind-Value="@productName" />
+                    <ValidationMessage For="@(() => product.Name)" />
+                </div>
+            </div>
+            <div class="mb-3">                                               
+                <div>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#referenceId">
+                        Seleccionar Referencias
+                    </button>
+                </div>
+            </div>
+            <p class="mt-2">
+                Selected employee IDs: @String.Join(", ", ListIdsReferences.Select(i => i.ToString()) ?? Enumerable.Empty<string>())
+            </p>
+            <button class="btn btn-primary" type="button" @onclick="@(() => CreateAsync())">Guardar Cambios</button>
         </div>
     </div>
-    <div class="mb-3">
-        <label>Nombre de Producto:</label>
-        <div>
-            <InputText class="form-control" @bind-Value="@product.Name" />
-            <ValidationMessage For="@(() => product.Name)" />
-        </div>
-    </div>
-    @*<div class="mb-3">
-        <label>Tipo de Producto:</label>
-        <div>
-            <InputText class="form-control" @bind-Value="@product.Type" />
-            <ValidationMessage For="@(() => product.Type)" />
-        </div>
-    </div>*@
-    <button class="btn btn-primary" type="button" @onclick="@(() => CreateAsync())">Guardar Cambios</button>
 </EditForm>
+<div class="modal fade" id="referenceId" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Referencias </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" />
+            </div>
+            <div class="modal-body">
+                <ReferencesListSelect OnSelectedReferenceClick="ClickReferenceCallBack" />
+            </div>
+        </div>
+    </div>
+</div>
 
 
 

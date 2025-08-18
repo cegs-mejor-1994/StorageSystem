@@ -17,6 +17,7 @@ namespace StorageSystem.API.Repositories.Implementations
             _context = context;
             _entity = _context.Set<T>();
         }
+
         public virtual async Task<ActionResponse<T>> AddAsync(T entity)
         {
             _context.Add(entity);

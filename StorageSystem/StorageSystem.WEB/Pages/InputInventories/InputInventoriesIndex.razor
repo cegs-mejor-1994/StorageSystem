@@ -32,7 +32,7 @@
                                 <td>@inputInventory.MatutingDate</td>
                                 <td>@inputInventory.Supplier!.Name</td>
                                 <td>
-                                    <a href="/inputInventories/edit/@inputInventory.Id" class="btn btn-warning">Editar</a>
+                                    <a href="/inputInventories/edit/@inputInventory.Id" class="btn btn-warning"><i class="bi bi-pencil"/> Editar</a>
                                     <HxButton Color="ThemeColor.Danger" Text="Borrar" OnClick="@(() => DeleteAsync(inputInventory))" />
                                 </td>
                             </tr>

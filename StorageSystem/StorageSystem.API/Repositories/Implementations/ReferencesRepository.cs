@@ -40,7 +40,18 @@ namespace StorageSystem.API.Repositories.Implementations
         {
             return await _context.References
                 .OrderBy(r => r.Name)
-                .ToListAsync();
+                .Include(m => m.MeasurementUnit)
+                .Select(r => new Reference
+                {
+                    Id = r.Id,
+                    Name = r.Name,
+                    MeasurementUnitId = r.MeasurementUnitId,
+                    MeasurementUnit = new MeasurementUnit
+                    {                        
+                        Name = r.Name + " " + r.MeasurementUnit!.Code
+                    }
+                })
+                .ToListAsync();                
         }
 
         public async Task<ActionResponse<int>> GetTotalPagesAsync(PaginationDTO pagination)

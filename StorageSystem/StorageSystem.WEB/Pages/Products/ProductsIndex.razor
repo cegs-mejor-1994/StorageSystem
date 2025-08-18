@@ -1,39 +1,40 @@
 ﻿@page "/products"
-
-<h3>Productos</h3>
-<div class="mb-3">
-    <a class="btn btn-primary btn-sm float-end" @onclick="@(() => ShowModalAsync())">Nuevo Producto</a>
-</div>
-<GenericList MyList="Products">
-    <Body>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Codigo</th>
-                    <th>Nombre</th>
-                    <th>Tipo de Producto</th>
-                    <th style="width:168px">Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var product in Products!)
-                {
-                    <tr>
-                        <td>@product.Code</td>
-                        <td>@product.Name</td>
-                        @*<td>@product.Type</td>*@
-                        <td>
-                            <a @onclick="@(() => ShowModalAsync(product.Id, true))" class="btn btn-warning">Editar</a>
-                            <button class="btn btn-danger" @onclick="@(() => DeleteAsync(product))">Borrar</button>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </Body>
-</GenericList>
-
-
+<PageTitle>Productos</PageTitle>
+<HxCard>
+    <HeaderTemplate>
+        <HxIcon Icon="@BootstrapIcon.ListCheck" /> Productos
+        <a class="btn btn-primary float-end" href="/products/create">Nuevo Producto</a>
+    </HeaderTemplate>
+    <BodyTemplate>
+        <Filter PlaceHolder="Buscar producto..." Callback="@FilterCallBack" />
+        <GenericList MyList="Products">
+            <Body>
+                <Pagination CurrentPage="currentPage" TotalPages="totalPages" SelectedPage="SelectedPageAsync" RecordsNumber="SelectedRecordsNumberAsync" />
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Codigo</th>
+                            <th>Nombre</th>
+                            <th style="width: 210px">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var product in Products!)
+                        {
+                            <tr>
+                                <td>@product.Code</td>
+                                <td>@product.Name</td>
+                                <td>
+                                    <HxButton Color="ThemeColor.Danger" Text="Borrar" OnClick="@(() => DeleteAsync(product))" />
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </Body>
+        </GenericList>
+    </BodyTemplate>
+</HxCard>
 
 
 
