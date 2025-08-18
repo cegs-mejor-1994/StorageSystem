@@ -8,7 +8,7 @@
 }
 else
 {   
-    <EditForm Model="reference">
+    <EditForm Model="reference" OnValidSubmit="EditAsync">
     <DataAnnotationsValidator />
     <div class="row">
         <div class="col-6">
@@ -21,11 +21,12 @@ else
             <div class="mb-3">           
                 <label>Unidad de Medida</label>
                 <div>
-                    <HxInputText @bind-Value="measurementUnitName" disabled/>
+                    <HxInputText @bind-Value="measurementUnitName" Enabled="false" />
                     <ValidationMessage For="@(() => reference.MeasurementUnitId)" />    
                 </div>
             </div>
-            <HxButton Text="Guardar Cambios" Color="ThemeColor.Primary" OnClick="@(() => EditAsync())" />            
+            <HxSubmit Text="Guardar Cambios" Color="ThemeColor.Primary" />
+            <a href="/references" class="btn btn-success">Regresar</a>
         </div>        
     </div>
 </EditForm>
