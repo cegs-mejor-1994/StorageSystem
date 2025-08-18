@@ -1,36 +1,43 @@
 ﻿@page "/rawMaterials"
+<PageTitle>Materias Primas</PageTitle>
+<HxCard>
+    <HeaderTemplate>
+        <HxIcon Icon="@BootstrapIcon.ListCheck" /> Materias Primas
+        <a class="btn btn-primary" href="/rawMaterials/create">Nueva Materia Prima</a>
+    </HeaderTemplate>
+    <BodyTemplate>
+        <Filter PlaceHolder="Buscar materia prima..." Callback="@FilterCallBack" />
+        <GenericList MyList="RawMaterials">
+            <Body>
+                <Pagination CurrentPage="currentPage" TotalPages="totalPages" SelectedPage="SelectedPageAsync" RecordsNumber="SelectedRecordsNumberAsync" />
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Codigo</th>
+                            <th>Nombre</th>
+                            <th style="width:210px">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var rawMaterial in RawMaterials!)
+                        {
+                            <tr>
+                                <td>@rawMaterial.Code</td>
+                                <td>@rawMaterial.Name @rawMaterial.MeasurementUnit!.Code</td>
+                                <td>
+                                    <a href="/rawMaterials/edit/@rawMaterial.Id" class="btn btn-warning"><i class="bi bi-pencil"/> Editar</a>
+                                    <HxButton Text="Borrar" Icon="BootstrapIcon.Trash" IconPlacement="ButtonIconPlacement.Start" Color="ThemeColor.Danger" Size="ButtonSize.Small" OnClick="@(() => DeleteAsync(rawMaterial))" />
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </Body>
+        </GenericList>
+    </BodyTemplate>
+</HxCard>
 
-<h3>Materias Primas</h3>
-<div class="mb-3">
-    <a class="btn btn-primary btn-sm float-end" @onclick="@(() => ShowModalAsync())">Nueva Materia Prima</a>
-</div>
-<GenericList MyList="RawMaterials">
-    <Body>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Codigo</th>
-                    <th>Nombre</th>
-                    <th>Estado</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var rawMaterial in RawMaterials!)
-                {
-                    <tr>
-                        <td>@rawMaterial.Code</td>
-                        <td>@rawMaterial.Name</td>
-                        <td>@rawMaterial.State</td>
-                        <td>
-                            <a @onclick="@(() => ShowModalAsync(rawMaterial.Id, true))" class="btn btn-warning">Editar</a>
-                            <button class="btn btn-danger" @onclick="@(() => DeleteAsync(rawMaterial))">Borrar</button>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </Body>
-</GenericList>
+
+
 
 

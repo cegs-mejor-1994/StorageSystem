@@ -1,18 +1,20 @@
 ﻿@page "/rawMaterials/edit/{Id:int}"
-
-
 @if (rawMaterial is null)
 {
     <Loading />
 }
 else
 {
-    <h3>Crear Materia Prima</h3>
+    <h3>Editar Materia prima</h3>
     <EditForm Model="rawMaterial" OnValidSubmit="EditAsync">
         <DataAnnotationsValidator />
-
         <div class="row">
             <div class="col-6">
+                <div class="mb-3">
+                    <label>Unidad de Medida:</label>
+                    <InputText class="form-control" @bind-Value="measurementUnitName" disabled />
+                    <ValidationMessage For="@(() => rawMaterial.MeasurementUnitId)" />
+                </div>
                 <div class="mb-3">
                     <label>Codigo:</label>
                     <div>
@@ -21,7 +23,7 @@ else
                     </div>
                 </div>
                 <div class="mb-3">
-                    <label>Name</label>
+                    <label>Nombre:</label>
                     <div>
                         <InputText class="form-control" @bind-Value="rawMaterial.Name" />
                         <ValidationMessage For="@(() => rawMaterial.Name)" />
@@ -29,38 +31,11 @@ else
                 </div>
                 <div class="mb-3">
                     <label>Categoria:</label>
-                    <div>
-                        <select class="form-select" @bind="rawMaterial.CategoryId">
-                            <option value="0">-- Seleccione una categoria --</option>
-                            @if (categories != null)
-                            {
-                                @foreach (var category in categories)
-                                {
-                                    <option value="@category.Id" selected="@(category.Id == rawMaterial.CategoryId)">@category.Name</option>
-                                }
-                            })
-                        </select>
-                        <ValidationMessage For="@(() => rawMaterial.CategoryId)" />
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <label>Unidad de medida:</label>
-                    <div>
-                        <select class="form-select" @bind="rawMaterial.MeasurementUnitId">
-                            <option value="0">--Seleccione una unidad de medida</option>
-                            @if (measurementUnits != null)
-                            {
-                                @foreach (var measurementUnit in measurementUnits)
-                                {
-                                    <option value="@measurementUnit.Id" selected="@(measurementUnit.Id == rawMaterial.MeasurementUnitId)">@measurementUnit.Name</option>
-                                }
-                            }
-                        </select>
-                        <ValidationMessage For="@(() => rawMaterial.MeasurementUnitId)" />
-                    </div>
-                </div>
-                <button class="btn btn-primary" type="submit">Guardar Cambios</button>
-                <a href="/rawMaterials" class="btn btn-success">Regresar</a>
+                    <InputText class="form-control" @bind-Value="categoryName" disabled />
+                    <ValidationMessage For="@(() => rawMaterial.CategoryId)" />
+                </div>               
+                <HxSubmit Color="ThemeColor.Primary" Text="Guardar Cambios"/>
+                <a href="/rawMAterials" class="btn btn-success">Regresar</a>
             </div>
         </div>
     </EditForm>

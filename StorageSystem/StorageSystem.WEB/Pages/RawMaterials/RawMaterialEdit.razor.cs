@@ -14,8 +14,9 @@ namespace StorageSystem.WEB.Pages.RawMaterials
         private RawMaterial? rawMaterial;
         private List<Category>? categories;
         private List<MeasurementUnit>? measurementUnits;
-
-        [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
+        private string categoryName { get; set; } = null!;
+        private string measurementUnitName { get; set; } = null!;
+        
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
         [Inject] private IRepository Repository { get; set; } = null!;
@@ -45,6 +46,8 @@ namespace StorageSystem.WEB.Pages.RawMaterials
             else
             {
                 rawMaterial = responseHttp.Response;
+                categoryName = GetCategoryName(rawMaterial!.CategoryId);
+                measurementUnitName = GetMeasurementUnitName(rawMaterial!.MeasurementUnitId);
             }
         }
 
@@ -56,9 +59,7 @@ namespace StorageSystem.WEB.Pages.RawMaterials
                 var message = await responseHttp.GetErrorMessageAsync();
                 await SweetAlertService.FireAsync("Error", message);
                 return;
-            }
-
-            await BlazoredModal.CloseAsync(ModalResult.Ok());
+            }            
             NavigationManager.NavigateTo("/rawMaterials");
             var toast = SweetAlertService.Mixin(new SweetAlertOptions
             {
@@ -92,6 +93,18 @@ namespace StorageSystem.WEB.Pages.RawMaterials
                 return;
             }
             measurementUnits = responseHttp.Response;
+        }
+
+        private string GetCategoryName(int id)
+        {
+            var category = categories!.FirstOrDefault(x => x.Id == id);
+            return category!.Name;
+        }
+
+        private string GetMeasurementUnitName(int id)
+        {
+            var measurementUnit = measurementUnits!.FirstOrDefault(x => x.Id == id);
+            return measurementUnit!.Name;
         }
     }
 }

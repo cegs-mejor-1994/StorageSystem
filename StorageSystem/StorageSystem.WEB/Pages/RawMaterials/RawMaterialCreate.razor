@@ -1,61 +1,72 @@
 ﻿@page "/rawMaterials/create"
+@using StorageSystem.WEB.Pages.Categories
+@using StorageSystem.WEB.Pages.MeasurementUnits
 
+<PageTitle>Crear Materia Prima</PageTitle>
 <h3>Crear Materia Prima</h3>
-<EditForm Model="rawMaterial" OnValidSubmit="CreateAsync">
-    <DataAnnotationsValidator/>
-
+<EditForm Model="rawMaterial">
+    <DataAnnotationsValidator />
     <div class="row">
         <div class="col-6">
             <div class="mb-3">
-                <label>Codigo:</label>
-                <div>
-                    <InputText class="form-control" @bind-Value="rawMaterial.Code" />
-                    <ValidationMessage For="@(() => rawMaterial.Code)" />
-                </div>
-            </div>
-            <div class="mb-3">
-                <label>Nombre</label>
+                <label>Nombre:</label>
                 <div>
                     <InputText class="form-control" @bind-Value="rawMaterial.Name" />
                     <ValidationMessage For="@(() => rawMaterial.Name)" />
                 </div>
             </div>
-            <div class="mb-3">
+            <div class="md-3">
                 <label>Categoria:</label>
+                <InputText class="form-control" @bind-Value="categoryName" disabled />
+                <ValidationMessage For="@(() => rawMaterial.CategoryId)" />
                 <div>
-                    <select class="form-select" @bind="rawMaterial.CategoryId">
-                        <option value="0">-- Seleccione una categoria --</option>
-                        @if (categories != null)
-                        {
-                            @foreach (var category in categories)
-                            {
-                                <option value="@category.Id">@category.Name</option>
-                            }
-                        })
-                    </select>
-                    <ValidationMessage For="@(() => rawMaterial.CategoryId)" />
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#categoryId">
+                        Seleccionar
+                    </button>
                 </div>
             </div>
+        </div>
+        <div class="col-6">
             <div class="mb-3">
                 <label>Unidad de medida:</label>
+                <InputText class="form-control" @bind-Value="measurementUnitName" disabled />
+                <ValidationMessage For="@(() => rawMaterial.MeasurementUnitId)" />
                 <div>
-                    <select class="form-select" @bind="rawMaterial.MeasurementUnitId">
-                        <option value="0">--Seleccione una unidad de medida</option>
-                        @if(measurementUnits != null)
-                        {
-                            @foreach (var measurementUnit in measurementUnits)
-                            {
-                                <option value="@measurementUnit.Id">@measurementUnit.Name</option>
-                            }
-                        }
-                    </select>
-                    <ValidationMessage For="@(() => rawMaterial.MeasurementUnitId)" />
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#measurementUnitId">
+                        Seleccionar
+                    </button>
                 </div>
             </div>
-            <button class="btn btn-primary" type="submit">Guardar Cambios</button>
-            <a href="/rawMaterials" class="btn btn-success">Regresar</a>
         </div>
+        <HxButton Color="ThemeColor.Primary" Text="Guardar Cambios" OnClick="@(() => CreateAsync())"/>
+        <a href="/rawMaterials" class="btn btn-success">Regresar</a>
     </div>
 </EditForm>
 
+<div class="modal fade" id="measurementUnit" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Unidades de Medida </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" />
+            </div>
+            <div class="modal-body">
+                <MeasurementUnitsListSelect OnSelectedMeasurementUnitChanged="ClickMeasurementUnitCallBack" />
+            </div>
+        </div>
+    </div>
+</div>
 
+<div class="modal fade" id="categoryId" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Categorias </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" />
+            </div>
+            <div class="modal-body">
+                <CategoriesListSelect OnSelectedCategoryChanged="ClickCategoryCallBack"/>
+            </div>
+        </div>
+    </div>
+</div>

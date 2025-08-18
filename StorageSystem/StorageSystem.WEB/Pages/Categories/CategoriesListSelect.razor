@@ -1,0 +1,29 @@
+﻿<GenericList MyList="categories">
+    <Body>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th style="width:168px">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var category in categories!)
+                {
+                    <tr>
+                        <td>@category.Name</td>
+                        <td>
+                            <HxButton Color="ThemeColor.Secondary" data-bs-dismiss="modal" Text="Seleccionar" OnClick="@(() => OnSelectedCategoryChanged.InvokeAsync($"{category.Id},{category.Name}"))" />
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </Body>
+</GenericList>
+
+
+
+
+
+

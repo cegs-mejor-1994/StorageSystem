@@ -6,7 +6,7 @@
 }
 else
 {
-    <h3>Editar Invetario</h3>
+    <h3>Editar Inventario</h3>
     <EditForm Model="inputInventory" OnValidSubmit="EditAsync">
         <DataAnnotationsValidator />
         <div class="row">
@@ -41,8 +41,8 @@ else
                     <label>Proveedor:</label>                                            
                         <InputText class="form-control" @bind-Value="supplierName" disabled />
                         <ValidationMessage For="@(() => inputInventory.SupplierId)" />
-                </div>
-                <button class="btn btn-primary" type="submit">Guardar Cambios</button>
+                </div>                
+                <HxSubmit Color="ThemeColor.Primary" Text="Guardar Cambios"/>
                 <a href="/inputInventories" class="btn btn-success">Regresar</a>
             </div>
         </div>

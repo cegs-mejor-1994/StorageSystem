@@ -1,5 +1,3 @@
-using Blazored.Modal;
-using Blazored.Modal.Services;
 using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components;
 using StorageSystem.Shared.Entities;
@@ -10,46 +8,108 @@ namespace StorageSystem.WEB.Pages.RawMaterials
 {
     public partial class RawMaterialsIndex
     {
-        [CascadingParameter] IModalService Modal { get; set; } = default!;
+        private int currentPage = 1;
+        private int totalPages;
+
+        [Parameter, SupplyParameterFromQuery] public string Page { get; set; } = string.Empty;
+        [Parameter, SupplyParameterFromQuery] public string Filter { get; set; } = string.Empty;
+        [Parameter, SupplyParameterFromQuery] public int RecordsNumber { get; set; } = 8;
+
         [Inject] private IRepository Repository { get; set; } = null!;
-        [Inject] private NavigationManager NavigationManager { get; set; } = null!;
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
+        [Inject] private NavigationManager NavigationManager { get; set; } = null!;
+        
         public List<RawMaterial>? RawMaterials { get; set; }
 
-        protected async override Task OnInitializedAsync()
+        protected override async Task OnInitializedAsync()
         {
             await LoadAsync();
         }
 
-        private async Task LoadAsync()
+        private async Task FilterCallBack(string filter)
         {
-            var responseHttp = await Repository.GetAsync<List<RawMaterial>>("api/RawMaterials");
-            if (responseHttp.Error)
-            {
-                var message = await responseHttp.GetErrorMessageAsync();
-                await SweetAlertService.FireAsync("Error!", message, SweetAlertIcon.Error);
-                return;
-            }
-            RawMaterials = responseHttp.Response;
+            Filter = filter;
+            await ApplyFilterAsync();
+            StateHasChanged();
         }
 
-        private async Task ShowModalAsync(int id = 0, bool isEdit = false)
+        private async Task SelectedRecordsNumberAsync(int recordsnumber)
         {
-            IModalReference modalReference; 
-            if (isEdit)
-            {
-                modalReference = Modal.Show<RawMaterialEdit>(string.Empty, new ModalParameters().Add("Id", id));   
-            }
-            else
-            {
-                modalReference = Modal.Show<RawMaterialCreate>();
-            }
+            RecordsNumber = recordsnumber;
+            int page = 1;
+            await LoadAsync(page);
+            await SelectedPageAsync(page);
+        }
 
-            var result = await modalReference.Result;
-            if (result.Confirmed)
+        private async Task SelectedPageAsync(int page)
+        {
+            currentPage = page;
+            await LoadAsync(page);
+        }
+
+        private async Task LoadAsync(int page = 1)
+        {
+            if (!string.IsNullOrWhiteSpace(Page))
             {
-                await LoadAsync();
+                page = Convert.ToInt32(Page);
             }
+            var ok = await LoadListAsync(page);
+            if (ok)
+            {
+                await LoadPagesAsync();
+            }
+        }
+
+        private void ValidateRecordsNumber(int recordsnumber)
+        {
+            if (recordsnumber == 0)
+            {
+                RecordsNumber = 10;
+            }
+        }
+
+        private async Task<bool> LoadListAsync(int page)
+        {
+            ValidateRecordsNumber(RecordsNumber);
+            var url = $"api/RawMaterials/?page={page}&recordsnumber={RecordsNumber}";
+            if (!string.IsNullOrWhiteSpace(Filter))
+            {
+                url += $"&filter={Filter}";
+            }
+            var responseHttp = await Repository.GetAsync<List<RawMaterial>>(url);
+            if (responseHttp.Error)
+            {
+                var messageError = await responseHttp.GetErrorMessageAsync();
+                await SweetAlertService.FireAsync("Error", messageError, SweetAlertIcon.Error);
+                return false;
+            }
+            RawMaterials = responseHttp.Response;
+            return true;
+        }
+
+        private async Task LoadPagesAsync()
+        {
+            ValidateRecordsNumber(RecordsNumber);
+            var url = $"api/RawMaterials/totalPages?recordsnumber={RecordsNumber}";
+            if (!string.IsNullOrWhiteSpace(Filter))
+            {
+                url += $"&filter={Filter}";
+            }
+            var responseHttp = await Repository.GetAsync<int>(url);
+            if (responseHttp.Error)
+            {
+                var messageError = await responseHttp.GetErrorMessageAsync();
+                await SweetAlertService.FireAsync("Error", messageError, SweetAlertIcon.Error);
+                return;
+            }
+            totalPages = responseHttp.Response;
+        }
+
+        private async Task ApplyFilterAsync()
+        {
+            int page = 1;
+            await LoadAsync(page);
+            await SelectedPageAsync(page);
         }
 
         private async Task DeleteAsync(RawMaterial rawMaterial)
@@ -57,7 +117,7 @@ namespace StorageSystem.WEB.Pages.RawMaterials
             var result = await SweetAlertService.FireAsync(new SweetAlertOptions
             {
                 Title = "Confirmacion",
-                Text = $"¿Estas seguro de querer eliminar la materia prima: {rawMaterial.Name}?",
+                Text = $"¿Estas seguro que quieres borrar la materia prima: {rawMaterial.Name}?",
                 Icon = SweetAlertIcon.Question,
                 ShowCancelButton = true,
             });
@@ -72,7 +132,7 @@ namespace StorageSystem.WEB.Pages.RawMaterials
             {
                 if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
                 {
-                    NavigationManager.NavigateTo("/rawMaterials");
+                    NavigationManager.NavigateTo("/");
                 }
                 else
                 {
@@ -82,7 +142,6 @@ namespace StorageSystem.WEB.Pages.RawMaterials
                 return;
             }
             await LoadAsync();
-
             var toast = SweetAlertService.Mixin(new SweetAlertOptions
             {
                 Toast = true,
@@ -90,7 +149,7 @@ namespace StorageSystem.WEB.Pages.RawMaterials
                 ShowConfirmButton = true,
                 Timer = 3000,
             });
-            await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro eliminado correctamente");
+            await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro borrado con exito");
         }
     }
 }
