@@ -18,6 +18,8 @@ namespace StorageSystem.Shared.Entities
         public int ReferenceId { get; set; }
         public Reference? Reference { get; set; }
 
+        public DateTime RegisterDate { get; set; }
+
         public ICollection<Recipe>? Recipes { get; set; }
     }
 }

@@ -31,6 +31,8 @@ namespace StorageSystem.Shared.Entities
         [Required(ErrorMessage = "El campo {0} es requerido")]
         public string City { get; set; } = null!;
 
+        public string State { get; set; } = "Disponible";
+
         public ICollection<InputInventory>? InputInventories { get; set; } 
     }
 }

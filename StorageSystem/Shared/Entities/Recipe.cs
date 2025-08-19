@@ -17,6 +17,8 @@ namespace StorageSystem.Shared.Entities
         public int ProductId { get; set; }
         public Product? Product { get; set; }
 
+        public string State { get; set; } = "Disponible";
+
         public ICollection<ProductionGap>? ProductionGaps { get; set; }
     }
 }

@@ -14,8 +14,7 @@ namespace StorageSystem.Shared.Entities
         public int RecipeId { get; set; }
         public Recipe? Recipe { get; set; }
 
-        public int InputInventoryId { get; set; }
-        public InputInventory? InputInventory { get; set; }
+        public DateTime RegisterDate { get; set; }
 
         public ICollection<Manufactury>? Manufacturies { get; set; }
     }

@@ -93,6 +93,10 @@ namespace StorageSystem.API.Migrations
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Nit")
@@ -128,6 +132,10 @@ namespace StorageSystem.API.Migrations
                     b.Property<DateTime>("RegisterDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("SupplierId")
                         .HasColumnType("int");
 
@@ -153,10 +161,22 @@ namespace StorageSystem.API.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
                     b.Property<int>("ProductionGapId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("RegisterDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
 
                     b.HasIndex("ProductionGapId");
 
@@ -215,6 +235,9 @@ namespace StorageSystem.API.Migrations
                     b.Property<int>("ManuFacturyId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("RegisterDate")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ClientId");
@@ -245,6 +268,9 @@ namespace StorageSystem.API.Migrations
                     b.Property<int>("ReferenceId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("RegisterDate")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Name")
@@ -268,11 +294,14 @@ namespace StorageSystem.API.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
-                    b.Property<int>("InputInventoryId")
+                    b.Property<int?>("InputInventoryId")
                         .HasColumnType("int");
 
                     b.Property<int>("RecipeId")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("RegisterDate")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -345,6 +374,10 @@ namespace StorageSystem.API.Migrations
                     b.Property<int>("RawMaterialId")
                         .HasColumnType("int");
 
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ProductId");
@@ -369,6 +402,10 @@ namespace StorageSystem.API.Migrations
                         .IsRequired()
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
+
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -411,6 +448,10 @@ namespace StorageSystem.API.Migrations
                         .HasMaxLength(12)
                         .HasColumnType("nvarchar(12)");
 
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Nit")
@@ -440,11 +481,19 @@ namespace StorageSystem.API.Migrations
 
             modelBuilder.Entity("StorageSystem.Shared.Entities.Manufactury", b =>
                 {
+                    b.HasOne("StorageSystem.Shared.Entities.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("StorageSystem.Shared.Entities.ProductionGap", "ProductionGap")
                         .WithMany("Manufacturies")
                         .HasForeignKey("ProductionGapId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Product");
 
                     b.Navigation("ProductionGap");
                 });
@@ -481,19 +530,16 @@ namespace StorageSystem.API.Migrations
 
             modelBuilder.Entity("StorageSystem.Shared.Entities.ProductionGap", b =>
                 {
-                    b.HasOne("StorageSystem.Shared.Entities.InputInventory", "InputInventory")
+                    b.HasOne("StorageSystem.Shared.Entities.InputInventory", null)
                         .WithMany("ProductionGaps")
                         .HasForeignKey("InputInventoryId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("StorageSystem.Shared.Entities.Recipe", "Recipe")
                         .WithMany("ProductionGaps")
                         .HasForeignKey("RecipeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.Navigation("InputInventory");
 
                     b.Navigation("Recipe");
                 });

@@ -24,7 +24,7 @@ namespace StorageSystem.Shared.Entities
         public Category? Category { get; set; }
 
         public int MeasurementUnitId { get; set; }
-        public MeasurementUnit? MeasurementUnit { get; set; }
+        public MeasurementUnit? MeasurementUnit { get; set; }        
 
         public ICollection<InputInventory>? InputInventories { get; set; }
     }

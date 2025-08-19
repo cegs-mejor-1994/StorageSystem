@@ -14,6 +14,8 @@ namespace StorageSystem.Shared.Entities
         public int MeasurementUnitId { get; set; }
         public MeasurementUnit? MeasurementUnit { get; set; }
 
+        public string State { get; set; } = "Disponible";
+
         public ICollection<Product>? Products { get; set; }
     }
 }

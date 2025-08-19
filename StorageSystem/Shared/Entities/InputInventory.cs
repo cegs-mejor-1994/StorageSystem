@@ -31,6 +31,8 @@ namespace StorageSystem.Shared.Entities
         public int RawMaterialId { get; set; }
         public RawMaterial? RawMaterial { get; set; }
 
+        public string State { get; set; } = "Disponible";
+
         public ICollection<ProductionGap>? ProductionGaps { get; set; }
     }
 }

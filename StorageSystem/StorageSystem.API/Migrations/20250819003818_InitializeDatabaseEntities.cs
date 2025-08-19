@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace StorageSystem.API.Migrations
 {
     /// <inheritdoc />
-    public partial class AddEntitiesInitialize : Migration
+    public partial class InitializeDatabaseEntities : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -38,7 +38,8 @@ namespace StorageSystem.API.Migrations
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Address = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     Phone = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
-                    City = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                    City = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    State = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -71,7 +72,8 @@ namespace StorageSystem.API.Migrations
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Address = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     Phone = table.Column<string>(type: "nvarchar(12)", maxLength: 12, nullable: false),
-                    City = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                    City = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    State = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -115,7 +117,8 @@ namespace StorageSystem.API.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    MeasurementUnitId = table.Column<int>(type: "int", nullable: false)
+                    MeasurementUnitId = table.Column<int>(type: "int", nullable: false),
+                    State = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -139,7 +142,8 @@ namespace StorageSystem.API.Migrations
                     MatutingDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     RegisterDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     SupplierId = table.Column<int>(type: "int", nullable: false),
-                    RawMaterialId = table.Column<int>(type: "int", nullable: false)
+                    RawMaterialId = table.Column<int>(type: "int", nullable: false),
+                    State = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -166,7 +170,8 @@ namespace StorageSystem.API.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Code = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    ReferenceId = table.Column<int>(type: "int", nullable: false)
+                    ReferenceId = table.Column<int>(type: "int", nullable: false),
+                    RegisterDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -187,7 +192,8 @@ namespace StorageSystem.API.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Amount = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
                     RawMaterialId = table.Column<int>(type: "int", nullable: false),
-                    ProductId = table.Column<int>(type: "int", nullable: false)
+                    ProductId = table.Column<int>(type: "int", nullable: false),
+                    State = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -214,7 +220,8 @@ namespace StorageSystem.API.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Amount = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
                     RecipeId = table.Column<int>(type: "int", nullable: false),
-                    InputInventoryId = table.Column<int>(type: "int", nullable: false)
+                    RegisterDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    InputInventoryId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -240,7 +247,10 @@ namespace StorageSystem.API.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Amount = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    ProductionGapId = table.Column<int>(type: "int", nullable: false)
+                    ProductionGapId = table.Column<int>(type: "int", nullable: false),
+                    ProductId = table.Column<int>(type: "int", nullable: false),
+                    State = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RegisterDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -249,6 +259,12 @@ namespace StorageSystem.API.Migrations
                         name: "FK_Manufacturies_ProductionGaps_ProductionGapId",
                         column: x => x.ProductionGapId,
                         principalTable: "ProductionGaps",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Manufacturies_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -261,7 +277,8 @@ namespace StorageSystem.API.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Amount = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
                     ManuFacturyId = table.Column<int>(type: "int", nullable: false),
-                    ClientId = table.Column<int>(type: "int", nullable: false)
+                    ClientId = table.Column<int>(type: "int", nullable: false),
+                    RegisterDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -301,6 +318,11 @@ namespace StorageSystem.API.Migrations
                 name: "IX_InputInventories_SupplierId",
                 table: "InputInventories",
                 column: "SupplierId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Manufacturies_ProductId",
+                table: "Manufacturies",
+                column: "ProductId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Manufacturies_ProductionGapId",
