@@ -15,11 +15,9 @@ namespace StorageSystem.Shared.Entities
         [Required(ErrorMessage = "El campo {0} es requerido")]
         public string Name { get; set; } = null!;
 
-        public int ReferenceId { get; set; }
-        public Reference? Reference { get; set; }
-
         public DateTime RegisterDate { get; set; }
 
+        public ICollection<ProductsDetail>? ProductsDetails { get; set; }
         public ICollection<Recipe>? Recipes { get; set; }
     }
 }

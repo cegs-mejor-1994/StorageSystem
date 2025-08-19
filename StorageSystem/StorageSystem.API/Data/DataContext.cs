@@ -27,15 +27,17 @@ namespace StorageSystem.API.Data
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Category>().HasIndex(c => c.Code).IsUnique();
-            modelBuilder.Entity<Client>().HasIndex(c => c.Nit).IsUnique();
+            modelBuilder.Entity<Client>().HasIndex(cl => cl.Nit).IsUnique();
             modelBuilder.Entity<InputInventory>();
             modelBuilder.Entity<Manufactury>();
             modelBuilder.Entity<MeasurementUnit>().HasIndex(m => m.Code).IsUnique();
             modelBuilder.Entity<Order>();
-            modelBuilder.Entity<Product>().HasIndex(p => p.Name).IsUnique();
+            modelBuilder.Entity<Product>().HasIndex(p => new { p.Code, p.Name }).IsUnique();
+            modelBuilder.Entity<ProductsDetail>();
             modelBuilder.Entity<ProductionGap>();
             modelBuilder.Entity<RawMaterial>().HasIndex(r => r.Code).IsUnique();
             modelBuilder.Entity<Recipe>();
+            modelBuilder.Entity<RecipeTotal>();
             modelBuilder.Entity<Reference>().HasIndex(r => new { r.MeasurementUnitId, r.Name }).IsUnique();
             modelBuilder.Entity<Supplier>().HasIndex(s => s.Nit).IsUnique();                       
             DisableCascadingDelete(modelBuilder);                                                                           
