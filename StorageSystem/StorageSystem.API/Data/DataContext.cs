@@ -17,6 +17,7 @@ namespace StorageSystem.API.Data
         public DbSet<MeasurementUnit> MeasurementUnits { get; set; }                
         public DbSet<Order> Orders { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<ProductsDetail> ProductsDetails { get; set; }
         public DbSet<ProductionGap> ProductionGaps { get; set; }
         public DbSet<RawMaterial> RawMaterials { get; set; }
         public DbSet<Recipe> Recipes { get; set; }
@@ -32,7 +33,7 @@ namespace StorageSystem.API.Data
             modelBuilder.Entity<Manufactury>();
             modelBuilder.Entity<MeasurementUnit>().HasIndex(m => m.Code).IsUnique();
             modelBuilder.Entity<Order>();
-            modelBuilder.Entity<Product>().HasIndex(p => new { p.Code, p.Name }).IsUnique();
+            modelBuilder.Entity<Product>().HasIndex(p => new { p.Code }).IsUnique();
             modelBuilder.Entity<ProductsDetail>();
             modelBuilder.Entity<ProductionGap>();
             modelBuilder.Entity<RawMaterial>().HasIndex(r => r.Code).IsUnique();

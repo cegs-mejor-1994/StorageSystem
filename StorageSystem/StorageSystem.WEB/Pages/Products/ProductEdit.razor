@@ -1,0 +1,13 @@
+﻿@page "/products/edit/{Id:int}"
+
+
+@if (product is null)
+{
+    <Loading />
+}
+else
+{
+    <FormWithFields @ref="productForm" Label="Producto:" Model="product" OnValidSubmit="EditAsync" ReturnAction="Return" />
+}
+
+

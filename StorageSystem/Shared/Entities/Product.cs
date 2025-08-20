@@ -1,7 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using StorageSystem.Shared.Interfaces;
+using System.ComponentModel.DataAnnotations;
 namespace StorageSystem.Shared.Entities
 {
-    public class Product
+    public class Product : IEntityFields
     {
         public int Id { get; set; }
 

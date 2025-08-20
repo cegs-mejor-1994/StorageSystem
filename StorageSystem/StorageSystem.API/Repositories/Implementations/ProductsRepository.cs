@@ -31,8 +31,6 @@ namespace StorageSystem.API.Repositories.Implementations
                 WasSuccess = true,
                 Result = await queryable
                     .OrderBy(x => x.Name)
-                    .Include(r => r.Reference!)
-                    .ThenInclude(m => m.MeasurementUnit)
                     .Paginate(pagination)
                     .ToListAsync()
             };
@@ -42,8 +40,6 @@ namespace StorageSystem.API.Repositories.Implementations
         {
             return await _context.Products
                 .OrderBy(s => s.Name)
-                .Include(r => r.Reference!)
-                .ThenInclude(m => m.MeasurementUnit)
                 .ToListAsync();
         }
 
