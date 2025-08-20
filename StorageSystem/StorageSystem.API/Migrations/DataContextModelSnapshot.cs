@@ -407,7 +407,8 @@ namespace StorageSystem.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductId");
+                    b.HasIndex("ProductId")
+                        .IsUnique();
 
                     b.HasIndex("RawMaterialId");
 

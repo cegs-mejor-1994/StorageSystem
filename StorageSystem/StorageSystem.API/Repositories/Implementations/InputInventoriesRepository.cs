@@ -36,8 +36,7 @@ namespace StorageSystem.API.Repositories.Implementations
                     .Include(i => i.Supplier!)
                     .Paginate(pagination)
                     .ToListAsync()
-            };
-             
+            };             
         }
 
         public async Task<ActionResponse<int>> GetTotalPagesAsync(PaginationDTO pagination)

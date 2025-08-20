@@ -33,11 +33,11 @@ namespace StorageSystem.API.Data
             modelBuilder.Entity<Manufactury>();
             modelBuilder.Entity<MeasurementUnit>().HasIndex(m => m.Code).IsUnique();
             modelBuilder.Entity<Order>();
-            modelBuilder.Entity<Product>().HasIndex(p => new { p.Code }).IsUnique();
+            modelBuilder.Entity<Product>().HasIndex(p => p.Code ).IsUnique();
             modelBuilder.Entity<ProductsDetail>();
             modelBuilder.Entity<ProductionGap>();
             modelBuilder.Entity<RawMaterial>().HasIndex(r => r.Code).IsUnique();
-            modelBuilder.Entity<Recipe>();
+            modelBuilder.Entity<Recipe>().HasIndex(r => r.ProductId).IsUnique();
             modelBuilder.Entity<RecipeTotal>();
             modelBuilder.Entity<Reference>().HasIndex(r => new { r.MeasurementUnitId, r.Name }).IsUnique();
             modelBuilder.Entity<Supplier>().HasIndex(s => s.Nit).IsUnique();                       

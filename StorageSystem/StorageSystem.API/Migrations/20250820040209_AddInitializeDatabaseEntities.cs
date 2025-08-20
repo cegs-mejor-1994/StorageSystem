@@ -436,7 +436,8 @@ namespace StorageSystem.API.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Recipes_ProductId",
                 table: "Recipes",
-                column: "ProductId");
+                column: "ProductId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Recipes_RawMaterialId",

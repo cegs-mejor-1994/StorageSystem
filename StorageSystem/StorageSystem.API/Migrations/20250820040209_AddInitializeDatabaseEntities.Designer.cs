@@ -12,7 +12,7 @@ using StorageSystem.API.Data;
 namespace StorageSystem.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250820030226_AddInitializeDatabaseEntities")]
+    [Migration("20250820040209_AddInitializeDatabaseEntities")]
     partial class AddInitializeDatabaseEntities
     {
         /// <inheritdoc />
@@ -410,7 +410,8 @@ namespace StorageSystem.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductId");
+                    b.HasIndex("ProductId")
+                        .IsUnique();
 
                     b.HasIndex("RawMaterialId");
 
