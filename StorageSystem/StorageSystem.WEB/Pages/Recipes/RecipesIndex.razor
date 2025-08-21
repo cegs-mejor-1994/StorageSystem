@@ -1,3 +1,43 @@
-﻿<h3>RecipesIndex</h3>
+﻿@page "/recipes"
+
+<PageTitle>Formulas</PageTitle>
+<HxCard>
+    <HeaderTemplate>
+        <HxIcon Icon="@BootstrapIcon.ListCheck" /> Formulas
+        <a class="btn btn-primary" href="/recipes/create">Nueva Formula</a>
+    </HeaderTemplate>
+    <BodyTemplate>
+        <Filter PlaceHolder="Buscar producto de formula..." Callback="@FilterCallBack" />
+        <GenericList MyList="Recipes">
+            <Body>
+                <Pagination CurrentPage="currentPage" TotalPages="totalPages" SelectedPage="SelectedPageAsync" RecordsNumber="SelectedRecordsNumberAsync" />
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>       
+                            <th style="width: 210px">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var recipe in Recipes!)
+                        {
+                            <tr>
+                                <td>@recipe.Product!.Name</td>
+                                <td>
+                                    <a href="/recipes/edit/@recipe.Id" class="btn btn-warning"><i class="bi bi-pencil" /> Editar</a>
+                                    <HxButton Color="ThemeColor.Danger" Text="Borrar" OnClick="@(() => DeleteAsync(recipe))" />
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </Body>
+        </GenericList>
+    </BodyTemplate>
+</HxCard>
+
+
+
+
 
 

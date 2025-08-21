@@ -407,10 +407,10 @@ namespace StorageSystem.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductId")
-                        .IsUnique();
-
                     b.HasIndex("RawMaterialId");
+
+                    b.HasIndex("ProductId", "RawMaterialId")
+                        .IsUnique();
 
                     b.ToTable("Recipes");
                 });

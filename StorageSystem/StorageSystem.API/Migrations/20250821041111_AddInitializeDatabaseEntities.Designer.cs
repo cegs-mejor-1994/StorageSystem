@@ -12,7 +12,7 @@ using StorageSystem.API.Data;
 namespace StorageSystem.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250820040209_AddInitializeDatabaseEntities")]
+    [Migration("20250821041111_AddInitializeDatabaseEntities")]
     partial class AddInitializeDatabaseEntities
     {
         /// <inheritdoc />
@@ -410,10 +410,10 @@ namespace StorageSystem.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductId")
-                        .IsUnique();
-
                     b.HasIndex("RawMaterialId");
+
+                    b.HasIndex("ProductId", "RawMaterialId")
+                        .IsUnique();
 
                     b.ToTable("Recipes");
                 });

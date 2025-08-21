@@ -1,0 +1,74 @@
+﻿@page "/recipes/create"
+@using StorageSystem.WEB.Pages.Products
+@using StorageSystem.WEB.Pages.RawMaterials
+
+<PageTitle>Crear Formula</PageTitle>
+<h3>Crear Formula</h3>
+<EditForm Model="recipe">
+    <DataAnnotationsValidator />
+    <div class="row">
+        <div class="col-6">
+            <div class="md-3">
+                <label>Materia Prima:</label>
+                <InputText class="form-control" @bind-Value="rawMaterialName" disabled />
+                <ValidationMessage For="@(() => recipe.RawMaterialId)" />
+                <div>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#rawMaterialId">
+                        Seleccionar
+                    </button>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label>Cantidad:</label>
+                <div>
+                    <InputText class="form-control" @bind-Value="recipe.Amount" />
+                    <ValidationMessage For="@(() => recipe.Amount)" />
+                </div>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="mb-3">
+                <label>Proveedor:</label>
+                <InputText class="form-control" @bind-Value="productName" disabled />
+                <ValidationMessage For="@(() => recipe.ProductId)" />
+                <div>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#productId">
+                        Seleccionar
+                    </button>
+                </div>
+            </div>
+        </div>
+        <button class="btn btn-primary form-control" type="button" @onclick="@(() => CreateAsync())">Guardar Cambios</button>
+        <a href="/recipes" class="btn btn-success">Regresar</a>
+    </div>
+</EditForm>
+
+<div class="modal fade" id="productId" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Productos </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" />
+            </div>
+            <div class="modal-body">
+                <ProductsListSelect OnSelectedProductChanged="ClickProductCallBack" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="rawMaterialId" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Materias Primas </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" />
+            </div>
+            <div class="modal-body">
+                <RawMaterialsListSelect OnSelectedRawMaterialChanged="ClickRawMaterialCallBack" />
+            </div>
+        </div>
+    </div>
+</div>
+
+
