@@ -6,7 +6,7 @@ namespace StorageSystem.API.UnitOfWork.Interfaces
 {
     public interface IRecipesUnitOfWork
     {
-        Task<IEnumerable<Recipe>> GetComboAsync();
+        Task<IEnumerable<Recipe>> GetComboAsync();        
         Task<ActionResponse<IEnumerable<Recipe>>> GetAsync(PaginationDTO pagination);
         Task<ActionResponse<int>> GetTotalPagesAsync(PaginationDTO pagination);
     }

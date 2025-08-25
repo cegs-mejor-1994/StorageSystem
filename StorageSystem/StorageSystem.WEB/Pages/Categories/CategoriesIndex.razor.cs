@@ -4,7 +4,6 @@ using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components;
 using StorageSystem.Shared.Entities;
 using StorageSystem.WEB.Repositories;
-using System.Net;
 
 namespace StorageSystem.WEB.Pages.Categories
 {

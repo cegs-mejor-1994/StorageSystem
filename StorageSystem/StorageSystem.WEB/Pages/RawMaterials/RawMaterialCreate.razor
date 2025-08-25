@@ -9,6 +9,13 @@
     <div class="row">
         <div class="col-6">
             <div class="mb-3">
+                <label>Codigo:</label>
+                <div>
+                    <InputText class="form-control" @bind-Value="rawMaterial.Code" />
+                    <ValidationMessage For="@(() => rawMaterial.Code)" />
+                </div>
+            </div>
+            <div class="mb-3">
                 <label>Nombre:</label>
                 <div>
                     <InputText class="form-control" @bind-Value="rawMaterial.Name" />
@@ -43,7 +50,7 @@
     </div>
 </EditForm>
 
-<div class="modal fade" id="measurementUnit" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade" id="measurementUnitId" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">

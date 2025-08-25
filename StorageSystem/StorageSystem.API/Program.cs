@@ -27,6 +27,7 @@ builder.Services.AddScoped<IInputInventoriesRepository, InputInventoriesReposito
 builder.Services.AddScoped<IMeasurementUnitsRepository, MeasurementUnitsRepository>();
 builder.Services.AddScoped<IProductsRepository, ProductsRepository>();
 builder.Services.AddScoped<IRawMaterialsRepository, RawMaterialsRepository>();
+builder.Services.AddScoped<IRecipesRepository, RecipesRepository>();
 builder.Services.AddScoped<IReferencesRepository, ReferencesRepository>();
 builder.Services.AddScoped<ISuppliersRepository, SuppliersRepository>();
 
@@ -36,6 +37,7 @@ builder.Services.AddScoped<IInputInventoriesUnitOfWork, InputInventoriesUnitOfWo
 builder.Services.AddScoped<IMeasurementUnitsUnitOfWork, MeasurementUnitsUnitOfWork>();
 builder.Services.AddScoped<IProductsUnitOfWork, ProductsUnitOfWork>();
 builder.Services.AddScoped<IRawMaterialsUnitOfWork, RawMaterialsUnitOfWork>();
+builder.Services.AddScoped<IRecipesUnitOfWork, RecipesUnitOfWork>();
 builder.Services.AddScoped<IReferencesUnitOfWork, ReferencesUnitOfWork>();
 builder.Services.AddScoped<ISuppliersUnitOfWork, SuppliersUnitOfWork>();
 

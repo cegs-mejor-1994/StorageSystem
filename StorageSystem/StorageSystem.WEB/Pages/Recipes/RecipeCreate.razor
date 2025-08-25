@@ -3,45 +3,73 @@
 @using StorageSystem.WEB.Pages.RawMaterials
 
 <PageTitle>Crear Formula</PageTitle>
-<h3>Crear Formula</h3>
-<EditForm Model="recipe">
-    <DataAnnotationsValidator />
-    <div class="row">
-        <div class="col-6">
-            <div class="md-3">
-                <label>Materia Prima:</label>
-                <InputText class="form-control" @bind-Value="rawMaterialName" disabled />
-                <ValidationMessage For="@(() => recipe.RawMaterialId)" />
-                <div>
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#rawMaterialId">
+<HxCard>
+    <HeaderTemplate>
+        <EditForm Model="recipe">
+            <DataAnnotationsValidator />
+            <div class="row g-1 align-items-center">
+                <div class="col-12 col-sm-8">
+                    <InputText class="form-control" @bind-Value="productName" disabled placeholder="Producto" />
+                    <ValidationMessage For="@(() => recipe.ProductId)" />
+                </div>
+                <div class="col-12 col-sm-4">
+                    <button type="button" class="btn btn-info w-100" data-bs-toggle="modal" data-bs-target="#productId" disabled="@(isProductButton)">
                         Seleccionar
                     </button>
                 </div>
             </div>
-            <div class="mb-3">
-                <label>Cantidad:</label>
-                <div>
-                    <InputText class="form-control" @bind-Value="recipe.Amount" />
+            <div class="row g-1 align-items-center">
+                <div class="col-12 col-sm-8">
+                    <InputText class="form-control" @bind-Value="rawMaterialName" disabled placeholder="Materia Prima" />
+                    <ValidationMessage For="@(() => recipe.RawMaterialId)" />
+                </div>
+                <div class="col-12 col-sm-4">
+                    <button type="button" class="btn btn-info w-100" data-bs-toggle="modal" data-bs-target="#rawMaterialId">
+                        Seleccionar
+                    </button>
+                </div>
+            </div>
+            <div class="row g-1 align-items-center">
+                <div class="col-12 col-sm-4">
+                    <InputText class="form-control" @bind-Value="recipe.Amount" placeholder="Cantidad" />
                     <ValidationMessage For="@(() => recipe.Amount)" />
                 </div>
-            </div>
-        </div>
-        <div class="col-6">
-            <div class="mb-3">
-                <label>Proveedor:</label>
-                <InputText class="form-control" @bind-Value="productName" disabled />
-                <ValidationMessage For="@(() => recipe.ProductId)" />
-                <div>
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#productId">
-                        Seleccionar
-                    </button>
+                <div class="col-12 col-sm-4">
+                    <button class="btn btn-primary w-100" type="button" @onclick="@(() => CreateAsync())">Guardar Cambios</button>
+                </div>
+                <div class="col-12 col-sm-4">
+                    <a href="/recipes" class="btn btn-success w-100">Regresar</a>
                 </div>
             </div>
-        </div>
-        <button class="btn btn-primary form-control" type="button" @onclick="@(() => CreateAsync())">Guardar Cambios</button>
-        <a href="/recipes" class="btn btn-success">Regresar</a>
-    </div>
-</EditForm>
+        </EditForm>
+    </HeaderTemplate>
+    <BodyTemplate>
+        @if (Recipes != null)
+        {
+            <GenericList MyList="Recipes">
+                <Body>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Materia prima</th>
+                                <th>Cantidad</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var recipe in Recipes!)
+                            {
+                                <tr>
+                                    <td>@recipe.RawMaterial!.Name</td>
+                                    <td>@recipe.Amount @recipe.RawMaterial.MeasurementUnit!.Code</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </Body>
+            </GenericList>
+        }
+    </BodyTemplate>        
+</HxCard>
 
 <div class="modal fade" id="productId" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -51,7 +79,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" />
             </div>
             <div class="modal-body">
-                <ProductsListSelect OnSelectedProductChanged="ClickProductCallBack" />
+                <ProductsRecipesListSelect OnSelectedProductRecipeChanged="ClickProductCallBack" />
             </div>
         </div>
     </div>
@@ -65,10 +93,31 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" />
             </div>
             <div class="modal-body">
-                <RawMaterialsListSelect OnSelectedRawMaterialChanged="ClickRawMaterialCallBack" />
+                <GenericList MyList="rawMaterials">
+                    <Body>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th style="width:168px">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var rawMaterial in rawMaterials!)
+                                {            
+                                    <tr>
+                                        <td>@rawMaterial.Name</td>
+                                        <td>
+                                            <HxButton Color="ThemeColor.Secondary" data-bs-dismiss="modal" Text="Seleccionar" OnClick="@(() => ClickRawMaterialCallBack($"{rawMaterial.Id},{rawMaterial.Name}"))" />
+                                        </td>
+                                    </tr>                                    
+                                }
+                            </tbody>
+                        </table>
+                    </Body>
+                </GenericList>
             </div>
         </div>
     </div>
 </div>
-
 

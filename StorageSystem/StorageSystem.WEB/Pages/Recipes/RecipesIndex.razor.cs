@@ -83,6 +83,7 @@ namespace StorageSystem.WEB.Pages.Recipes
                 return false;
             }
             Recipes = responseHttp.Response;
+            Recipes = Recipes!.GroupBy(r => r.Product!.Name).Select(g => g.First()).ToList();
             return true;
         }
 
@@ -111,12 +112,12 @@ namespace StorageSystem.WEB.Pages.Recipes
             await SelectedPageAsync(page);
         }
 
-        private async Task DeleteAsync(Recipe recipe)
+        /*private async Task DeleteAsync(Product product)
         {
             var result = await SweetAlertService.FireAsync(new SweetAlertOptions
             {
                 Title = "Confirmacion",
-                Text = $"¿Estas seguro de querer eliminar la formual del producto: {recipe.Product!.Name}?",
+                Text = $"¿Estas seguro de querer eliminar el producto: {product.Name}?",
                 Icon = SweetAlertIcon.Question,
                 ShowCancelButton = true,
             });
@@ -126,7 +127,7 @@ namespace StorageSystem.WEB.Pages.Recipes
             {
                 return;
             }
-            var responseHttp = await Repository.DeleteAsync<Recipe>($"api/Recipes/{recipe.Id}");
+            var responseHttp = await Repository.DeleteAsync<Product>($"api/Products/{product.Id}");
             if (responseHttp.Error)
             {
                 if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
@@ -150,6 +151,6 @@ namespace StorageSystem.WEB.Pages.Recipes
                 Timer = 3000,
             });
             await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro eliminado correctamente");
-        }
+        }*/
     }
 }

@@ -30,10 +30,10 @@ namespace StorageSystem.API.Repositories.Implementations
             {
                 WasSuccess = true,
                 Result = await queryable
-                    .OrderBy(x => x.Id)
-                    .Include(i => i.RawMaterial!)
-                    .ThenInclude(i => i.MeasurementUnit)
-                    .Include(i => i.Supplier!)
+                    .OrderBy(i => i.Id)
+                    .Include(r => r.RawMaterial!)
+                    .ThenInclude(m => m.MeasurementUnit)
+                    .Include(s => s.Supplier!)
                     .Paginate(pagination)
                     .ToListAsync()
             };             

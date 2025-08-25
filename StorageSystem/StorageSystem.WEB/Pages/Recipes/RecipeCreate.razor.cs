@@ -8,23 +8,30 @@ namespace StorageSystem.WEB.Pages.Recipes
     public partial class RecipeCreate
     {
         private Recipe recipe = new();
-
-        private string rawMaterialName = "Materia prima";
-        private int rawMaterialId { get; set; }
-
         private string productName = "Producto";
+        private string rawMaterialName = "Materia prima";
+
+        private int rawMaterialId { get; set; }
         private int productId { get; set; }
+        private bool isProductButton = false;
+
+        private List<Recipe>? Recipes { get; set; }
+        private List<RawMaterial>? rawMaterials { get; set; }
 
         [Inject] private IRepository Repository { get; set; } = null!;
-        [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
-        [Inject] private NavigationManager NavigationManager { get; set; } = null!;
+        [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;        
 
+        protected override async Task OnInitializedAsync()
+        {
+            await LoadRawMaterialsAsync();
+        }
 
         private void ClickProductCallBack(string product)
         {
             string[] valores = product.Split(',');
             productId = int.Parse(valores[0]);
-            productName = valores[1];
+            productName = valores[1];   
+            isProductButton = true;
         }
 
         private void ClickRawMaterialCallBack(string rawMaterial)
@@ -32,7 +39,7 @@ namespace StorageSystem.WEB.Pages.Recipes
             string[] valores = rawMaterial.Split(',');
             rawMaterialId = int.Parse(valores[0]);
             rawMaterialName = valores[1];
-        }
+        }        
 
         private async Task CreateAsync()
         {
@@ -49,15 +56,15 @@ namespace StorageSystem.WEB.Pages.Recipes
                         await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
                         return;
                     }
-                    var toast = SweetAlertService.Mixin(new SweetAlertOptions
+                    await LoadRecipesAsync(productId);
+                    /*var toast = SweetAlertService.Mixin(new SweetAlertOptions
                     {
                         Toast = true,
                         Position = SweetAlertPosition.BottomEnd,
                         ShowConfirmButton = true,
                         Timer = 3000
-                    });
-                    await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro creado con éxito.");
-                    productName = "Proveedor";
+                    });                    
+                    await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro creado con éxito.");    */                
                     rawMaterialName = "Materia prima";
                     recipe = new Recipe();
                 }
@@ -72,6 +79,31 @@ namespace StorageSystem.WEB.Pages.Recipes
                 await SweetAlertService.FireAsync("Error", ex.Message, SweetAlertIcon.Error);
                 return;
             }
+        }
+
+        private async Task LoadRecipesAsync(int productId)
+        {
+            var responseHttp = await Repository.GetAsync<List<Recipe>>("/api/Recipes/combo");
+            if (responseHttp.Error)
+            {
+                var message = await responseHttp.GetErrorMessageAsync();
+                await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+                return;
+            }
+            Recipes = responseHttp.Response;
+            Recipes = Recipes!.Where(r => r.ProductId == productId).ToList();
+        }
+
+        private async Task LoadRawMaterialsAsync()
+        {
+            var responseHttp = await Repository.GetAsync<List<RawMaterial>>("/api/RawMaterials/combo");
+            if (responseHttp.Error)
+            {
+                var message = await responseHttp.GetErrorMessageAsync();
+                await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+                return;
+            }
+            rawMaterials = responseHttp.Response;
         }
     }
 }

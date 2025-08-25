@@ -1,3 +1,44 @@
-﻿<h3>RecipeEdit</h3>
+﻿@page "/recipes/edit/{ProductId:int}"
 
-
+<PageTitle>Editar Formula</PageTitle>
+<HxCard>
+    <HeaderTemplate>                    
+        <div class="row g-1 align-items-center">
+            <div class="col-12 col-sm-12">
+                <InputText class="form-control" @bind-Value="productName" disabled placeholder="Producto" />   
+                <a href="/recipes" class="btn btn-success w-100 mt-1">Regresar</a>
+            </div>
+        </div>        
+    </HeaderTemplate>
+    <BodyTemplate>
+        @if (Recipes != null)
+        {
+            <GenericList MyList="Recipes">
+                <Body>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Materia prima</th>
+                                <th>Cantidad</th>
+                                <th style="width: 210px">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var recipe in Recipes!)
+                            {
+                                <tr>
+                                    <td>@recipe.RawMaterial!.Name</td>
+                                    <td>@recipe.Amount @recipe.RawMaterial.MeasurementUnit!.Code</td>
+                                    <td>
+                                        <HxButton Text="Editar" Color="ThemeColor.Warning" IconPlacement="ButtonIconPlacement.Start" Icon="BootstrapIcon.Pencil" Size="ButtonSize.Small" OnClick="@(() => ShowModalAsync(recipe.Id))" />
+                                        <HxButton Text="Borrar" Icon="BootstrapIcon.Trash" IconPlacement="ButtonIconPlacement.Start" Color="ThemeColor.Danger" Size="ButtonSize.Small" OnClick="@(() => DeleteAsync(recipe))"/>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </Body>
+            </GenericList>
+        }
+    </BodyTemplate>
+</HxCard>

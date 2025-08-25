@@ -1,0 +1,25 @@
+﻿@page "/recipes/RawMaterialedit/{Id:int}"
+
+@if (Recipe == null)
+{
+    <Loading />
+} 
+else 
+{ 
+    <div class="row g-1 align-items-center">
+        <div class="col-12 col-sm-8">
+            <HxInputText @bind-Value="RawMaterial!.Name" Enabled="false"/>
+        </div>
+        <div class="col-12 col-sm-8">
+            <label class="form-label">Cantidad:</label>
+            <div>
+                <HxInputText @bind-Value="Recipe!.Amount" />
+            </div>
+        </div>
+        <div class="d-grid gap-2 d-md-block">
+            <HxButton Color="ThemeColor.Primary" Text="Guardar Cambios" OnClick="@(() => EditAsync())" />
+        </div>
+    </div>
+}
+
+
