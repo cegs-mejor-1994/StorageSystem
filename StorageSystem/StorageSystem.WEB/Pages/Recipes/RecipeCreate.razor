@@ -31,7 +31,7 @@
             </div>
             <div class="row g-1 align-items-center">
                 <div class="col-12 col-sm-4">
-                    <InputText class="form-control" @bind-Value="recipe.Amount" placeholder="Cantidad" />
+                    <InputText class="form-control" @bind-Value="recipe.Amount" placeholder="Cantidad" /> @rawMaterialCodeMeasurementUnit
                     <ValidationMessage For="@(() => recipe.Amount)" />
                 </div>
                 <div class="col-12 col-sm-4">
@@ -104,13 +104,17 @@
                             </thead>
                             <tbody>
                                 @foreach (var rawMaterial in rawMaterials!)
-                                {            
-                                    <tr>
-                                        <td>@rawMaterial.Name</td>
-                                        <td>
-                                            <HxButton Color="ThemeColor.Secondary" data-bs-dismiss="modal" Text="Seleccionar" OnClick="@(() => ClickRawMaterialCallBack($"{rawMaterial.Id},{rawMaterial.Name}"))" />
-                                        </td>
-                                    </tr>                                    
+                                {
+                                    var exists = Recipes?.Any(r => r.RawMaterialId == rawMaterial.Id) ?? false;
+                                    @if (!exists)
+                                    {
+                                        <tr>
+                                            <td>@rawMaterial.Name</td>
+                                            <td>
+                                                <HxButton Color="ThemeColor.Secondary" data-bs-dismiss="modal" Text="Seleccionar" OnClick="@(() => ClickRawMaterialCallBack($"{rawMaterial.Id},{rawMaterial.Name},{rawMaterial.MeasurementUnit!.Code}"))" />
+                                            </td>
+                                        </tr>
+                                    }
                                 }
                             </tbody>
                         </table>

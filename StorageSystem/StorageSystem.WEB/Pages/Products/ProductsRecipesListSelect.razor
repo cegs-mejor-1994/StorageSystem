@@ -10,7 +10,7 @@
             <tbody>
                 @foreach (var product in products!)
                 {
-                    var existeFormula = recipes!.Any(r => r.ProductId == product.Id);
+                    var existeFormula = recipes?.Any(r => r.ProductId == product.Id) ?? false;
                     <tr>
                         @if (!existeFormula)
                         {

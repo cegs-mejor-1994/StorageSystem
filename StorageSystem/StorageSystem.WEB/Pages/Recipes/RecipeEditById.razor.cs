@@ -12,7 +12,7 @@ namespace StorageSystem.WEB.Pages.Recipes
     {
         private Recipe? Recipe;
         private Product? Product { get; set; }
-        private RawMaterial? RawMaterial { get; set; }
+        private RawMaterial? RawMaterial { get; set; }          
 
         [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
 
@@ -45,7 +45,7 @@ namespace StorageSystem.WEB.Pages.Recipes
             if (Recipe != null)
             {
                 await GetRawMaterial(Recipe.RawMaterialId);
-                await GetProduct(Recipe.ProductId);
+                await GetProduct(Recipe.ProductId);                
             }
         }
 
@@ -72,7 +72,7 @@ namespace StorageSystem.WEB.Pages.Recipes
 
         private async Task GetRawMaterial(int id)
         {
-            var responseHttp = await Repository.GetAsync<RawMaterial>($"/api/RawMaterials/{id}");
+            var responseHttp = await Repository.GetAsync<RawMaterial>($"/api/RawMaterials/combo");
             if (responseHttp.Error)
             {
                 if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
@@ -87,7 +87,7 @@ namespace StorageSystem.WEB.Pages.Recipes
             }
             else
             {
-                RawMaterial = responseHttp.Response;
+                RawMaterial = responseHttp.Response; 
             }
         }
 

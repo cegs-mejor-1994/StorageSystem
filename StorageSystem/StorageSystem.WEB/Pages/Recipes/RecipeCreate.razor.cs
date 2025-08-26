@@ -10,13 +10,14 @@ namespace StorageSystem.WEB.Pages.Recipes
         private Recipe recipe = new();
         private string productName = "Producto";
         private string rawMaterialName = "Materia prima";
+        private string rawMaterialCodeMeasurementUnit = string.Empty;   
 
         private int rawMaterialId { get; set; }
         private int productId { get; set; }
         private bool isProductButton = false;
 
-        private List<Recipe>? Recipes { get; set; }
-        private List<RawMaterial>? rawMaterials { get; set; }
+        private List<Recipe>? Recipes { get; set; } = null!;
+        private List<RawMaterial>? rawMaterials { get; set; } = null!;
 
         [Inject] private IRepository Repository { get; set; } = null!;
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;        
@@ -39,6 +40,7 @@ namespace StorageSystem.WEB.Pages.Recipes
             string[] valores = rawMaterial.Split(',');
             rawMaterialId = int.Parse(valores[0]);
             rawMaterialName = valores[1];
+            rawMaterialCodeMeasurementUnit = valores[2];
         }        
 
         private async Task CreateAsync()

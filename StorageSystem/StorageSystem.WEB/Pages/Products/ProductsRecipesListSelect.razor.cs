@@ -7,8 +7,8 @@ namespace StorageSystem.WEB.Pages.Products
 {
     public partial class ProductsRecipesListSelect
     {
-        private List<Product>? products { get; set; }
-        private List<Recipe>? recipes { get; set; }
+        private List<Product>? products { get; set; } = null!;
+        private List<Recipe>? recipes { get; set; } = null!;
         [Parameter] public EventCallback<string> OnSelectedProductRecipeChanged { get; set; }
 
         [Inject] private IRepository Repository { get; set; } = null!;

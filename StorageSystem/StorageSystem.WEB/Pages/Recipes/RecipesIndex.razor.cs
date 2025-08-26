@@ -10,7 +10,7 @@ namespace StorageSystem.WEB.Pages.Recipes
     {
         private int currentPage = 1;
         private int totalPages;
-
+        
         [Parameter, SupplyParameterFromQuery] public string Page { get; set; } = string.Empty;
         [Parameter, SupplyParameterFromQuery] public string Filter { get; set; } = string.Empty;
         [Parameter, SupplyParameterFromQuery] public int RecordsNumber { get; set; } = 8;
