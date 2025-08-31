@@ -1,5 +1,44 @@
-﻿<h3>ProductionGAPIndex</h3>
+﻿@page "/productionsgap"
+<PageTitle>Procesos</PageTitle>
+<HxCard>
+    <HeaderTemplate>
+        <HxIcon Icon="@BootstrapIcon.ListCheck" /> Procesos
+        <a class="btn btn-primary float-end" href="/productionsgap/create">Nuevo Proceso</a>
+    </HeaderTemplate>
+    <BodyTemplate>
+        <Filter PlaceHolder="Buscar formula..." Callback="@FilterCallBack" />
+        <GenericList MyList="ProductionGaps">
+            <Body>
+                <Pagination CurrentPage="currentPage" TotalPages="totalPages" SelectedPage="SelectedPageAsync" RecordsNumber="SelectedRecordsNumberAsync" />
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Cantidad proceso</th>
+                            <th>Lote / Vence</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var productionGap in ProductionGaps!)
+                        {
+                            <tr>
+                                <td>@productionGap.Recipe!.Product!.Name</td>
+                                <td>@productionGap.Amount</td>
+                                <td>@productionGap.RegisterDate</td>                                
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </Body>
+        </GenericList>
+    </BodyTemplate>
+</HxCard>
 
-@code {
 
-}
+
+
+
+
+
+
+

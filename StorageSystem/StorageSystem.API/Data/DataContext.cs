@@ -21,6 +21,7 @@ namespace StorageSystem.API.Data
         public DbSet<ProductionGap> ProductionGaps { get; set; }
         public DbSet<RawMaterial> RawMaterials { get; set; }
         public DbSet<Recipe> Recipes { get; set; }
+        public DbSet<RecipeTotal> RecipeTotals { get; set; }
         public DbSet<Reference> References { get; set; }
         public DbSet<Supplier> Suppliers { get; set; }                 
 

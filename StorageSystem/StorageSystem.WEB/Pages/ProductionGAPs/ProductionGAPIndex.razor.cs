@@ -2,11 +2,10 @@ using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components;
 using StorageSystem.Shared.Entities;
 using StorageSystem.WEB.Repositories;
-using System.Net;
 
-namespace StorageSystem.WEB.Pages.Recipes
+namespace StorageSystem.WEB.Pages.ProductionGAPs
 {
-    public partial class RecipesIndex
+    public partial class ProductionGAPIndex
     {
         private int currentPage = 1;
         private int totalPages;
@@ -14,11 +13,11 @@ namespace StorageSystem.WEB.Pages.Recipes
         [Parameter, SupplyParameterFromQuery] public string Page { get; set; } = string.Empty;
         [Parameter, SupplyParameterFromQuery] public string Filter { get; set; } = string.Empty;
         [Parameter, SupplyParameterFromQuery] public int RecordsNumber { get; set; } = 8;
-
-        [Inject] private IRepository Repository { get; set; } = null!;
-        [Inject] private NavigationManager NavigationManager { get; set; } = null!;
+        
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
-        public List<Product>? Products { get; set; }
+        [Inject] private IRepository Repository { get; set; } = null!;
+
+        private List<ProductionGap>? ProductionGaps { get; set; }
 
         protected async override Task OnInitializedAsync()
         {
@@ -70,26 +69,26 @@ namespace StorageSystem.WEB.Pages.Recipes
         private async Task<bool> LoadListAsync(int page)
         {
             ValidateRecordsNumber(RecordsNumber);
-            var url = $"api/Products/?page={page}&recordsnumber={RecordsNumber}";
+            var url = $"api/ProductionGaps/?page={page}&recordsnumber={RecordsNumber}";
             if (!string.IsNullOrWhiteSpace(Filter))
             {
                 url += $"&filter={Filter}";
             }
-            var responseHttp = await Repository.GetAsync<List<Product>>(url);
+            var responseHttp = await Repository.GetAsync<List<ProductionGap>>(url);
             if (responseHttp.Error)
             {
                 var messageError = await responseHttp.GetErrorMessageAsync();
                 await SweetAlertService.FireAsync("Error", messageError, SweetAlertIcon.Error);
                 return false;
             }
-            Products = responseHttp.Response;
+            ProductionGaps = responseHttp.Response;
             return true;
         }
 
         private async Task LoadPagesAsync()
         {
             ValidateRecordsNumber(RecordsNumber);
-            var url = $"api/Products/totalPages?recordsnumber={RecordsNumber}";
+            var url = $"api/ProductionGaps/totalPages?recordsnumber={RecordsNumber}";
             if (!string.IsNullOrWhiteSpace(Filter))
             {
                 url += $"&filter={Filter}";
@@ -110,46 +109,5 @@ namespace StorageSystem.WEB.Pages.Recipes
             await LoadAsync(page);
             await SelectedPageAsync(page);
         }
-
-        /*private async Task DeleteAsync(Product product)
-        {
-            var result = await SweetAlertService.FireAsync(new SweetAlertOptions
-            {
-                Title = "Confirmacion",
-                Text = $"¿Estas seguro de querer eliminar el formula del producto: {product.Name}?",
-                Icon = SweetAlertIcon.Question,
-                ShowCancelButton = true,
-            });
-
-            var confirm = string.IsNullOrEmpty(result.Value);
-            if (confirm)
-            {
-                return;
-            }
-            var responseHttp = await Repository.DeleteAsync<Product>($"api/Products/{product.Id}");
-            if (responseHttp.Error)
-            {
-                if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
-                {
-                    NavigationManager.NavigateTo("/");
-                }
-                else
-                {
-                    var messageError = await responseHttp.GetErrorMessageAsync();
-                    await SweetAlertService.FireAsync("Error", messageError, SweetAlertIcon.Error);
-                }
-                return;
-            }
-            await LoadAsync();
-
-            var toast = SweetAlertService.Mixin(new SweetAlertOptions
-            {
-                Toast = true,
-                Position = SweetAlertPosition.BottomEnd,
-                ShowConfirmButton = true,
-                Timer = 3000,
-            });
-            await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro eliminado correctamente");
-        }*/
     }
 }
