@@ -4,7 +4,7 @@ using StorageSystem.Shared.Responses;
 
 namespace StorageSystem.API.Repositories.Interfaces
 {
-    public interface IProductionGapRepository
+    public interface IProductionGapsRepository
     {
         Task<IEnumerable<ProductionGap>> GetComboAsync();
         Task<ActionResponse<IEnumerable<ProductionGap>>> GetAsync(PaginationDTO pagination);
