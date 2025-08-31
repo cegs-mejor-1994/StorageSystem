@@ -11,8 +11,9 @@ namespace StorageSystem.WEB.Pages.Recipes
     public partial class RecipeEditById
     {
         private Recipe? Recipe;
-        private Product? Product { get; set; }
-        private RawMaterial? RawMaterial { get; set; }          
+        //private Product? Product { get; set; }
+        private List<RawMaterial>? RawMaterials { get; set; }
+        private RawMaterial? RawMaterial { get; set; }
 
         [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
 
@@ -21,6 +22,11 @@ namespace StorageSystem.WEB.Pages.Recipes
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
         [Inject] private IRepository Repository { get; set; } = null!;
+
+        protected async override Task OnInitializedAsync()
+        {
+            await GetRawMaterials();
+        }
 
         protected async override Task OnParametersSetAsync()
         {
@@ -43,13 +49,13 @@ namespace StorageSystem.WEB.Pages.Recipes
             }
 
             if (Recipe != null)
-            {
-                await GetRawMaterial(Recipe.RawMaterialId);
-                await GetProduct(Recipe.ProductId);                
+            {               
+                //await GetProduct(Recipe.ProductId);                
+                GetRawMaterial(Recipe.RawMaterialId);
             }
         }
 
-        private async Task GetProduct(int id)
+       /* private async Task GetProduct(int id)
         {
             var responseHttp = await Repository.GetAsync<Product>($"/api/Products/{id}");
             if (responseHttp.Error)
@@ -68,33 +74,31 @@ namespace StorageSystem.WEB.Pages.Recipes
             {
                 Product = responseHttp.Response;
             }
-        }
+        }*/
 
-        private async Task GetRawMaterial(int id)
+        private async Task GetRawMaterials()
         {
-            var responseHttp = await Repository.GetAsync<RawMaterial>($"/api/RawMaterials/combo");
+            var responseHttp = await Repository.GetAsync<List<RawMaterial>>("/api/RawMaterials/combo");
             if (responseHttp.Error)
             {
-                if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
-                {
-                    NavigationManager.NavigateTo("/");
-                }
-                else
-                {
-                    var message = await responseHttp.GetErrorMessageAsync();
-                    await SweetAlertService.FireAsync(new SweetAlertOptions { Title = "Error", Text = message, Icon = SweetAlertIcon.Error });
-                }
+                var message = await responseHttp.GetErrorMessageAsync();
+                await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+                return;
             }
-            else
-            {
-                RawMaterial = responseHttp.Response; 
+            RawMaterials = responseHttp.Response;
+        }
+
+        private void GetRawMaterial(int id)
+        {
+            if (RawMaterials != null) {                
+                RawMaterial = RawMaterials.FirstOrDefault(x => x.Id == id);
             }
         }
 
         private async Task EditAsync()
         {
-            Recipe.ProductId = Product!.Id;
-            Recipe.RawMaterialId = RawMaterial!.Id;
+            //Recipe!.ProductId = Product!.Id;
+            //Recipe.RawMaterialId = RawMaterial!.Id;
             var responseHttp = await Repository.PutAsync($"/api/Recipes", Recipe);
             if (responseHttp.Error)
             {

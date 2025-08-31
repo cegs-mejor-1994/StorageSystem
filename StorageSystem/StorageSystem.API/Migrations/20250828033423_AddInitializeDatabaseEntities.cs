@@ -177,6 +177,33 @@ namespace StorageSystem.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "FormReference",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ReferenceId = table.Column<int>(type: "int", nullable: false),
+                    RawMaterialId = table.Column<int>(type: "int", nullable: false),
+                    State = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FormReference", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_FormReference_RawMaterials_RawMaterialId",
+                        column: x => x.RawMaterialId,
+                        principalTable: "RawMaterials",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_FormReference_References_ReferenceId",
+                        column: x => x.ReferenceId,
+                        principalTable: "References",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Products",
                 columns: table => new
                 {
@@ -290,12 +317,19 @@ namespace StorageSystem.API.Migrations
                     Amount = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
                     ProductionGapId = table.Column<int>(type: "int", nullable: false),
                     ProductsDetailId = table.Column<int>(type: "int", nullable: false),
+                    FormReferenceId = table.Column<int>(type: "int", nullable: false),
                     State = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     RegisterDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Manufacturies", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Manufacturies_FormReference_FormReferenceId",
+                        column: x => x.FormReferenceId,
+                        principalTable: "FormReference",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Manufacturies_ProductionGaps_ProductionGapId",
                         column: x => x.ProductionGapId,
@@ -351,6 +385,16 @@ namespace StorageSystem.API.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_FormReference_RawMaterialId",
+                table: "FormReference",
+                column: "RawMaterialId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FormReference_ReferenceId",
+                table: "FormReference",
+                column: "ReferenceId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_InputInventories_RawMaterialId",
                 table: "InputInventories",
                 column: "RawMaterialId");
@@ -359,6 +403,11 @@ namespace StorageSystem.API.Migrations
                 name: "IX_InputInventories_SupplierId",
                 table: "InputInventories",
                 column: "SupplierId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Manufacturies_FormReferenceId",
+                table: "Manufacturies",
+                column: "FormReferenceId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Manufacturies_ProductionGapId",
@@ -471,6 +520,9 @@ namespace StorageSystem.API.Migrations
 
             migrationBuilder.DropTable(
                 name: "Manufacturies");
+
+            migrationBuilder.DropTable(
+                name: "FormReference");
 
             migrationBuilder.DropTable(
                 name: "ProductionGaps");

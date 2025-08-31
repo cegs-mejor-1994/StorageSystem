@@ -3,7 +3,7 @@
 <HxCard>
     <HeaderTemplate>
         <HxIcon Icon="@BootstrapIcon.ListCheck" /> Materias Primas
-        <a class="btn btn-primary" href="/rawMaterials/create">Nueva Materia Prima</a>
+        <a class="btn btn-primary float-end" href="/rawMaterials/create">Nueva Materia Prima</a>
     </HeaderTemplate>
     <BodyTemplate>
         <Filter PlaceHolder="Buscar materia prima..." Callback="@FilterCallBack" />
@@ -23,7 +23,7 @@
                         {
                             <tr>
                                 <td>@rawMaterial.Code</td>
-                                <td>@rawMaterial.Name @rawMaterial.MeasurementUnit!.Code</td>
+                                <td>@rawMaterial.Name</td>
                                 <td>
                                     <a href="/rawMaterials/edit/@rawMaterial.Id" class="btn btn-warning"><i class="bi bi-pencil"/> Editar</a>
                                     <HxButton Text="Borrar" Icon="BootstrapIcon.Trash" IconPlacement="ButtonIconPlacement.Start" Color="ThemeColor.Danger" Size="ButtonSize.Small" OnClick="@(() => DeleteAsync(rawMaterial))" />

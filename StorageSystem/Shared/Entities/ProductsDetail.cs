@@ -12,6 +12,7 @@ namespace StorageSystem.Shared.Entities
        
         public int ProductId { get; set; }
         public Product? Product { get; set; }
+
         public int ReferenceId { get; set; }
         public Reference? Reference { get; set; }
 

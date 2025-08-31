@@ -105,6 +105,33 @@ namespace StorageSystem.API.Migrations
                     b.ToTable("Clients");
                 });
 
+            modelBuilder.Entity("StorageSystem.Shared.Entities.FormReference", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("RawMaterialId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ReferenceId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RawMaterialId");
+
+                    b.HasIndex("ReferenceId");
+
+                    b.ToTable("FormReference");
+                });
+
             modelBuilder.Entity("StorageSystem.Shared.Entities.InputInventory", b =>
                 {
                     b.Property<int>("Id")
@@ -161,6 +188,9 @@ namespace StorageSystem.API.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
+                    b.Property<int>("FormReferenceId")
+                        .HasColumnType("int");
+
                     b.Property<int>("ProductionGapId")
                         .HasColumnType("int");
 
@@ -175,6 +205,8 @@ namespace StorageSystem.API.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("FormReferenceId");
 
                     b.HasIndex("ProductionGapId");
 
@@ -508,6 +540,25 @@ namespace StorageSystem.API.Migrations
                     b.ToTable("Suppliers");
                 });
 
+            modelBuilder.Entity("StorageSystem.Shared.Entities.FormReference", b =>
+                {
+                    b.HasOne("StorageSystem.Shared.Entities.RawMaterial", "RawMaterial")
+                        .WithMany()
+                        .HasForeignKey("RawMaterialId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("StorageSystem.Shared.Entities.Reference", "Reference")
+                        .WithMany()
+                        .HasForeignKey("ReferenceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("RawMaterial");
+
+                    b.Navigation("Reference");
+                });
+
             modelBuilder.Entity("StorageSystem.Shared.Entities.InputInventory", b =>
                 {
                     b.HasOne("StorageSystem.Shared.Entities.RawMaterial", "RawMaterial")
@@ -529,6 +580,12 @@ namespace StorageSystem.API.Migrations
 
             modelBuilder.Entity("StorageSystem.Shared.Entities.Manufactury", b =>
                 {
+                    b.HasOne("StorageSystem.Shared.Entities.FormReference", "FormReference")
+                        .WithMany()
+                        .HasForeignKey("FormReferenceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("StorageSystem.Shared.Entities.ProductionGap", "ProductionGap")
                         .WithMany("Manufacturies")
                         .HasForeignKey("ProductionGapId")
@@ -540,6 +597,8 @@ namespace StorageSystem.API.Migrations
                         .HasForeignKey("ProductsDetailId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("FormReference");
 
                     b.Navigation("ProductionGap");
 

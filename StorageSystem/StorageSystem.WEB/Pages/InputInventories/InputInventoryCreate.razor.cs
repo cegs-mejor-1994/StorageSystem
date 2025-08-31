@@ -18,8 +18,6 @@ namespace StorageSystem.WEB.Pages.InputInventories
 
         [Inject] private IRepository Repository { get; set; } = null!;
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
-        [Inject] private NavigationManager NavigationManager { get; set; } = null!;
-
 
         private void ClickSupplierCallBack (string supplier)
         {            

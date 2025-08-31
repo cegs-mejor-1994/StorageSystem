@@ -7,13 +7,16 @@
 else 
 { 
     <div class="row g-1 align-items-center">
-        <div class="col-12 col-sm-8">
+        <div class="col-12 col-sm-12">
             <HxInputText @bind-Value="RawMaterial!.Name" Enabled="false"/>
         </div>
-        <div class="col-12 col-sm-8">
-            <label class="form-label">Cantidad:</label>
+        <div class="col-12 col-sm-12 d-flex mt-2">
+            @if (RawMaterial != null)
+            {
+                <label class="form-label me-2 mb-0">Cantidad @RawMaterial.MeasurementUnit!.Code</label>                
+            }            
             <div>
-                <HxInputText @bind-Value="Recipe!.Amount" /> 
+                <HxInputText style="max-width: 200px" @bind-Value="Recipe!.Amount" />   
             </div>
         </div>
         <div class="d-grid gap-2 d-md-block">

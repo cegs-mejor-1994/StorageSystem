@@ -10,7 +10,7 @@ namespace StorageSystem.WEB.Pages.Recipes
     {
         private int currentPage = 1;
         private int totalPages;
-        
+
         [Parameter, SupplyParameterFromQuery] public string Page { get; set; } = string.Empty;
         [Parameter, SupplyParameterFromQuery] public string Filter { get; set; } = string.Empty;
         [Parameter, SupplyParameterFromQuery] public int RecordsNumber { get; set; } = 8;
@@ -18,7 +18,7 @@ namespace StorageSystem.WEB.Pages.Recipes
         [Inject] private IRepository Repository { get; set; } = null!;
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
-        public List<Recipe>? Recipes { get; set; }
+        public List<Product>? Products { get; set; }
 
         protected async override Task OnInitializedAsync()
         {
@@ -70,27 +70,26 @@ namespace StorageSystem.WEB.Pages.Recipes
         private async Task<bool> LoadListAsync(int page)
         {
             ValidateRecordsNumber(RecordsNumber);
-            var url = $"api/Recipes/?page={page}&recordsnumber={RecordsNumber}";
+            var url = $"api/Products/?page={page}&recordsnumber={RecordsNumber}";
             if (!string.IsNullOrWhiteSpace(Filter))
             {
                 url += $"&filter={Filter}";
             }
-            var responseHttp = await Repository.GetAsync<List<Recipe>>(url);
+            var responseHttp = await Repository.GetAsync<List<Product>>(url);
             if (responseHttp.Error)
             {
                 var messageError = await responseHttp.GetErrorMessageAsync();
                 await SweetAlertService.FireAsync("Error", messageError, SweetAlertIcon.Error);
                 return false;
             }
-            Recipes = responseHttp.Response;
-            Recipes = Recipes!.GroupBy(r => r.Product!.Name).Select(g => g.First()).ToList();
+            Products = responseHttp.Response;
             return true;
         }
 
         private async Task LoadPagesAsync()
         {
             ValidateRecordsNumber(RecordsNumber);
-            var url = $"api/Recipes/totalPages?recordsnumber={RecordsNumber}";
+            var url = $"api/Products/totalPages?recordsnumber={RecordsNumber}";
             if (!string.IsNullOrWhiteSpace(Filter))
             {
                 url += $"&filter={Filter}";
@@ -112,7 +111,7 @@ namespace StorageSystem.WEB.Pages.Recipes
             await SelectedPageAsync(page);
         }
 
-        /*private async Task DeleteAsync(Product product)
+        private async Task DeleteAsync(Product product)
         {
             var result = await SweetAlertService.FireAsync(new SweetAlertOptions
             {
@@ -151,6 +150,6 @@ namespace StorageSystem.WEB.Pages.Recipes
                 Timer = 3000,
             });
             await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro eliminado correctamente");
-        }*/
+        }
     }
 }
