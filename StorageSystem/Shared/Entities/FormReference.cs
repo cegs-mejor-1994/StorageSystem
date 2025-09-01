@@ -13,5 +13,7 @@ namespace StorageSystem.Shared.Entities
         public RawMaterial? RawMaterial { get; set; }
 
         public string State { get; set; } = "Disponible";
+
+        public ICollection<ProductsDetail>? ProductsDetails { get; set; }
     }
 }

@@ -12,7 +12,7 @@ using StorageSystem.API.Data;
 namespace StorageSystem.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250831223154_AddInitializeDatabaseEntities")]
+    [Migration("20250901044501_AddInitializeDatabaseEntities")]
     partial class AddInitializeDatabaseEntities
     {
         /// <inheritdoc />
@@ -130,9 +130,10 @@ namespace StorageSystem.API.Migrations
 
                     b.HasIndex("RawMaterialId");
 
-                    b.HasIndex("ReferenceId");
+                    b.HasIndex("ReferenceId", "RawMaterialId")
+                        .IsUnique();
 
-                    b.ToTable("FormReference");
+                    b.ToTable("FormReferences");
                 });
 
             modelBuilder.Entity("StorageSystem.Shared.Entities.InputInventory", b =>
@@ -191,9 +192,6 @@ namespace StorageSystem.API.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
-                    b.Property<int>("FormReferenceId")
-                        .HasColumnType("int");
-
                     b.Property<int>("ProductionGapId")
                         .HasColumnType("int");
 
@@ -208,8 +206,6 @@ namespace StorageSystem.API.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("FormReferenceId");
 
                     b.HasIndex("ProductionGapId");
 
@@ -300,9 +296,6 @@ namespace StorageSystem.API.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int?>("ReferenceId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("RegisterDate")
                         .HasColumnType("datetime2");
 
@@ -310,8 +303,6 @@ namespace StorageSystem.API.Migrations
 
                     b.HasIndex("Code")
                         .IsUnique();
-
-                    b.HasIndex("ReferenceId");
 
                     b.ToTable("Products");
                 });
@@ -329,7 +320,7 @@ namespace StorageSystem.API.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
-                    b.Property<int?>("InputInventoryId")
+                    b.Property<int>("InputInventoryId")
                         .HasColumnType("int");
 
                     b.Property<int>("RecipeId")
@@ -355,10 +346,10 @@ namespace StorageSystem.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("ProductId")
+                    b.Property<int>("FormReferenceId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ReferenceId")
+                    b.Property<int>("ProductId")
                         .HasColumnType("int");
 
                     b.Property<string>("State")
@@ -367,9 +358,9 @@ namespace StorageSystem.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductId");
+                    b.HasIndex("FormReferenceId");
 
-                    b.HasIndex("ReferenceId");
+                    b.HasIndex("ProductId");
 
                     b.ToTable("ProductsDetails");
                 });
@@ -552,7 +543,7 @@ namespace StorageSystem.API.Migrations
                         .IsRequired();
 
                     b.HasOne("StorageSystem.Shared.Entities.Reference", "Reference")
-                        .WithMany()
+                        .WithMany("FormReferences")
                         .HasForeignKey("ReferenceId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -583,12 +574,6 @@ namespace StorageSystem.API.Migrations
 
             modelBuilder.Entity("StorageSystem.Shared.Entities.Manufactury", b =>
                 {
-                    b.HasOne("StorageSystem.Shared.Entities.FormReference", "FormReference")
-                        .WithMany()
-                        .HasForeignKey("FormReferenceId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("StorageSystem.Shared.Entities.ProductionGap", "ProductionGap")
                         .WithMany("Manufacturies")
                         .HasForeignKey("ProductionGapId")
@@ -600,8 +585,6 @@ namespace StorageSystem.API.Migrations
                         .HasForeignKey("ProductsDetailId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.Navigation("FormReference");
 
                     b.Navigation("ProductionGap");
 
@@ -627,20 +610,13 @@ namespace StorageSystem.API.Migrations
                     b.Navigation("ManuFactury");
                 });
 
-            modelBuilder.Entity("StorageSystem.Shared.Entities.Product", b =>
-                {
-                    b.HasOne("StorageSystem.Shared.Entities.Reference", null)
-                        .WithMany("Products")
-                        .HasForeignKey("ReferenceId")
-                        .OnDelete(DeleteBehavior.Restrict);
-                });
-
             modelBuilder.Entity("StorageSystem.Shared.Entities.ProductionGap", b =>
                 {
-                    b.HasOne("StorageSystem.Shared.Entities.InputInventory", null)
+                    b.HasOne("StorageSystem.Shared.Entities.InputInventory", "InputInventory")
                         .WithMany("ProductionGaps")
                         .HasForeignKey("InputInventoryId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("StorageSystem.Shared.Entities.Recipe", "Recipe")
                         .WithMany("ProductionGaps")
@@ -648,26 +624,28 @@ namespace StorageSystem.API.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.Navigation("InputInventory");
+
                     b.Navigation("Recipe");
                 });
 
             modelBuilder.Entity("StorageSystem.Shared.Entities.ProductsDetail", b =>
                 {
+                    b.HasOne("StorageSystem.Shared.Entities.FormReference", "FormReference")
+                        .WithMany("ProductsDetails")
+                        .HasForeignKey("FormReferenceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("StorageSystem.Shared.Entities.Product", "Product")
                         .WithMany("ProductsDetails")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("StorageSystem.Shared.Entities.Reference", "Reference")
-                        .WithMany()
-                        .HasForeignKey("ReferenceId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                    b.Navigation("FormReference");
 
                     b.Navigation("Product");
-
-                    b.Navigation("Reference");
                 });
 
             modelBuilder.Entity("StorageSystem.Shared.Entities.RawMaterial", b =>
@@ -729,6 +707,11 @@ namespace StorageSystem.API.Migrations
                     b.Navigation("Orders");
                 });
 
+            modelBuilder.Entity("StorageSystem.Shared.Entities.FormReference", b =>
+                {
+                    b.Navigation("ProductsDetails");
+                });
+
             modelBuilder.Entity("StorageSystem.Shared.Entities.InputInventory", b =>
                 {
                     b.Navigation("ProductionGaps");
@@ -775,7 +758,7 @@ namespace StorageSystem.API.Migrations
 
             modelBuilder.Entity("StorageSystem.Shared.Entities.Reference", b =>
                 {
-                    b.Navigation("Products");
+                    b.Navigation("FormReferences");
                 });
 
             modelBuilder.Entity("StorageSystem.Shared.Entities.Supplier", b =>

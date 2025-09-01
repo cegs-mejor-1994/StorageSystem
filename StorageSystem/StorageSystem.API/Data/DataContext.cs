@@ -12,6 +12,7 @@ namespace StorageSystem.API.Data
 
         public DbSet<Category> Categories { get; set; }
         public DbSet<Client> Clients { get; set; }
+        public DbSet<FormReference> FormReferences { get; set; }
         public DbSet<InputInventory> InputInventories { get; set; }
         public DbSet<Manufactury> Manufacturies { get; set; }
         public DbSet<MeasurementUnit> MeasurementUnits { get; set; }                
@@ -30,6 +31,7 @@ namespace StorageSystem.API.Data
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Category>().HasIndex(c => c.Code).IsUnique();
             modelBuilder.Entity<Client>().HasIndex(cl => cl.Nit).IsUnique();
+            modelBuilder.Entity<FormReference>().HasIndex(r => new { r.ReferenceId, r.RawMaterialId }).IsUnique();
             modelBuilder.Entity<InputInventory>();
             modelBuilder.Entity<Manufactury>();
             modelBuilder.Entity<MeasurementUnit>().HasIndex(m => m.Code).IsUnique();

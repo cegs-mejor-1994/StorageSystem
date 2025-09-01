@@ -16,6 +16,6 @@ namespace StorageSystem.Shared.Entities
 
         public string State { get; set; } = "Disponible";
 
-        public ICollection<Product>? Products { get; set; }
+        public ICollection<FormReference>? FormReferences { get; set; }
     }
 }
