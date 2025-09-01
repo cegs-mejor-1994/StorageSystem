@@ -63,7 +63,7 @@ namespace StorageSystem.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "RecipeTotal",
+                name: "RecipeTotals",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -73,7 +73,7 @@ namespace StorageSystem.API.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RecipeTotal", x => x.Id);
+                    table.PrimaryKey("PK_RecipeTotals", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -513,7 +513,7 @@ namespace StorageSystem.API.Migrations
                 name: "Orders");
 
             migrationBuilder.DropTable(
-                name: "RecipeTotal");
+                name: "RecipeTotals");
 
             migrationBuilder.DropTable(
                 name: "Clients");

@@ -464,7 +464,7 @@ namespace StorageSystem.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RecipeTotal");
+                    b.ToTable("RecipeTotals");
                 });
 
             modelBuilder.Entity("StorageSystem.Shared.Entities.Reference", b =>

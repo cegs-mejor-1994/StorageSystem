@@ -4,7 +4,7 @@
 <PageTitle>Editar Formula</PageTitle>
 <HxCard>
     <HeaderTemplate>
-        <h3 class="text-center">@GetProductName()</h3>
+        <h3 class="text-center">@product.Name</h3>
         <div class="row g-1 align-items-center">
             <div class="col-12 col-sm-8">
                 <InputText class="form-control" @bind-Value="rawMaterialName" disabled placeholder="Materia Prima" />                
@@ -25,6 +25,15 @@
             </div>
             <div class="col-12 col-sm-4">
                 <a href="/recipes" class="btn btn-success w-100">Regresar</a>
+            </div>
+        </div>
+        <div class="row g-1 align-items-center mt-1">
+            <div class="col-12 col-sm-6 d-flex align-items-center">
+                <label class="me-2 mb-0">Total Bache:</label>
+                <InputText class="form-control" style="max-width: 200px" @bind-Value="batchTotal" placeholder="Total Bache:" />
+            </div>
+            <div class="col-12 col-sm-6">
+                <button class="btn btn-secondary w-100" type="button" onclick="@(() => EditBatchTotalAsync())">Actualizar Bache</button>
             </div>
         </div>
     </HeaderTemplate>

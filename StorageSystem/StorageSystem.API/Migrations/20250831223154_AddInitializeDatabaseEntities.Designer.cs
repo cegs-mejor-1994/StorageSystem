@@ -12,7 +12,7 @@ using StorageSystem.API.Data;
 namespace StorageSystem.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250828033423_AddInitializeDatabaseEntities")]
+    [Migration("20250831223154_AddInitializeDatabaseEntities")]
     partial class AddInitializeDatabaseEntities
     {
         /// <inheritdoc />
@@ -467,7 +467,7 @@ namespace StorageSystem.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RecipeTotal");
+                    b.ToTable("RecipeTotals");
                 });
 
             modelBuilder.Entity("StorageSystem.Shared.Entities.Reference", b =>
