@@ -28,6 +28,7 @@ namespace StorageSystem.API.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<AppearanceReference>().HasIndex(r => new { r.ReferenceId, r.RawMaterialId }).IsUnique();
             modelBuilder.Entity<Category>().HasIndex(c => c.Code).IsUnique();
             modelBuilder.Entity<Client>().HasIndex(cl => cl.Nit).IsUnique();
             modelBuilder.Entity<InputInventory>();
@@ -35,7 +36,7 @@ namespace StorageSystem.API.Data
             modelBuilder.Entity<MeasurementUnit>().HasIndex(m => m.Code).IsUnique();
             modelBuilder.Entity<Order>();
             modelBuilder.Entity<Product>().HasIndex(r => new { r.Code, r.Name }).IsUnique();
-            modelBuilder.Entity<ProductsDetail>().HasIndex(pr => new { pr.ProductId, pr.RawMaterialId, pr.ReferenceId }).IsUnique();
+            modelBuilder.Entity<ProductsDetail>().HasIndex(pr => new { pr.ProductId, pr.RawMaterialId, pr.AppearanceReferenceId }).IsUnique();
             modelBuilder.Entity<ProductionGap>();
             modelBuilder.Entity<RawMaterial>().HasIndex(r => new { r.Code, r.Name }).IsUnique();
             modelBuilder.Entity<Recipe>().HasIndex(r => new { r.ProductId, r.RawMaterialId }).IsUnique();

@@ -11,7 +11,8 @@ namespace StorageSystem.WEB.Pages.ProductDetails
 {
     public partial class ProductDetailsFragments
     {
-        [EditorRequired, Parameter] public int ProductId { get; set; }
+        /*
+         [EditorRequired, Parameter] public int ProductId { get; set; }
 
         [CascadingParameter] IModalService Modal { get; set; } = default!;
 
@@ -201,5 +202,6 @@ namespace StorageSystem.WEB.Pages.ProductDetails
             RecipeTotals = responseHttp.Response;
             batchTotal = RecipeTotals!.Where(r => r.RecipeId == ProductId).Select(r => r.TotalRecipe).FirstOrDefault();
         }
+         */
     }
 }

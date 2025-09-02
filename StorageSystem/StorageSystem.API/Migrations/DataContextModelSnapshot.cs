@@ -22,6 +22,39 @@ namespace StorageSystem.API.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("StorageSystem.Shared.Entities.AppearanceReference", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("AppearanceReferenceId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RawMaterialId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ReferenceId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppearanceReferenceId");
+
+                    b.HasIndex("RawMaterialId");
+
+                    b.HasIndex("ReferenceId", "RawMaterialId")
+                        .IsUnique();
+
+                    b.ToTable("AppearanceReference");
+                });
+
             modelBuilder.Entity("StorageSystem.Shared.Entities.Category", b =>
                 {
                     b.Property<int>("Id")
@@ -311,13 +344,16 @@ namespace StorageSystem.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("AppearanceReferenceId")
+                        .HasColumnType("int");
+
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
                     b.Property<int>("RawMaterialId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ReferenceId")
+                    b.Property<int?>("ReferenceId")
                         .HasColumnType("int");
 
                     b.Property<string>("State")
@@ -326,11 +362,13 @@ namespace StorageSystem.API.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AppearanceReferenceId");
+
                     b.HasIndex("RawMaterialId");
 
                     b.HasIndex("ReferenceId");
 
-                    b.HasIndex("ProductId", "RawMaterialId", "ReferenceId")
+                    b.HasIndex("ProductId", "RawMaterialId", "AppearanceReferenceId")
                         .IsUnique();
 
                     b.ToTable("ProductsDetails");
@@ -503,6 +541,30 @@ namespace StorageSystem.API.Migrations
                     b.ToTable("Suppliers");
                 });
 
+            modelBuilder.Entity("StorageSystem.Shared.Entities.AppearanceReference", b =>
+                {
+                    b.HasOne("StorageSystem.Shared.Entities.AppearanceReference", null)
+                        .WithMany("AppearanceReferences")
+                        .HasForeignKey("AppearanceReferenceId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("StorageSystem.Shared.Entities.RawMaterial", "RawMaterial")
+                        .WithMany()
+                        .HasForeignKey("RawMaterialId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("StorageSystem.Shared.Entities.Reference", "Reference")
+                        .WithMany()
+                        .HasForeignKey("ReferenceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("RawMaterial");
+
+                    b.Navigation("Reference");
+                });
+
             modelBuilder.Entity("StorageSystem.Shared.Entities.InputInventory", b =>
                 {
                     b.HasOne("StorageSystem.Shared.Entities.RawMaterial", "RawMaterial")
@@ -581,6 +643,12 @@ namespace StorageSystem.API.Migrations
 
             modelBuilder.Entity("StorageSystem.Shared.Entities.ProductsDetail", b =>
                 {
+                    b.HasOne("StorageSystem.Shared.Entities.AppearanceReference", "AppearanceReference")
+                        .WithMany()
+                        .HasForeignKey("AppearanceReferenceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("StorageSystem.Shared.Entities.Product", "Product")
                         .WithMany("ProductsDetails")
                         .HasForeignKey("ProductId")
@@ -593,17 +661,16 @@ namespace StorageSystem.API.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("StorageSystem.Shared.Entities.Reference", "Reference")
+                    b.HasOne("StorageSystem.Shared.Entities.Reference", null)
                         .WithMany("ProductsDetails")
                         .HasForeignKey("ReferenceId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("AppearanceReference");
 
                     b.Navigation("Product");
 
                     b.Navigation("RawMaterial");
-
-                    b.Navigation("Reference");
                 });
 
             modelBuilder.Entity("StorageSystem.Shared.Entities.RawMaterial", b =>
@@ -653,6 +720,11 @@ namespace StorageSystem.API.Migrations
                         .IsRequired();
 
                     b.Navigation("MeasurementUnit");
+                });
+
+            modelBuilder.Entity("StorageSystem.Shared.Entities.AppearanceReference", b =>
+                {
+                    b.Navigation("AppearanceReferences");
                 });
 
             modelBuilder.Entity("StorageSystem.Shared.Entities.Category", b =>

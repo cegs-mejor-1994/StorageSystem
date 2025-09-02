@@ -32,7 +32,7 @@ namespace StorageSystem.API.Repositories.Implementations
                 Result = await queryable
                  .OrderBy(r => r.Id)
                  .Include(r => r.RawMaterial)
-                 .Include(r => r.Reference)
+                 .Include(r => r.AppearanceReference)
                  .Include(p => p.Product)
                  .ToListAsync()
             };
@@ -43,7 +43,7 @@ namespace StorageSystem.API.Repositories.Implementations
             return await _context.ProductsDetails
                  .OrderBy(r => r.Id)
                  .Include(r => r.RawMaterial)
-                 .Include(r => r.Reference)
+                 .Include(r => r.AppearanceReference)
                  .Include(p => p.Product)
                  .ToListAsync();
         }

@@ -220,33 +220,33 @@ namespace StorageSystem.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProductsDetails",
+                name: "AppearanceReference",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ProductId = table.Column<int>(type: "int", nullable: false),
                     ReferenceId = table.Column<int>(type: "int", nullable: false),
                     RawMaterialId = table.Column<int>(type: "int", nullable: false),
-                    State = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    State = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AppearanceReferenceId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProductsDetails", x => x.Id);
+                    table.PrimaryKey("PK_AppearanceReference", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ProductsDetails_Products_ProductId",
-                        column: x => x.ProductId,
-                        principalTable: "Products",
+                        name: "FK_AppearanceReference_AppearanceReference_AppearanceReferenceId",
+                        column: x => x.AppearanceReferenceId,
+                        principalTable: "AppearanceReference",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_ProductsDetails_RawMaterials_RawMaterialId",
+                        name: "FK_AppearanceReference_RawMaterials_RawMaterialId",
                         column: x => x.RawMaterialId,
                         principalTable: "RawMaterials",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_ProductsDetails_References_ReferenceId",
+                        name: "FK_AppearanceReference_References_ReferenceId",
                         column: x => x.ReferenceId,
                         principalTable: "References",
                         principalColumn: "Id",
@@ -277,6 +277,47 @@ namespace StorageSystem.API.Migrations
                         name: "FK_ProductionGaps_Recipes_RecipeId",
                         column: x => x.RecipeId,
                         principalTable: "Recipes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProductsDetails",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ProductId = table.Column<int>(type: "int", nullable: false),
+                    AppearanceReferenceId = table.Column<int>(type: "int", nullable: false),
+                    RawMaterialId = table.Column<int>(type: "int", nullable: false),
+                    State = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ReferenceId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductsDetails", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProductsDetails_AppearanceReference_AppearanceReferenceId",
+                        column: x => x.AppearanceReferenceId,
+                        principalTable: "AppearanceReference",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ProductsDetails_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ProductsDetails_RawMaterials_RawMaterialId",
+                        column: x => x.RawMaterialId,
+                        principalTable: "RawMaterials",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ProductsDetails_References_ReferenceId",
+                        column: x => x.ReferenceId,
+                        principalTable: "References",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -337,6 +378,22 @@ namespace StorageSystem.API.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppearanceReference_AppearanceReferenceId",
+                table: "AppearanceReference",
+                column: "AppearanceReferenceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppearanceReference_RawMaterialId",
+                table: "AppearanceReference",
+                column: "RawMaterialId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppearanceReference_ReferenceId_RawMaterialId",
+                table: "AppearanceReference",
+                columns: new[] { "ReferenceId", "RawMaterialId" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Categories_Code",
@@ -403,9 +460,14 @@ namespace StorageSystem.API.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductsDetails_ProductId_RawMaterialId_ReferenceId",
+                name: "IX_ProductsDetails_AppearanceReferenceId",
                 table: "ProductsDetails",
-                columns: new[] { "ProductId", "RawMaterialId", "ReferenceId" },
+                column: "AppearanceReferenceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductsDetails_ProductId_RawMaterialId_AppearanceReferenceId",
+                table: "ProductsDetails",
+                columns: new[] { "ProductId", "RawMaterialId", "AppearanceReferenceId" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -486,7 +548,7 @@ namespace StorageSystem.API.Migrations
                 name: "Recipes");
 
             migrationBuilder.DropTable(
-                name: "References");
+                name: "AppearanceReference");
 
             migrationBuilder.DropTable(
                 name: "Suppliers");
@@ -496,6 +558,9 @@ namespace StorageSystem.API.Migrations
 
             migrationBuilder.DropTable(
                 name: "RawMaterials");
+
+            migrationBuilder.DropTable(
+                name: "References");
 
             migrationBuilder.DropTable(
                 name: "Categories");
