@@ -1,5 +1,29 @@
 ﻿<GenericList MyList="references">
     <Body>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Nombre de Referencia</th>
+                    <th style="width:168px">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var reference in references!)
+                {
+                    <tr>
+                        <td>@reference.MeasurementUnit?.Name</td>
+                        <td>
+                            <HxButton Color="ThemeColor.Secondary" data-bs-dismiss="modal" Text="Seleccionar" OnClick="@(() => OnSelectedReferenceChanged.InvokeAsync($"{reference.Id},{reference.MeasurementUnit?.Name}"))" />
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </Body>
+</GenericList>
+@*
+	<GenericList MyList="references">
+    <Body>
 		<HxCheckboxList TItem="Reference"
 						TValue="int"
 						Label="Referencias"
@@ -10,5 +34,4 @@
 		<HxButton Color="ThemeColor.Secondary" data-bs-dismiss="modal" Text="Seleccionar" OnClick="@(() => OnSelectedReferenceClick.InvokeAsync(selectedReferenceIds))"/>
     </Body>
 </GenericList>
-
-
+*@

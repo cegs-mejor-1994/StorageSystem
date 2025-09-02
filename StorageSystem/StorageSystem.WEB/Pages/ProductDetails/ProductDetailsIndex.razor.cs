@@ -16,7 +16,7 @@ namespace StorageSystem.WEB.Pages.ProductDetails
 
         [Inject] private IRepository Repository { get; set; } = null!;        
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
-        public List<Reference>? References { get; set; }
+        public List<Product>? Products { get; set; }
 
         protected async override Task OnInitializedAsync()
         {
@@ -68,26 +68,26 @@ namespace StorageSystem.WEB.Pages.ProductDetails
         private async Task<bool> LoadListAsync(int page)
         {
             ValidateRecordsNumber(RecordsNumber);
-            var url = $"api/References/?page={page}&recordsnumber={RecordsNumber}";
+            var url = $"api/Products/?page={page}&recordsnumber={RecordsNumber}";
             if (!string.IsNullOrWhiteSpace(Filter))
             {
                 url += $"&filter={Filter}";
             }
-            var responseHttp = await Repository.GetAsync<List<Reference>>(url);
+            var responseHttp = await Repository.GetAsync<List<Product>>(url);
             if (responseHttp.Error)
             {
                 var messageError = await responseHttp.GetErrorMessageAsync();
                 await SweetAlertService.FireAsync("Error", messageError, SweetAlertIcon.Error);
                 return false;
             }
-            References = responseHttp.Response;
+            Products = responseHttp.Response;
             return true;
         }
 
         private async Task LoadPagesAsync()
         {
             ValidateRecordsNumber(RecordsNumber);
-            var url = $"api/References/totalPages?recordsnumber={RecordsNumber}";
+            var url = $"api/Products/totalPages?recordsnumber={RecordsNumber}";
             if (!string.IsNullOrWhiteSpace(Filter))
             {
                 url += $"&filter={Filter}";

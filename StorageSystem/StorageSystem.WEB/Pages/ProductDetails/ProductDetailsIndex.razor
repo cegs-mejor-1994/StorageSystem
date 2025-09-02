@@ -1,12 +1,12 @@
 ﻿@page "/formReferences"
-<PageTitle>Presentacion de Referencias</PageTitle>
+<PageTitle>Formulas</PageTitle>
 <HxCard>
     <HeaderTemplate>
-        <HxIcon Icon="@BootstrapIcon.ListCheck" /> Presentacion de Referencias
+        <HxIcon Icon="@BootstrapIcon.ListCheck" /> Formulas
     </HeaderTemplate>
     <BodyTemplate>
         <Filter PlaceHolder="Buscar formula..." Callback="@FilterCallBack" />
-        <GenericList MyList="References">
+        <GenericList MyList="Products">
             <Body>
                 <Pagination CurrentPage="currentPage" TotalPages="totalPages" SelectedPage="SelectedPageAsync" RecordsNumber="SelectedRecordsNumberAsync" />
                 <table class="table table-striped">
@@ -17,12 +17,12 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var reference in References!)
+                        @foreach (var product in Products!)
                         {
                             <tr>
-                                <td>@reference.Name @reference.MeasurementUnit!.Code</td>
+                                <td>@product.Name</td>
                                 <td>
-                                    <a href="/formReferences/details/@reference.Id" class="btn btn-warning"><i class="bi bi-pencil" /> Detalles</a>
+                                    <a href="/formReferences/details/@product.Id" class="btn btn-warning"><i class="bi bi-pencil" /> Detalles</a>
                                 </td>
                             </tr>
                         }
@@ -32,6 +32,13 @@
         </GenericList>
     </BodyTemplate>
 </HxCard>
+
+
+
+
+
+
+
 
 
 

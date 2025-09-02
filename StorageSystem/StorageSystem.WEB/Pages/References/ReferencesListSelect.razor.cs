@@ -7,20 +7,18 @@ namespace StorageSystem.WEB.Pages.References
 {
     public partial class ReferencesListSelect
     {
-        private List<Reference>? references { get; set; }       
-
-        private List<int> selectedReferenceIds { get; set; } = new();        
-        [Parameter] public EventCallback<List<int>> OnSelectedReferenceClick { get; set; }
+        private List<Reference>? references { get; set; }
+        [Parameter] public EventCallback<string> OnSelectedReferenceChanged { get; set; }
 
         [Inject] private IRepository Repository { get; set; } = null!;
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
 
         protected override async Task OnInitializedAsync()
         {
-            await LoadReferencesAsync();            
+            await LoadProductsAsync();
         }
 
-        private async Task LoadReferencesAsync()
+        private async Task LoadProductsAsync()
         {
             var responseHttp = await Repository.GetAsync<List<Reference>>("/api/References/combo");
             if (responseHttp.Error)
