@@ -31,6 +31,7 @@ namespace StorageSystem.API.Repositories.Implementations
                 WasSuccess = true,
                 Result = await queryable
                     .OrderBy(x => x.Name)
+                    .Include(r => r.MeasurementUnit)
                     .Paginate(pagination)
                     .ToListAsync()
             };

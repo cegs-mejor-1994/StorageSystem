@@ -20,7 +20,6 @@
 
   <ItemGroup>
     <Folder Include="Pages\Manufacturies\" />
-    <Folder Include="Pages\FormReferences\" />
     <Folder Include="Pages\Orders\" />
   </ItemGroup>
 

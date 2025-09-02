@@ -7,8 +7,11 @@
         public int ProductId { get; set; }
         public Product? Product { get; set; }
 
-        public int FormReferenceId { get; set; }
-        public FormReference? FormReference { get; set; }
+        public int ReferenceId { get; set; }
+        public Reference? Reference { get; set; }
+
+        public int RawMaterialId { get; set; }
+        public RawMaterial? RawMaterial { get; set; }
 
         public string State { get; set; } = "Disponible";
         public ICollection<Manufactury>? Manufacturies { get; set; }

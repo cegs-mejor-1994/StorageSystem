@@ -220,26 +220,33 @@ namespace StorageSystem.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "FormReferences",
+                name: "ProductsDetails",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    ProductId = table.Column<int>(type: "int", nullable: false),
                     ReferenceId = table.Column<int>(type: "int", nullable: false),
                     RawMaterialId = table.Column<int>(type: "int", nullable: false),
                     State = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_FormReferences", x => x.Id);
+                    table.PrimaryKey("PK_ProductsDetails", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_FormReferences_RawMaterials_RawMaterialId",
+                        name: "FK_ProductsDetails_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ProductsDetails_RawMaterials_RawMaterialId",
                         column: x => x.RawMaterialId,
                         principalTable: "RawMaterials",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_FormReferences_References_ReferenceId",
+                        name: "FK_ProductsDetails_References_ReferenceId",
                         column: x => x.ReferenceId,
                         principalTable: "References",
                         principalColumn: "Id",
@@ -270,33 +277,6 @@ namespace StorageSystem.API.Migrations
                         name: "FK_ProductionGaps_Recipes_RecipeId",
                         column: x => x.RecipeId,
                         principalTable: "Recipes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ProductsDetails",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ProductId = table.Column<int>(type: "int", nullable: false),
-                    FormReferenceId = table.Column<int>(type: "int", nullable: false),
-                    State = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProductsDetails", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ProductsDetails_FormReferences_FormReferenceId",
-                        column: x => x.FormReferenceId,
-                        principalTable: "FormReferences",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_ProductsDetails_Products_ProductId",
-                        column: x => x.ProductId,
-                        principalTable: "Products",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -371,17 +351,6 @@ namespace StorageSystem.API.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_FormReferences_RawMaterialId",
-                table: "FormReferences",
-                column: "RawMaterialId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_FormReferences_ReferenceId_RawMaterialId",
-                table: "FormReferences",
-                columns: new[] { "ReferenceId", "RawMaterialId" },
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_InputInventories_RawMaterialId",
                 table: "InputInventories",
                 column: "RawMaterialId");
@@ -428,20 +397,26 @@ namespace StorageSystem.API.Migrations
                 column: "RecipeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Products_Code",
+                name: "IX_Products_Code_Name",
                 table: "Products",
-                column: "Code",
+                columns: new[] { "Code", "Name" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductsDetails_FormReferenceId",
+                name: "IX_ProductsDetails_ProductId_RawMaterialId_ReferenceId",
                 table: "ProductsDetails",
-                column: "FormReferenceId");
+                columns: new[] { "ProductId", "RawMaterialId", "ReferenceId" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductsDetails_ProductId",
+                name: "IX_ProductsDetails_RawMaterialId",
                 table: "ProductsDetails",
-                column: "ProductId");
+                column: "RawMaterialId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductsDetails_ReferenceId",
+                table: "ProductsDetails",
+                column: "ReferenceId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RawMaterials_CategoryId",
@@ -449,9 +424,9 @@ namespace StorageSystem.API.Migrations
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RawMaterials_Code",
+                name: "IX_RawMaterials_Code_Name",
                 table: "RawMaterials",
-                column: "Code",
+                columns: new[] { "Code", "Name" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -511,7 +486,7 @@ namespace StorageSystem.API.Migrations
                 name: "Recipes");
 
             migrationBuilder.DropTable(
-                name: "FormReferences");
+                name: "References");
 
             migrationBuilder.DropTable(
                 name: "Suppliers");
@@ -521,9 +496,6 @@ namespace StorageSystem.API.Migrations
 
             migrationBuilder.DropTable(
                 name: "RawMaterials");
-
-            migrationBuilder.DropTable(
-                name: "References");
 
             migrationBuilder.DropTable(
                 name: "Categories");

@@ -1,28 +1,28 @@
-﻿@page "/recipes"
-<PageTitle>Formulas</PageTitle>
+﻿@page "/formReferences"
+<PageTitle>Presentacion de Referencias</PageTitle>
 <HxCard>
     <HeaderTemplate>
-        <HxIcon Icon="@BootstrapIcon.ListCheck" /> Formulas        
+        <HxIcon Icon="@BootstrapIcon.ListCheck" /> Presentacion de Referencias
     </HeaderTemplate>
     <BodyTemplate>
         <Filter PlaceHolder="Buscar formula..." Callback="@FilterCallBack" />
-        <GenericList MyList="Products">
+        <GenericList MyList="References">
             <Body>
                 <Pagination CurrentPage="currentPage" TotalPages="totalPages" SelectedPage="SelectedPageAsync" RecordsNumber="SelectedRecordsNumberAsync" />
                 <table class="table table-striped">
                     <thead>
-                        <tr>                            
+                        <tr>
                             <th>Nombre</th>
                             <th style="width: 210px">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var product in Products!)
+                        @foreach (var reference in References!)
                         {
-                            <tr>                                
-                                <td>@product.Name</td>
+                            <tr>
+                                <td>@reference.Name @reference.MeasurementUnit!.Code</td>
                                 <td>
-                                    <a href="/recipes/details/@product.Id" class="btn btn-warning"><i class="bi bi-pencil" /> Detalles</a>
+                                    <a href="/formReferences/details/@reference.Id" class="btn btn-warning"><i class="bi bi-pencil" /> Detalles</a>
                                 </td>
                             </tr>
                         }
@@ -32,6 +32,9 @@
         </GenericList>
     </BodyTemplate>
 </HxCard>
+
+
+
 
 
 
