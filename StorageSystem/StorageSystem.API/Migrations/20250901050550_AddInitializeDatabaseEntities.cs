@@ -84,7 +84,7 @@ namespace StorageSystem.API.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     RecipeId = table.Column<int>(type: "int", nullable: false),
-                    TotalRecipe = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    TotalRecipe = table.Column<decimal>(type: "decimal(18,3)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -166,7 +166,7 @@ namespace StorageSystem.API.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Amount = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    Amount = table.Column<decimal>(type: "decimal(18,3)", maxLength: 10, nullable: false),
                     Batch = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: false),
                     MatutingDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     RegisterDate = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -197,7 +197,7 @@ namespace StorageSystem.API.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Amount = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    Amount = table.Column<decimal>(type: "decimal(18,3)", maxLength: 10, nullable: false),
                     RawMaterialId = table.Column<int>(type: "int", nullable: false),
                     ProductId = table.Column<int>(type: "int", nullable: false),
                     State = table.Column<string>(type: "nvarchar(max)", nullable: false)
@@ -252,7 +252,7 @@ namespace StorageSystem.API.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Amount = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    Amount = table.Column<decimal>(type: "decimal(18,3)", maxLength: 10, nullable: false),
                     RecipeId = table.Column<int>(type: "int", nullable: false),
                     InputInventoryId = table.Column<int>(type: "int", nullable: false),
                     RegisterDate = table.Column<DateTime>(type: "datetime2", nullable: false)
@@ -307,7 +307,7 @@ namespace StorageSystem.API.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Amount = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    Amount = table.Column<decimal>(type: "decimal(18,3)", maxLength: 10, nullable: false),
                     ProductionGapId = table.Column<int>(type: "int", nullable: false),
                     ProductsDetailId = table.Column<int>(type: "int", nullable: false),
                     State = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -336,7 +336,7 @@ namespace StorageSystem.API.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Amount = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    Amount = table.Column<decimal>(type: "decimal(18,3)", maxLength: 10, nullable: false),
                     ManuFacturyId = table.Column<int>(type: "int", nullable: false),
                     ClientId = table.Column<int>(type: "int", nullable: false),
                     RegisterDate = table.Column<DateTime>(type: "datetime2", nullable: false)

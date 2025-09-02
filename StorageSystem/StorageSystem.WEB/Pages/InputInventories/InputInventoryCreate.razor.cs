@@ -37,7 +37,7 @@ namespace StorageSystem.WEB.Pages.InputInventories
         {
             try
             {
-                if (!string.IsNullOrWhiteSpace(inputInventory.Amount) && !string.IsNullOrWhiteSpace(inputInventory.Batch) && inputInventory.MatutingDate != DateTime.MinValue && rawMaterialId != 0 && supplierId != 0)
+                if (inputInventory.Amount == 0 && !string.IsNullOrWhiteSpace(inputInventory.Batch) && inputInventory.MatutingDate != DateTime.MinValue && rawMaterialId != 0 && supplierId != 0)
                 {
                     inputInventory.SupplierId = supplierId;
                     inputInventory.RawMaterialId = rawMaterialId;

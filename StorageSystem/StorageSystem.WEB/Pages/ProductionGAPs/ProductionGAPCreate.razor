@@ -1,3 +1,48 @@
-﻿<h3>ProductionGAPCreate</h3>
+﻿@page "/productionsgaps/create"
+@using StorageSystem.WEB.Pages.Products
+
+<PageTitle>Crear Bache</PageTitle>
+<EditForm Model="ProductionGap">
+    <HxCard>
+        <HeaderTemplate>
+            <h3>Crear Bache</h3>
+            <div class="row g-1 align-items-center">
+                <div class="col-12 col-sm-8">
+                    <InputText class="form-control" @bind-Value="productName" disabled placeholder="Producto" />
+                </div>
+                <div class="col-12 col-sm-4">
+                    <button type="button" class="btn btn-info w-100" data-bs-toggle="modal" data-bs-target="#productId">
+                        Seleccionar
+                    </button>
+                </div>
+            </div>
+        </HeaderTemplate>
+        <BodyTemplate>
+            <div class="row g-1 align-items-center mt-1">
+                <div class="col-12 col-sm-6 d-flex align-items-center">
+                    <label class="me-2 mb-0">Cantidad</label>
+                    <InputNumber class="form-control" style="max-width: 200px" @bind-Value="ProductionGap.Amount" placeholder="Cantidad" />                
+                </div>
+                <div class="col-12 col-sm-6">
+                    <button class="btn btn-primary w-100" type="button" onclick="@(() => CreateAsync())">Guardar Cambios</button>
+                </div>
+            </div>
+        </BodyTemplate>
+    </HxCard>
+</EditForm>
+
+<div class="modal fade" id="productId" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Productos </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" />
+            </div>
+            <div class="modal-body">                
+                <ProductsListSelect OnSelectedProductChanged="ClickProductCallBack"/>                            
+            </div>
+        </div>
+    </div>
+</div>
 
 

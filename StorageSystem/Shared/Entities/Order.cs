@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace StorageSystem.Shared.Entities
 {
@@ -6,10 +7,11 @@ namespace StorageSystem.Shared.Entities
     {
         public int Id { get; set; }
 
+        [Column(TypeName = "decimal(18,3)")]
         [Display(Name = "Total Pagar")]
         [MaxLength(10, ErrorMessage = "El campo {0} no puede tener mas de {1} caracteres")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
-        public string Amount { get; set; } = null!;
+        public decimal Amount { get; set; }
 
         public int ManuFacturyId { get; set; }
         public Manufactury? ManuFactury { get; set; }

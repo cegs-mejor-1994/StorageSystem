@@ -16,7 +16,7 @@ namespace StorageSystem.WEB.Pages.Recipes
 
         private string rawMaterialName = "Materia prima";        
         private string rawMaterialCodeMeasurementUnit = string.Empty;
-        private string batchTotal = string.Empty;
+        private decimal? batchTotal;
 
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
@@ -145,7 +145,7 @@ namespace StorageSystem.WEB.Pages.Recipes
         {
             try
             {
-                if (!string.IsNullOrWhiteSpace(recipe.Amount) && rawMaterialId != 0 && ProductId != 0)
+                if (recipe.Amount == 0 && rawMaterialId != 0 && ProductId != 0)
                 {
                     recipe.ProductId = ProductId;
                     recipe.RawMaterialId = rawMaterialId;
@@ -176,11 +176,11 @@ namespace StorageSystem.WEB.Pages.Recipes
 
         private async Task EditBatchTotalAsync()
         {
-            if (!string.IsNullOrWhiteSpace(batchTotal))
+            if (batchTotal == 0)
             {
                 recipe2.Id = RecipeTotals!.Where(r => r.RecipeId == ProductId).Select(r => r.Id).FirstOrDefault();
                 recipe2.RecipeId = ProductId;
-                recipe2.TotalRecipe = batchTotal;
+                recipe2.TotalRecipe = (decimal)batchTotal;
                 var responseHttp = await Repository.PutAsync($"/api/RecipeTotals", recipe2);
                 if (responseHttp.Error)
                 {
@@ -215,7 +215,7 @@ namespace StorageSystem.WEB.Pages.Recipes
                 return;
             }
             RecipeTotals = responseHttp.Response;
-            batchTotal = RecipeTotals!.Where(r => r.RecipeId == ProductId).Select(r => r.TotalRecipe).FirstOrDefault() ?? string.Empty;
+            batchTotal = RecipeTotals!.Where(r => r.RecipeId == ProductId).Select(r => r.TotalRecipe).FirstOrDefault();
         }
     }
 }

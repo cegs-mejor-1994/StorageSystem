@@ -12,7 +12,7 @@ using StorageSystem.API.Data;
 namespace StorageSystem.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250901044501_AddInitializeDatabaseEntities")]
+    [Migration("20250901050550_AddInitializeDatabaseEntities")]
     partial class AddInitializeDatabaseEntities
     {
         /// <inheritdoc />
@@ -144,10 +144,9 @@ namespace StorageSystem.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Amount")
-                        .IsRequired()
+                    b.Property<decimal>("Amount")
                         .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
+                        .HasColumnType("decimal(18,3)");
 
                     b.Property<string>("Batch")
                         .IsRequired()
@@ -187,10 +186,9 @@ namespace StorageSystem.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Amount")
-                        .IsRequired()
+                    b.Property<decimal>("Amount")
                         .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
+                        .HasColumnType("decimal(18,3)");
 
                     b.Property<int>("ProductionGapId")
                         .HasColumnType("int");
@@ -255,10 +253,9 @@ namespace StorageSystem.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Amount")
-                        .IsRequired()
+                    b.Property<decimal>("Amount")
                         .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
+                        .HasColumnType("decimal(18,3)");
 
                     b.Property<int>("ClientId")
                         .HasColumnType("int");
@@ -315,10 +312,9 @@ namespace StorageSystem.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Amount")
-                        .IsRequired()
+                    b.Property<decimal>("Amount")
                         .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
+                        .HasColumnType("decimal(18,3)");
 
                     b.Property<int>("InputInventoryId")
                         .HasColumnType("int");
@@ -416,10 +412,9 @@ namespace StorageSystem.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Amount")
-                        .IsRequired()
+                    b.Property<decimal>("Amount")
                         .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
+                        .HasColumnType("decimal(18,3)");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
@@ -452,9 +447,8 @@ namespace StorageSystem.API.Migrations
                     b.Property<int>("RecipeId")
                         .HasColumnType("int");
 
-                    b.Property<string>("TotalRecipe")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<decimal>("TotalRecipe")
+                        .HasColumnType("decimal(18,3)");
 
                     b.HasKey("Id");
 
