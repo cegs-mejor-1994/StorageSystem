@@ -220,7 +220,7 @@ namespace StorageSystem.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AppearanceReference",
+                name: "AppearanceReferences",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -231,15 +231,15 @@ namespace StorageSystem.API.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AppearanceReference", x => x.Id);
+                    table.PrimaryKey("PK_AppearanceReferences", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AppearanceReference_RawMaterials_RawMaterialId",
+                        name: "FK_AppearanceReferences_RawMaterials_RawMaterialId",
                         column: x => x.RawMaterialId,
                         principalTable: "RawMaterials",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_AppearanceReference_References_ReferenceId",
+                        name: "FK_AppearanceReferences_References_ReferenceId",
                         column: x => x.ReferenceId,
                         principalTable: "References",
                         principalColumn: "Id",
@@ -283,16 +283,15 @@ namespace StorageSystem.API.Migrations
                     ProductId = table.Column<int>(type: "int", nullable: false),
                     AppearanceReferenceId = table.Column<int>(type: "int", nullable: false),
                     RawMaterialId = table.Column<int>(type: "int", nullable: false),
-                    State = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ReferenceId = table.Column<int>(type: "int", nullable: true)
+                    State = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ProductsDetails", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ProductsDetails_AppearanceReference_AppearanceReferenceId",
+                        name: "FK_ProductsDetails_AppearanceReferences_AppearanceReferenceId",
                         column: x => x.AppearanceReferenceId,
-                        principalTable: "AppearanceReference",
+                        principalTable: "AppearanceReferences",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -305,12 +304,6 @@ namespace StorageSystem.API.Migrations
                         name: "FK_ProductsDetails_RawMaterials_RawMaterialId",
                         column: x => x.RawMaterialId,
                         principalTable: "RawMaterials",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_ProductsDetails_References_ReferenceId",
-                        column: x => x.ReferenceId,
-                        principalTable: "References",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -373,20 +366,20 @@ namespace StorageSystem.API.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AppearanceReference_RawMaterialId",
-                table: "AppearanceReference",
+                name: "IX_AppearanceReferences_RawMaterialId",
+                table: "AppearanceReferences",
                 column: "RawMaterialId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AppearanceReference_ReferenceId_RawMaterialId",
-                table: "AppearanceReference",
+                name: "IX_AppearanceReferences_ReferenceId_RawMaterialId",
+                table: "AppearanceReferences",
                 columns: new[] { "ReferenceId", "RawMaterialId" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Categories_Code",
+                name: "IX_Categories_Code_Name",
                 table: "Categories",
-                column: "Code",
+                columns: new[] { "Code", "Name" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -416,9 +409,9 @@ namespace StorageSystem.API.Migrations
                 column: "ProductsDetailId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MeasurementUnits_Code",
+                name: "IX_MeasurementUnits_Code_Name",
                 table: "MeasurementUnits",
-                column: "Code",
+                columns: new[] { "Code", "Name" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -462,11 +455,6 @@ namespace StorageSystem.API.Migrations
                 name: "IX_ProductsDetails_RawMaterialId",
                 table: "ProductsDetails",
                 column: "RawMaterialId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProductsDetails_ReferenceId",
-                table: "ProductsDetails",
-                column: "ReferenceId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RawMaterials_CategoryId",
@@ -536,7 +524,7 @@ namespace StorageSystem.API.Migrations
                 name: "Recipes");
 
             migrationBuilder.DropTable(
-                name: "AppearanceReference");
+                name: "AppearanceReferences");
 
             migrationBuilder.DropTable(
                 name: "Suppliers");

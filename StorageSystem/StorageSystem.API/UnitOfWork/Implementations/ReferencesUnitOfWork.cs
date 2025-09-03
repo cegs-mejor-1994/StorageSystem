@@ -1,6 +1,8 @@
 ﻿using StorageSystem.API.Repositories.Interfaces;
 using StorageSystem.API.UnitOfWork.Interfaces;
-using System.Security.Cryptography.Xml;
+using StorageSystem.Shared.DTOs;
+using StorageSystem.Shared.Entities;
+using StorageSystem.Shared.Responses;
 
 namespace StorageSystem.API.UnitOfWork.Implementations
 {
@@ -13,8 +15,14 @@ namespace StorageSystem.API.UnitOfWork.Implementations
             _rerefencesRepository = rerefencesRepository;
         }
 
-        public async Task<IEnumerable<Shared.Entities.Reference>> GetComboAsync() => await _rerefencesRepository.GetComboAsync();
+        public async Task<IEnumerable<Reference>> GetComboAsync() => await _rerefencesRepository.GetComboAsync();
 
-        public async Task<IEnumerable<Shared.Entities.Reference>> GetWithTypeReferencesAndMeasurementUnitAsync() => await _rerefencesRepository.GetWithTypeReferencesAndMeasurementUnitAsync();
+        public async Task<ActionResponse<IEnumerable<Reference>>> GetAsync(PaginationDTO pagination) => await _rerefencesRepository.GetAsync(pagination);
+
+        public async Task<IEnumerable<Reference>> GetWithTypeReferencesAndMeasurementUnitAsync() => await _rerefencesRepository.GetWithTypeReferencesAndMeasurementUnitAsync();
+
+        public async Task<ActionResponse<int>> GetTotalPagesAsync(PaginationDTO pagination) => await _rerefencesRepository.GetTotalPagesAsync(pagination);
+
+
     }
 }

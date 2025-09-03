@@ -20,7 +20,7 @@
                         @foreach (var reference in References!)
                         {
                             <tr>
-                                <td>@reference.Name @reference.MeasurementUnit!.Code</td>
+                                <td>@reference.Name @reference.MeasurementUnit?.Code</td>
                                 <td>
                                     <a href="/references/edit/@reference.Id" class="btn btn-sm btn-warning"><i class="bi bi-pencil" /> Editar</a>
                                     <HxButton Text="Borrar" Icon="BootstrapIcon.Trash" IconPlacement="ButtonIconPlacement.Start" Color="ThemeColor.Danger" Size="ButtonSize.Small" OnClick="@(() => DeleteAsync(reference))" />

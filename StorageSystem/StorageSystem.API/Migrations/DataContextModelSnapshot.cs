@@ -47,7 +47,7 @@ namespace StorageSystem.API.Migrations
                     b.HasIndex("ReferenceId", "RawMaterialId")
                         .IsUnique();
 
-                    b.ToTable("AppearanceReference");
+                    b.ToTable("AppearanceReferences");
                 });
 
             modelBuilder.Entity("StorageSystem.Shared.Entities.Category", b =>
@@ -77,7 +77,7 @@ namespace StorageSystem.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Code")
+                    b.HasIndex("Code", "Name")
                         .IsUnique();
 
                     b.ToTable("Categories");
@@ -236,7 +236,7 @@ namespace StorageSystem.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Code")
+                    b.HasIndex("Code", "Name")
                         .IsUnique();
 
                     b.ToTable("MeasurementUnits");
@@ -348,9 +348,6 @@ namespace StorageSystem.API.Migrations
                     b.Property<int>("RawMaterialId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ReferenceId")
-                        .HasColumnType("int");
-
                     b.Property<string>("State")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -360,8 +357,6 @@ namespace StorageSystem.API.Migrations
                     b.HasIndex("AppearanceReferenceId");
 
                     b.HasIndex("RawMaterialId");
-
-                    b.HasIndex("ReferenceId");
 
                     b.HasIndex("ProductId", "RawMaterialId", "AppearanceReferenceId")
                         .IsUnique();
@@ -539,13 +534,13 @@ namespace StorageSystem.API.Migrations
             modelBuilder.Entity("StorageSystem.Shared.Entities.AppearanceReference", b =>
                 {
                     b.HasOne("StorageSystem.Shared.Entities.RawMaterial", "RawMaterial")
-                        .WithMany()
+                        .WithMany("AppearanceReferences")
                         .HasForeignKey("RawMaterialId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("StorageSystem.Shared.Entities.Reference", "Reference")
-                        .WithMany()
+                        .WithMany("AppearanceReferences")
                         .HasForeignKey("ReferenceId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -646,15 +641,10 @@ namespace StorageSystem.API.Migrations
                         .IsRequired();
 
                     b.HasOne("StorageSystem.Shared.Entities.RawMaterial", "RawMaterial")
-                        .WithMany()
+                        .WithMany("ProductsDetails")
                         .HasForeignKey("RawMaterialId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.HasOne("StorageSystem.Shared.Entities.Reference", null)
-                        .WithMany("ProductsDetails")
-                        .HasForeignKey("ReferenceId")
-                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("AppearanceReference");
 
@@ -691,7 +681,7 @@ namespace StorageSystem.API.Migrations
                         .IsRequired();
 
                     b.HasOne("StorageSystem.Shared.Entities.RawMaterial", "RawMaterial")
-                        .WithMany()
+                        .WithMany("Recipes")
                         .HasForeignKey("RawMaterialId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -763,7 +753,13 @@ namespace StorageSystem.API.Migrations
 
             modelBuilder.Entity("StorageSystem.Shared.Entities.RawMaterial", b =>
                 {
+                    b.Navigation("AppearanceReferences");
+
                     b.Navigation("InputInventories");
+
+                    b.Navigation("ProductsDetails");
+
+                    b.Navigation("Recipes");
                 });
 
             modelBuilder.Entity("StorageSystem.Shared.Entities.Recipe", b =>
@@ -773,7 +769,7 @@ namespace StorageSystem.API.Migrations
 
             modelBuilder.Entity("StorageSystem.Shared.Entities.Reference", b =>
                 {
-                    b.Navigation("ProductsDetails");
+                    b.Navigation("AppearanceReferences");
                 });
 
             modelBuilder.Entity("StorageSystem.Shared.Entities.Supplier", b =>
