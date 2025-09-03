@@ -227,18 +227,11 @@ namespace StorageSystem.API.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ReferenceId = table.Column<int>(type: "int", nullable: false),
                     RawMaterialId = table.Column<int>(type: "int", nullable: false),
-                    State = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AppearanceReferenceId = table.Column<int>(type: "int", nullable: true)
+                    State = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AppearanceReference", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AppearanceReference_AppearanceReference_AppearanceReferenceId",
-                        column: x => x.AppearanceReferenceId,
-                        principalTable: "AppearanceReference",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_AppearanceReference_RawMaterials_RawMaterialId",
                         column: x => x.RawMaterialId,
@@ -378,11 +371,6 @@ namespace StorageSystem.API.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AppearanceReference_AppearanceReferenceId",
-                table: "AppearanceReference",
-                column: "AppearanceReferenceId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AppearanceReference_RawMaterialId",

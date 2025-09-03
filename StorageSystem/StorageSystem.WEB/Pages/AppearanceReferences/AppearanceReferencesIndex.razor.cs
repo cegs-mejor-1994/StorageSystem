@@ -1,14 +1,11 @@
-using Blazored.Modal.Services;
-using Blazored.Modal;
 using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components;
 using StorageSystem.Shared.Entities;
 using StorageSystem.WEB.Repositories;
-using System.Net;
 
-namespace StorageSystem.WEB.Pages.References
+namespace StorageSystem.WEB.Pages.AppearanceReferences
 {
-    public partial class ReferencesIndex
+    public partial class AppearanceReferencesIndex
     {
         private int currentPage = 1;
         private int totalPages;
@@ -18,16 +15,13 @@ namespace StorageSystem.WEB.Pages.References
         [Parameter, SupplyParameterFromQuery] public int RecordsNumber { get; set; } = 8;
 
         [Inject] private IRepository Repository { get; set; } = null!;
-        [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
+        [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
+        public List<Reference>? References { get; set; }
 
-        [CascadingParameter] IModalService Modal { get; set; } = default!;
-        public List<Reference>? References { get; set; }        
-        public List<MeasurementUnit>? MeasurementUnits { get; set; }
-
-        protected override async Task OnInitializedAsync()
+        protected async override Task OnInitializedAsync()
         {
-            await LoadAsync();                        
+            await LoadAsync();
         }
 
         private async Task FilterCallBack(string filter)
@@ -70,7 +64,7 @@ namespace StorageSystem.WEB.Pages.References
             {
                 RecordsNumber = 10;
             }
-        }       
+        }
 
         private async Task<bool> LoadListAsync(int page)
         {
@@ -114,46 +108,6 @@ namespace StorageSystem.WEB.Pages.References
             int page = 1;
             await LoadAsync(page);
             await SelectedPageAsync(page);
-        }
-
-        private async Task DeleteAsync(Reference reference)
-        {
-            var result = await SweetAlertService.FireAsync(new SweetAlertOptions
-            {
-                Title = "Confirmacion",
-                Text = $"¿Estas seguro que quieres borrar la referencia de producto: {reference.Name}?",
-                Icon = SweetAlertIcon.Question,
-                ShowCancelButton = true,
-            });
-
-            var confirm = string.IsNullOrEmpty(result.Value);
-            if (confirm)
-            {
-                return;
-            }
-            var responseHttp = await Repository.DeleteAsync<Reference>($"api/References/{reference.Id}");
-            if (responseHttp.Error)
-            {
-                if (responseHttp.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
-                {
-                    NavigationManager.NavigateTo("/");
-                }
-                else
-                {
-                    var messageError = await responseHttp.GetErrorMessageAsync();
-                    await SweetAlertService.FireAsync("Error", messageError, SweetAlertIcon.Error);
-                }
-                return;
-            }
-            await LoadAsync();
-            var toast = SweetAlertService.Mixin(new SweetAlertOptions
-            {
-                Toast = true,
-                Position = SweetAlertPosition.BottomEnd,
-                ShowConfirmButton = true,
-                Timer = 3000,
-            });
-            await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro borrado con exito");
         }
     }
 }

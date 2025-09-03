@@ -1,65 +1,56 @@
 ﻿@page "/formReferences/details/{ProductId:int}"
 
-@*
-
 <PageTitle>Editar Formula</PageTitle>
 <HxCard>
     <HeaderTemplate>
         <h3 class="text-center">@product.Name</h3>
         <div class="row g-1 align-items-center">
             <div class="col-12 col-sm-8">
-                <InputText class="form-control" @bind-Value="rawMaterialName" disabled placeholder="Materia Prima" />
+                <InputText class="form-control" @bind-Value="appearanceReferenceName" disabled placeholder="Referencia" />
             </div>
             <div class="col-12 col-sm-4">
-                <button type="button" class="btn btn-info w-100" data-bs-toggle="modal" data-bs-target="#rawMaterialId">
-                    Seleccionar
+                <button type="button" class="btn btn-info w-100" data-bs-toggle="modal" data-bs-target="#appearanceReferenceId">
+                    Seleccionar Referencia
                 </button>
             </div>
         </div>
+        @if (referenceSelected)
+        {
+            <div class="row g-1 align-items-center">
+                <div class="col-12 col-sm-12">
+                    <button type="button" class="btn btn-info w-100" data-bs-toggle="modal" data-bs-target="#rawMaterialId">
+                        Seleccionar Materia Prima
+                    </button>
+                </div>
+            </div>
+        }
         <div class="row g-1 align-items-center mt-1">
-            <div class="col-12 col-sm-4 d-flex align-items-center">
-                <label class="me-2 mb-0">Cantidad @rawMaterialCodeMeasurementUnit</label>
-                <InputNumber class="form-control" style="max-width: 200px" @bind-Value="recipe.Amount" placeholder="Cantidad" />
-            </div>
-            <div class="col-12 col-sm-4">
-                <button class="btn btn-primary w-100" type="button" onclick="@(() => CreateAsync())">Guardar Cambios</button>
-            </div>
             <div class="col-12 col-sm-4">
                 <a href="/recipes" class="btn btn-success w-100">Regresar</a>
             </div>
         </div>
-        <div class="row g-1 align-items-center mt-1">
-            <div class="col-12 col-sm-6 d-flex align-items-center">
-                <label class="me-2 mb-0">Total Bache:</label>
-                <InputNumber class="form-control" style="max-width: 200px" @bind-Value="batchTotal" placeholder="Total Bache:" />
-            </div>
-            <div class="col-12 col-sm-6">
-                <button class="btn btn-secondary w-100" type="button" onclick="@(() => EditBatchTotalAsync())">Actualizar Bache</button>
-            </div>
-        </div>
     </HeaderTemplate>
     <BodyTemplate>
-        @if (Recipes != null)
+        @if (ProductsDetails != null)
         {
-            <GenericList MyList="Recipes">
+            <GenericList MyList="ProductsDetails">
                 <Body>
                     <table class="table table-striped">
                         <thead>
                             <tr>
+                                <th>Referencia</th>
                                 <th>Materia prima</th>
-                                <th>Cantidad</th>
                                 <th style="width: 210px">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var recipe in Recipes!)
+                            @foreach (var productsDetail in ProductsDetails!)
                             {
                                 <tr>
-                                    <td>@recipe.RawMaterial!.Name</td>
-                                    <td>@recipe.Amount @recipe.RawMaterial.MeasurementUnit!.Code</td>
+                                    <td>@productsDetail.AppearanceReference!.Reference!.Name @productsDetail.AppearanceReference.Reference.MeasurementUnit!.Code</td>
+                                    <td>@productsDetail.RawMaterial!.Name</td>                                  
                                     <td>
-                                        <HxButton Text="Editar" Color="ThemeColor.Warning" IconPlacement="ButtonIconPlacement.Start" Icon="BootstrapIcon.Pencil" Size="ButtonSize.Small" OnClick="@(() => ShowModalAsync(recipe.Id))" />
-                                        <HxButton Text="Borrar" Icon="BootstrapIcon.Trash" IconPlacement="ButtonIconPlacement.Start" Color="ThemeColor.Danger" Size="ButtonSize.Small" OnClick="@(() => DeleteAsync(recipe))" />
+                                        <HxButton Text="Borrar" Icon="BootstrapIcon.Trash" IconPlacement="ButtonIconPlacement.Start" Color="ThemeColor.Danger" Size="ButtonSize.Small" OnClick="@(() => DeleteAsync(productsDetail))" />
                                     </td>
                                 </tr>
                             }
@@ -70,6 +61,7 @@
         }
     </BodyTemplate>
 </HxCard>
+
 
 <div class="modal fade" id="rawMaterialId" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -91,13 +83,13 @@
                             <tbody>
                                 @foreach (var rawMaterial in rawMaterials!)
                                 {
-                                    var exists = Recipes?.Any(r => r.RawMaterialId == rawMaterial.Id) ?? false;
+                                    var exists = ProductsDetails?.Any(r => r.RawMaterialId == rawMaterial.Id && r.ProductId == ProductId) ?? false;
                                     @if (!exists)
                                     {
                                         <tr>
                                             <td>@rawMaterial.Name</td>
                                             <td>
-                                                <HxButton Color="ThemeColor.Secondary" data-bs-dismiss="modal" Text="Seleccionar" OnClick="@(() => ClickRawMaterialCallBack($"{rawMaterial.Id},{rawMaterial.Name},{rawMaterial.MeasurementUnit!.Code}"))" />
+                                                <HxButton Color="ThemeColor.Secondary" data-bs-dismiss="modal" Text="Seleccionar" OnClick="@(() => ClickRawMaterialCallBack($"{rawMaterial.Id}"))" />
                                             </td>
                                         </tr>
                                     }
@@ -110,4 +102,43 @@
         </div>
     </div>
 </div>
-*@
+
+<div class="modal fade" id="appearanceReferenceId" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Referencias</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" />
+            </div>
+            <div class="modal-body">
+                <GenericList MyList="appearanceReferences">
+                    <Body>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th style="width:168px">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var appearanceReference in appearanceReferences!)
+                                {
+                                    var exists = ProductsDetails?.Any(r => r.AppearanceReferenceId == appearanceReference.Id && r.ProductId == ProductId) ?? false;
+                                    @if (!exists)
+                                    {
+                                        <tr>
+                                            <td>@appearanceReference.Reference!.Name @appearanceReference.Reference.MeasurementUnit!.Code</td>
+                                            <td>
+                                                <HxButton Color="ThemeColor.Secondary" data-bs-dismiss="modal" Text="Seleccionar" OnClick="@(() => ClickAppearanceReferenceCallBack($"{appearanceReference.Id}, {appearanceReference.Reference.Name},{appearanceReference.Reference.MeasurementUnit.Code}"))" />
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </Body>
+                </GenericList>
+            </div>
+        </div>
+    </div>
+</div>

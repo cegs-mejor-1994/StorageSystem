@@ -1,35 +1,35 @@
+using Blazored.Modal;
+using Blazored.Modal.Services;
 using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components;
 using StorageSystem.Shared.Entities;
+using StorageSystem.WEB.Pages.Recipes;
 using StorageSystem.WEB.Repositories;
 using System.Net;
-using System.Threading.Tasks;
 
-namespace StorageSystem.WEB.Pages.ProductDetails
+namespace StorageSystem.WEB.Pages.AppearanceReferences
 {
-    public partial class ProductDetailsFragments
+    public partial class AppearanceReferenceDetails
     {
-        [EditorRequired, Parameter] public int ProductId { get; set; }
+        [EditorRequired, Parameter] public int ReferenceId { get; set; }        
+
+        private string rawMaterialName = "Materia prima";
 
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
         [Inject] private IRepository Repository { get; set; } = null!;
 
-        private List<ProductsDetail>? ProductsDetails { get; set; }
+        private List<AppearanceReference>? AppearanceReferences { get; set; }        
         private List<RawMaterial>? rawMaterials { get; set; } = null!;
-        private List<AppearanceReference>? appearanceReferences { get; set; } = null!;
 
-        private ProductsDetail productsDetail = new();
-        private Product product = new();
+        private AppearanceReference appearanceReference = new();
+        private Reference reference = new();        
 
-        private bool referenceSelected = false;
-        private int rawMaterialId { get; set; }    
-        private int appearanceReferenceId { get; set; }
-        private string appearanceReferenceName = "Referencia";
+        private int rawMaterialId { get; set; }
 
         protected async override Task OnParametersSetAsync()
         {
-            var responseHttp = await Repository.GetAsync<Product>($"/api/Products/{ProductId}");
+            var responseHttp = await Repository.GetAsync<Reference>($"/api/References/{ReferenceId}");
             if (responseHttp.Error)
             {
                 if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
@@ -44,26 +44,30 @@ namespace StorageSystem.WEB.Pages.ProductDetails
             }
             else
             {
-                product = responseHttp.Response!;
+                reference = responseHttp.Response!;
             }
-            await LoadProductDetailsAsync(ProductId);
-            await LoadRawMaterialsAsync();     
-            await LoadAppearanceReferencesAsync();
+            await LoadAppearanceReferencesAsync(ReferenceId);
+            await LoadRawMaterialsAsync();
         }
 
-        private async Task ClickRawMaterialCallBack(string rawMaterial)
+        private void ClickRawMaterialCallBack(string rawMaterial)
         {
             string[] valores = rawMaterial.Split(',');
             rawMaterialId = int.Parse(valores[0]);
-            await CreateAsync();
+            rawMaterialName = valores[1] + valores[2];
         }
 
-        private void ClickAppearanceReferenceCallBack(string appearanceReference)
+        private async Task LoadAppearanceReferencesAsync(int referenceId)
         {
-            string[] valores = appearanceReference.Split(',');
-            appearanceReferenceId = int.Parse(valores[0]);
-            appearanceReferenceName = valores[1] + " " + valores[2];
-            referenceSelected = true;
+            var responseHttp = await Repository.GetAsync<List<AppearanceReference>>("/api/AppearanceReferences/combo");
+            if (responseHttp.Error)
+            {
+                var message = await responseHttp.GetErrorMessageAsync();
+                await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+                return;
+            }
+            AppearanceReferences = responseHttp.Response;
+            AppearanceReferences = AppearanceReferences!.Where(r => r.ReferenceId == referenceId).ToList();
         }
 
         private async Task LoadRawMaterialsAsync()
@@ -78,37 +82,12 @@ namespace StorageSystem.WEB.Pages.ProductDetails
             rawMaterials = responseHttp.Response;
         }
 
-        private async Task LoadAppearanceReferencesAsync()
-        {
-            var responseHttp = await Repository.GetAsync<List<AppearanceReference>>("/api/AppearanceReferences/combo");
-            if (responseHttp.Error)
-            {
-                var message = await responseHttp.GetErrorMessageAsync();
-                await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
-                return;
-            }
-            appearanceReferences = responseHttp.Response;
-        }
-
-        private async Task LoadProductDetailsAsync(int productId)
-        {
-            var responseHttp = await Repository.GetAsync<List<ProductsDetail>>("/api/ProductsDetails/combo");
-            if (responseHttp.Error)
-            {
-                var message = await responseHttp.GetErrorMessageAsync();
-                await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
-                return;
-            }
-            ProductsDetails = responseHttp.Response;
-            ProductsDetails = ProductsDetails!.Where(r => r.ProductId == productId).ToList();
-        }
-
-        private async Task DeleteAsync(ProductsDetail productsDetail)
+        private async Task DeleteAsync(AppearanceReference appearanceReference)
         {
             var result = await SweetAlertService.FireAsync(new SweetAlertOptions
             {
                 Title = "Confirmacion",
-                Text = $"¿Estas seguro que quieres borrar la materia prima de presentacion {productsDetail.RawMaterial!.Name} del producto {product.Name}?",
+                Text = $"¿Estas seguro que quieres borrar la materia prima de presentacion: {appearanceReference.RawMaterial!.Name} de la Referencia?",
                 Icon = SweetAlertIcon.Question,
                 ShowCancelButton = true,
             });
@@ -118,7 +97,7 @@ namespace StorageSystem.WEB.Pages.ProductDetails
             {
                 return;
             }
-            var responseHttp = await Repository.DeleteAsync<ProductsDetail>($"api/ProductsDetails/{productsDetail.Id}");
+            var responseHttp = await Repository.DeleteAsync<AppearanceReference>($"api/AppearanceReferences/{appearanceReference.Id}");
             if (responseHttp.Error)
             {
                 if (responseHttp.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
@@ -132,7 +111,7 @@ namespace StorageSystem.WEB.Pages.ProductDetails
                 }
                 return;
             }
-            await LoadProductDetailsAsync(ProductId);
+            await LoadAppearanceReferencesAsync(ReferenceId);
             var toast = SweetAlertService.Mixin(new SweetAlertOptions
             {
                 Toast = true,
@@ -147,21 +126,21 @@ namespace StorageSystem.WEB.Pages.ProductDetails
         {
             try
             {
-                if (rawMaterialId != 0 && ProductId != 0)
+                if (rawMaterialId != 0 && ReferenceId != 0)
                 {
-                    productsDetail.AppearanceReferenceId = appearanceReferenceId;
-                    productsDetail.ProductId = ProductId;
-                    productsDetail.RawMaterialId = rawMaterialId;
-                    var responseHttp = await Repository.PostAsync("/api/ProductsDetails", productsDetail);
+                    appearanceReference.ReferenceId = ReferenceId;
+                    appearanceReference.RawMaterialId = rawMaterialId;
+                    var responseHttp = await Repository.PostAsync("/api/AppearanceReferences", appearanceReference);
                     if (responseHttp.Error)
                     {
                         var message = await responseHttp.GetErrorMessageAsync();
                         await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
                         return;
                     }
-                    await LoadProductDetailsAsync(ProductId);
-                    appearanceReferenceName = "Referencia";
-                    productsDetail = new ProductsDetail();
+                    await LoadAppearanceReferencesAsync(ReferenceId);
+                    rawMaterialName = "Materia prima";
+
+                    appearanceReference = new AppearanceReference();
                 }
                 else
                 {

@@ -20,6 +20,7 @@ builder.Services.AddDbContext<DataContext>(op => op.UseSqlServer("name=CadenaSto
 builder.Services.AddScoped(typeof(IGenericUnitOfWork<>), typeof(GenericUnitOfWork<>));
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
+builder.Services.AddScoped<IAppearanceReferencesRepository, AppearanceReferencesRepository>();
 builder.Services.AddScoped<ICategoriesRepository, CategoriesRepository>();
 builder.Services.AddScoped<IClientsRepository, ClientsRepository>();
 builder.Services.AddScoped<IInputInventoriesRepository, InputInventoriesRepository>();
@@ -32,6 +33,7 @@ builder.Services.AddScoped<IRecipesRepository, RecipesRepository>();
 builder.Services.AddScoped<IReferencesRepository, ReferencesRepository>();
 builder.Services.AddScoped<ISuppliersRepository, SuppliersRepository>();
 
+builder.Services.AddScoped<IAppearanceReferencesUnitOfWork, AppearanceReferencesUnitOfWork>();
 builder.Services.AddScoped<ICategoriesUnitOfWork, CategoriesUnitOfWork>();
 builder.Services.AddScoped<IClientsUnitOfWork, ClientsUnitOfWork>();
 builder.Services.AddScoped<IInputInventoriesUnitOfWork, InputInventoriesUnitOfWork>();

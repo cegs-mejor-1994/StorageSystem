@@ -1,19 +1,19 @@
-﻿@page "/references"
-<PageTitle>Referencias de Producto</PageTitle>
+﻿@page "/appearanceReferences"
+<PageTitle>Presentacion de Referencia</PageTitle>
 <HxCard>
-    <HeaderTemplate>        
-        <a class="btn btn-primary float-end" href="/references/create">Nueva referencia de Producto</a>        
+    <HeaderTemplate>
+        <HxIcon Icon="@BootstrapIcon.ListCheck" /> Presentacion de Referencia
     </HeaderTemplate>
     <BodyTemplate>
-        <Filter PlaceHolder="Buscar Referencia de Producto..." Callback="@FilterCallBack" />
+        <Filter PlaceHolder="Buscar Presentacion de Referencia..." Callback="@FilterCallBack" />
         <GenericList MyList="References">
             <Body>
                 <Pagination CurrentPage="currentPage" TotalPages="totalPages" SelectedPage="SelectedPageAsync" RecordsNumber="SelectedRecordsNumberAsync" />
                 <table class="table table-striped">
                     <thead>
-                        <tr>                            
-                            <th>Nombre</th>                                                        
-                            <th style="width:210px">Acciones</th>
+                        <tr>
+                            <th>Nombre</th>
+                            <th style="width: 210px">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -22,8 +22,7 @@
                             <tr>
                                 <td>@reference.Name @reference.MeasurementUnit!.Code</td>
                                 <td>
-                                    <a href="/references/edit/@reference.Id" class="btn btn-sm btn-warning"><i class="bi bi-pencil" /> Editar</a>
-                                    <HxButton Text="Borrar" Icon="BootstrapIcon.Trash" IconPlacement="ButtonIconPlacement.Start" Color="ThemeColor.Danger" Size="ButtonSize.Small" OnClick="@(() => DeleteAsync(reference))" />
+                                    <a href="/appearanceReferences/details/@reference.Id" class="btn btn-warning"><i class="bi bi-pencil" /> Detalles</a>
                                 </td>
                             </tr>
                         }
@@ -33,6 +32,7 @@
         </GenericList>
     </BodyTemplate>
 </HxCard>
+
 
 
 

@@ -30,9 +30,6 @@ namespace StorageSystem.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("AppearanceReferenceId")
-                        .HasColumnType("int");
-
                     b.Property<int>("RawMaterialId")
                         .HasColumnType("int");
 
@@ -44,8 +41,6 @@ namespace StorageSystem.API.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AppearanceReferenceId");
 
                     b.HasIndex("RawMaterialId");
 
@@ -543,11 +538,6 @@ namespace StorageSystem.API.Migrations
 
             modelBuilder.Entity("StorageSystem.Shared.Entities.AppearanceReference", b =>
                 {
-                    b.HasOne("StorageSystem.Shared.Entities.AppearanceReference", null)
-                        .WithMany("AppearanceReferences")
-                        .HasForeignKey("AppearanceReferenceId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("StorageSystem.Shared.Entities.RawMaterial", "RawMaterial")
                         .WithMany()
                         .HasForeignKey("RawMaterialId")
@@ -644,7 +634,7 @@ namespace StorageSystem.API.Migrations
             modelBuilder.Entity("StorageSystem.Shared.Entities.ProductsDetail", b =>
                 {
                     b.HasOne("StorageSystem.Shared.Entities.AppearanceReference", "AppearanceReference")
-                        .WithMany()
+                        .WithMany("ProductsDetails")
                         .HasForeignKey("AppearanceReferenceId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -724,7 +714,7 @@ namespace StorageSystem.API.Migrations
 
             modelBuilder.Entity("StorageSystem.Shared.Entities.AppearanceReference", b =>
                 {
-                    b.Navigation("AppearanceReferences");
+                    b.Navigation("ProductsDetails");
                 });
 
             modelBuilder.Entity("StorageSystem.Shared.Entities.Category", b =>

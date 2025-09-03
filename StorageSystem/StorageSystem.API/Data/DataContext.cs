@@ -10,6 +10,7 @@ namespace StorageSystem.API.Data
             
         }
 
+        public DbSet<AppearanceReference> AppearanceReferences { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Client> Clients { get; set; }        
         public DbSet<InputInventory> InputInventories { get; set; }
