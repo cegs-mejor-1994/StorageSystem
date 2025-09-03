@@ -27,5 +27,9 @@ namespace StorageSystem.Shared.Entities
         public MeasurementUnit? MeasurementUnit { get; set; }        
 
         public ICollection<InputInventory>? InputInventories { get; set; }
+        public ICollection<AppearanceReference>? AppearanceReferences { get; set; }
+        public ICollection<Recipe>? Recipes { get; set; }
+        public ICollection<ProductsDetail>? ProductsDetails { get; set; }
+
     }
 }

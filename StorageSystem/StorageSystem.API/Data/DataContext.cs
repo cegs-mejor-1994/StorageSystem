@@ -29,16 +29,16 @@ namespace StorageSystem.API.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<AppearanceReference>().HasIndex(r => new { r.ReferenceId, r.RawMaterialId }).IsUnique();
-            modelBuilder.Entity<Category>().HasIndex(c => c.Code).IsUnique();
+            modelBuilder.Entity<AppearanceReference>().HasIndex(a => new { a.ReferenceId, a.RawMaterialId }).IsUnique();
+            modelBuilder.Entity<Category>().HasIndex(ca => new { ca.Code, ca.Name }).IsUnique();
             modelBuilder.Entity<Client>().HasIndex(cl => cl.Nit).IsUnique();
             modelBuilder.Entity<InputInventory>();
             modelBuilder.Entity<Manufactury>();
-            modelBuilder.Entity<MeasurementUnit>().HasIndex(m => m.Code).IsUnique();
+            modelBuilder.Entity<MeasurementUnit>().HasIndex(me => new { me.Code, me.Name }).IsUnique();
             modelBuilder.Entity<Order>();
             modelBuilder.Entity<Product>().HasIndex(r => new { r.Code, r.Name }).IsUnique();
-            modelBuilder.Entity<ProductsDetail>().HasIndex(pr => new { pr.ProductId, pr.RawMaterialId, pr.AppearanceReferenceId }).IsUnique();
             modelBuilder.Entity<ProductionGap>();
+            modelBuilder.Entity<ProductsDetail>().HasIndex(pr => new { pr.ProductId, pr.RawMaterialId, pr.AppearanceReferenceId }).IsUnique();   
             modelBuilder.Entity<RawMaterial>().HasIndex(r => new { r.Code, r.Name }).IsUnique();
             modelBuilder.Entity<Recipe>().HasIndex(r => new { r.ProductId, r.RawMaterialId }).IsUnique();
             modelBuilder.Entity<RecipeTotal>();
