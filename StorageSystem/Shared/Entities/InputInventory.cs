@@ -9,7 +9,7 @@ namespace StorageSystem.Shared.Entities
 
         [Display(Name = "Cantidad")]
         [Column(TypeName = "decimal(18,3)")]
-        [MaxLength(10, ErrorMessage = "El campo {0} no puede tener mas de {1} caracteres")]
+        [Range(0.001, 9999999999, ErrorMessage = "El campo {0} debe ser mayor a 0 y menor que 9999999999")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
         public decimal Amount { get; set; }
 

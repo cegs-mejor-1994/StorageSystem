@@ -11,6 +11,8 @@ namespace StorageSystem.WEB.Pages.AppearanceReferences
 {
     public partial class AppearanceReferenceDetails
     {
+        private List<string> categorias = new List<string> { "Envase", "Tapa", "Asa" }; 
+
         [EditorRequired, Parameter] public int ReferenceId { get; set; }        
 
         private string rawMaterialName = "Materia prima";
@@ -21,6 +23,7 @@ namespace StorageSystem.WEB.Pages.AppearanceReferences
 
         private List<AppearanceReference>? AppearanceReferences { get; set; }        
         private List<RawMaterial>? rawMaterials { get; set; } = null!;
+        private List<Reference>? references { get; set; } = null!;
 
         private AppearanceReference appearanceReference = new();
         private Reference reference = new();        
@@ -29,32 +32,21 @@ namespace StorageSystem.WEB.Pages.AppearanceReferences
 
         protected async override Task OnParametersSetAsync()
         {
-            var responseHttp = await Repository.GetAsync<Reference>($"/api/References/{ReferenceId}");
-            if (responseHttp.Error)
-            {
-                if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
-                {
-                    NavigationManager.NavigateTo("/");
-                }
-                else
-                {
-                    var message = await responseHttp.GetErrorMessageAsync();
-                    await SweetAlertService.FireAsync(new SweetAlertOptions { Title = "Error", Text = message, Icon = SweetAlertIcon.Error });
-                }
-            }
-            else
-            {
-                reference = responseHttp.Response!;
-            }
             await LoadAppearanceReferencesAsync(ReferenceId);
             await LoadRawMaterialsAsync();
+            await LoadReferencesAsync();
+            GetReferenceById(ReferenceId);
+        }
+
+        private void GetReferenceById(int referenceId) { 
+            reference = references?.FirstOrDefault(r => r.Id == referenceId)!;
         }
 
         private void ClickRawMaterialCallBack(string rawMaterial)
         {
             string[] valores = rawMaterial.Split(',');
             rawMaterialId = int.Parse(valores[0]);
-            rawMaterialName = valores[1] + valores[2];
+            rawMaterialName = valores[1] + " " + valores[2];
         }
 
         private async Task LoadAppearanceReferencesAsync(int referenceId)
@@ -70,6 +62,18 @@ namespace StorageSystem.WEB.Pages.AppearanceReferences
             AppearanceReferences = AppearanceReferences!.Where(r => r.ReferenceId == referenceId).ToList();
         }
 
+        private async Task LoadReferencesAsync()
+        {
+            var responseHttp = await Repository.GetAsync<List<Reference>>("/api/References/combo");
+            if (responseHttp.Error)
+            {
+                var message = await responseHttp.GetErrorMessageAsync();
+                await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+                return;
+            }
+            references = responseHttp.Response;
+        }
+
         private async Task LoadRawMaterialsAsync()
         {
             var responseHttp = await Repository.GetAsync<List<RawMaterial>>("/api/RawMaterials/combo");
@@ -80,6 +84,8 @@ namespace StorageSystem.WEB.Pages.AppearanceReferences
                 return;
             }
             rawMaterials = responseHttp.Response;
+            rawMaterials = rawMaterials!.Where(rm => categorias.Contains(rm.Category!.Name)
+            ).ToList();
         }
 
         private async Task DeleteAsync(AppearanceReference appearanceReference)
@@ -124,6 +130,16 @@ namespace StorageSystem.WEB.Pages.AppearanceReferences
 
         private async Task CreateAsync()
         {
+            var categoryNameFromRawMaterialSelected = rawMaterials?.FirstOrDefault(rm => rm.Id == rawMaterialId)?.Category?.Name;
+
+            var categoriesNamesInAppearanceReferences = AppearanceReferences?.Select(ar => ar.RawMaterial?.Category?.Name).ToList();
+
+            if (categoriesNamesInAppearanceReferences != null && categoriesNamesInAppearanceReferences.Contains(categoryNameFromRawMaterialSelected))
+            {
+                await SweetAlertService.FireAsync("Error", $"Ya se ha  asignado una materia prima de tipo {categoryNameFromRawMaterialSelected} a la referencia.", SweetAlertIcon.Error);
+                return;
+            }
+
             try
             {
                 if (rawMaterialId != 0 && ReferenceId != 0)
@@ -139,7 +155,6 @@ namespace StorageSystem.WEB.Pages.AppearanceReferences
                     }
                     await LoadAppearanceReferencesAsync(ReferenceId);
                     rawMaterialName = "Materia prima";
-
                     appearanceReference = new AppearanceReference();
                 }
                 else

@@ -30,6 +30,5 @@ namespace StorageSystem.Shared.Entities
         public ICollection<AppearanceReference>? AppearanceReferences { get; set; }
         public ICollection<Recipe>? Recipes { get; set; }
         public ICollection<ProductsDetail>? ProductsDetails { get; set; }
-
     }
 }

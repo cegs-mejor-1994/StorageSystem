@@ -29,8 +29,9 @@ namespace StorageSystem.API.Repositories.Implementations
                 Result = await queryable
                     .OrderBy(ar => ar.Id)
                     .Include(ar => ar.Reference)
-                    .ThenInclude(m => m.MeasurementUnit)
+                    .ThenInclude(m => m!.MeasurementUnit)
                     .Include(ar => ar.RawMaterial)
+                    .ThenInclude(ca => ca!.Category)
                     .Paginate(pagination)
                     .ToListAsync()
             };
@@ -39,9 +40,11 @@ namespace StorageSystem.API.Repositories.Implementations
         public async Task<IEnumerable<AppearanceReference>> GetComboAsync()
         {
             return await _context.AppearanceReferences
-                  .OrderBy(ar => ar.Id)
+                    .OrderBy(ar => ar.Id)
                     .Include(ar => ar.Reference)
+                    .ThenInclude(m => m!.MeasurementUnit)
                     .Include(ar => ar.RawMaterial)
+                    .ThenInclude(ca => ca!.Category)
                     .ToListAsync();
         }
 

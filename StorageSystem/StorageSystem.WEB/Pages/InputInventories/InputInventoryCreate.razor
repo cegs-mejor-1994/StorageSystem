@@ -20,7 +20,7 @@
             <div class="mb-3">
                 <label>Cantidad:</label>
                 <div>
-                    <InputNumber class="form-control" @bind-Value="inputInventory.Amount" />
+                    <InputNumber class="form-control" @bind-Value="inputInventory.Amount" step="0.001"/>
                     <ValidationMessage For="@(() => inputInventory.Amount)" />
                 </div>
             </div>

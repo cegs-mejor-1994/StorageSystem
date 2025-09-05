@@ -36,9 +36,10 @@ namespace StorageSystem.API.Data
             modelBuilder.Entity<Manufactury>();
             modelBuilder.Entity<MeasurementUnit>().HasIndex(me => new { me.Code, me.Name }).IsUnique();
             modelBuilder.Entity<Order>();
-            modelBuilder.Entity<Product>().HasIndex(r => new { r.Code, r.Name }).IsUnique();
+            modelBuilder.Entity<Product>().HasIndex(pr => pr.Code).IsUnique();
+            modelBuilder.Entity<Product>().HasIndex(pr => pr.Name).IsUnique();
             modelBuilder.Entity<ProductionGap>();
-            modelBuilder.Entity<ProductsDetail>().HasIndex(pr => new { pr.ProductId, pr.RawMaterialId, pr.AppearanceReferenceId }).IsUnique();   
+            modelBuilder.Entity<ProductsDetail>().HasIndex(prd => new { prd.ProductId, prd.RawMaterialId, prd.AppearanceReferenceId }).IsUnique();   
             modelBuilder.Entity<RawMaterial>().HasIndex(r => new { r.Code, r.Name }).IsUnique();
             modelBuilder.Entity<Recipe>().HasIndex(r => new { r.ProductId, r.RawMaterialId }).IsUnique();
             modelBuilder.Entity<RecipeTotal>();

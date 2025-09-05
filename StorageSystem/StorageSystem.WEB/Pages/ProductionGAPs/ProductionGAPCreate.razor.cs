@@ -50,7 +50,7 @@ namespace StorageSystem.WEB.Pages.ProductionGAPs
         {
             try
             {
-                if (ProductionGap.Amount == 0 && productId != 0)
+                if (ProductionGap.Amount > 0 && productId != 0)
                 {
                     var responseHttp = await Repository.PostAsync("/api/ProductionGaps", ProductionGap);
                     if (responseHttp.Error)

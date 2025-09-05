@@ -145,7 +145,7 @@ namespace StorageSystem.WEB.Pages.Recipes
         {
             try
             {
-                if (recipe.Amount == 0 && rawMaterialId != 0 && ProductId != 0)
+                if (recipe.Amount > 0 && rawMaterialId != 0 && ProductId != 0)
                 {
                     recipe.ProductId = ProductId;
                     recipe.RawMaterialId = rawMaterialId;
@@ -176,7 +176,7 @@ namespace StorageSystem.WEB.Pages.Recipes
 
         private async Task EditBatchTotalAsync()
         {
-            if (batchTotal == 0)
+            if (batchTotal > 0)
             {
                 recipe2.Id = RecipeTotals!.Where(r => r.RecipeId == ProductId).Select(r => r.Id).FirstOrDefault();
                 recipe2.RecipeId = ProductId;

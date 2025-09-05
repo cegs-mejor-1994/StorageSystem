@@ -4,7 +4,7 @@
 <PageTitle>Editar Formula</PageTitle>
 <HxCard>
     <HeaderTemplate>
-        <h3 class="text-center">@reference.Name @reference.MeasurementUnit!.Code</h3>
+        <h3 class="text-center">@reference.Name @reference.MeasurementUnit?.Code</h3>
         <div class="row g-1 align-items-center">
             <div class="col-12 col-sm-8">
                 <InputText class="form-control" @bind-Value="rawMaterialName" disabled placeholder="Materia Prima" />
@@ -20,7 +20,7 @@
                 <button class="btn btn-primary w-100" type="button" onclick="@(() => CreateAsync())">Guardar Cambios</button>
             </div>
             <div class="col-12 col-sm-6">
-                <a href="/recipes" class="btn btn-success w-100">Regresar</a>
+                <a href="/appearanceReferences" class="btn btn-success w-100">Regresar</a>
             </div>
         </div>
     </HeaderTemplate>
@@ -74,16 +74,12 @@
                             <tbody>
                                 @foreach (var rawMaterial in rawMaterials!)
                                 {
-                                    var exists = AppearanceReferences?.Any(r => r.RawMaterialId == rawMaterial.Id) ?? false;
-                                    @if (!exists)
-                                    {
-                                        <tr>
-                                            <td>@rawMaterial.Name</td>
-                                            <td>
-                                                <HxButton Color="ThemeColor.Secondary" data-bs-dismiss="modal" Text="Seleccionar" OnClick="@(() => ClickRawMaterialCallBack($"{rawMaterial.Id},{rawMaterial.Name},{rawMaterial.MeasurementUnit!.Code}"))" />
-                                            </td>
-                                        </tr>
-                                    }
+                                    <tr>
+                                        <td>@rawMaterial.Name</td>
+                                        <td>
+                                            <HxButton Color="ThemeColor.Secondary" data-bs-dismiss="modal" Text="Seleccionar" OnClick="@(() => ClickRawMaterialCallBack($"{rawMaterial.Id},{rawMaterial.Name},{rawMaterial.MeasurementUnit!.Code}"))" />
+                                        </td>
+                                    </tr>
                                 }
                             </tbody>
                         </table>
