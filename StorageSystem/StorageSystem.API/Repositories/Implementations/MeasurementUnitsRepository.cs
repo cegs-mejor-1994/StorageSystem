@@ -30,7 +30,7 @@ namespace StorageSystem.API.Repositories.Implementations
             {
                 WasSuccess = true,
                 Result = await queryable
-                    .OrderBy(x => x.Name)
+                    .OrderBy(x => x.Name)                    
                     .Paginate(pagination)
                     .ToListAsync()
             };
@@ -39,7 +39,7 @@ namespace StorageSystem.API.Repositories.Implementations
         public async Task<IEnumerable<MeasurementUnit>> GetComboAsync()
         {
             return await _context.MeasurementUnits
-                .OrderBy(m => m.Name)
+                .OrderBy(x => x.Name)                
                 .ToListAsync(); 
         }
 

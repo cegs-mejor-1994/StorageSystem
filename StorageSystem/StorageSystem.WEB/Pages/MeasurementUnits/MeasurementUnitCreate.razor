@@ -1,38 +1,46 @@
 ﻿@page "/measurementUnits/create"
+<HxCard>
+    <HeaderTemplate>
+        <HxIcon Icon="@BootstrapIcon.ListCheck" /> Unidades de Medida
+        <a class="btn btn-success float-end" href="/measurementUnits">Regresar</a>
+    </HeaderTemplate>
+    <BodyTemplate>
+        <EditForm Model="measurementUnit" OnValidSubmit="CreateAsync">
+            <DataAnnotationsValidator />
+            <div class="mb-3">
+                <label class="form-label">Codigo</label>
+                <HxInputText @bind-Value="@measurementUnit.Code" />
+                <ValidationMessage For="@(() => measurementUnit.Code)" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Nombre</label>
+                <div>
+                    <HxInputText @bind-Value="@measurementUnit.Name" />
+                    <ValidationMessage For="@(() => measurementUnit.Name)" />
+                </div>
+            </div>
+            <div class="mb-3">
+                <select @bind="@measurementUnit.PhysicalState">
+                    <option value="0">Seleccione un tipo de producto</option>
+                    @foreach (var productPS in Enum.GetValues(typeof(StorageSystem.Shared.Enums.ProductStateAndPhisical.ProductPhysicalState)))
+                    {
+                        <option value="@productPS">@productPS.ToString()</option>
+                    }
+                </select>
+            </div>
+            <div class="mb-3">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" @bind="@measurementUnit.Base">
+                    <label class="form-check-label" for="flexCheckChecked">
+                        Unidad Base
+                    </label>
+                </div>
+            </div>
+            <div class="d-grid gap-2 d-md-block">
+                <HxSubmit Color="ThemeColor.Primary" Text="Guardar Cambios" />
+            </div>
+        </EditForm>
 
-<EditForm Model="measurementUnit">
-    <DataAnnotationsValidator />
-    <div class="mb-3">
-        <label class="form-label">Codigo</label>
-        <HxInputText @bind-Value="@measurementUnit.Code" />
-        <ValidationMessage For="@(() => measurementUnit.Code)" />
-    </div>
-    <div class="mb-3">
-        <label class="form-label">Nombre</label>
-        <div>
-            <HxInputText @bind-Value="@measurementUnit.Name" />
-            <ValidationMessage For="@(() => measurementUnit.Name)" />
-        </div>
-    </div>
-    <div class="mb-3">
-        <select @bind="@measurementUnit.PhysicalState">
-            <option value="0">Seleccione un tipo de producto</option>
-            @foreach (var productPS in Enum.GetValues(typeof(StorageSystem.Shared.Enums.ProductStateAndPhisical.ProductPhysicalState)))
-            {
-                <option value="@productPS">@productPS.ToString()</option>
-            }
-        </select>
-    </div>
-    <div class="mb-3">
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" @bind="@measurementUnit.Base">
-            <label class="form-check-label" for="flexCheckChecked">
-                Checked checkbox
-            </label>
-        </div>
-    </div>
-    <div class="d-grid gap-2 d-md-block">
-        <HxSubmit Color="ThemeColor.Primary" Text="Guardar Cambios" />        
-    </div>
-</EditForm>
+    </BodyTemplate>
+</HxCard>
 

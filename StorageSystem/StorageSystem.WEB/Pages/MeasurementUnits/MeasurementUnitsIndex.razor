@@ -3,7 +3,7 @@
 <HxCard>
     <HeaderTemplate>
         <HxIcon Icon="@BootstrapIcon.ListCheck" /> Unidades de Medida
-        <HxButton CssClass="float-end" Text="Nueva Unidad de Medida" Color="ThemeColor.Primary" Size="ButtonSize.Small" Icon="BootstrapIcon.PlusSquare" IconPlacement="ButtonIconPlacement.Start" OnClick="@(() => ShowModalAsync())" />
+        <a class="btn btn-primary float-end" href="/measurementUnits/create">Nueva Unidad de Medida</a>
     </HeaderTemplate>
     <BodyTemplate>
         <Filter PlaceHolder="Buscar Unidad de Medida..." Callback="@FilterCallBack" />
@@ -15,7 +15,7 @@
                         <tr>
                             <th>Codigo</th>
                             <th>Nombre</th>
-                            <th>Estado</th>
+                            <th>Tipo</th>
                             <th style="width:210px">Acciones</th>
                         </tr>
                     </thead>
@@ -25,9 +25,9 @@
                             <tr>
                                 <td>@measurementUnit.Code</td>
                                 <td>@measurementUnit.Name</td>
-                                <td>@measurementUnit.State</td>
+                                <td>@measurementUnit.PhysicalState</td>
                                 <td>
-                                    <a @onclick="@(() => ShowModalAsync(measurementUnit.Id, true))" class="btn btn-sm btn-warning"><i class="bi bi-pencil" /> Editar</a>
+                                    <a href="/measurementUnits/edit/@measurementUnit.Id" class="btn btn-sm btn-warning"><i class="bi bi-pencil" /> Editar</a>
                                     <HxButton Text="Borrar" Icon="BootstrapIcon.Trash" IconPlacement="ButtonIconPlacement.Start" Color="ThemeColor.Danger" Size="ButtonSize.Small" OnClick="@(() => DeleteAsync(measurementUnit))" />
                                 </td>
                             </tr>

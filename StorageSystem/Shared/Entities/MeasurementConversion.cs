@@ -12,7 +12,7 @@ namespace StorageSystem.Shared.Entities
         public int ToUnitId { get; set; }
         public MeasurementUnit? ToUnit { get; set; } = null!;
 
-        [Column(TypeName = "decimal(18,6)")]
-        public decimal Factor { get; set; }
+        [Column(TypeName = "decimal(18,4)")]
+        public double Factor { get; set; }
     }
 }

@@ -12,7 +12,7 @@ using StorageSystem.API.Data;
 namespace StorageSystem.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250908022425_AddInitializeDatabaseEntities")]
+    [Migration("20250908035301_AddInitializeDatabaseEntities")]
     partial class AddInitializeDatabaseEntities
     {
         /// <inheritdoc />
@@ -195,25 +195,15 @@ namespace StorageSystem.API.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("Factor")
-                        .HasColumnType("decimal(18,6)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("FromUnitId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("MeasurementUnitId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("MeasurementUnitId1")
                         .HasColumnType("int");
 
                     b.Property<int>("ToUnitId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("MeasurementUnitId");
-
-                    b.HasIndex("MeasurementUnitId1");
 
                     b.HasIndex("ToUnitId");
 
@@ -590,23 +580,13 @@ namespace StorageSystem.API.Migrations
             modelBuilder.Entity("StorageSystem.Shared.Entities.MeasurementConversion", b =>
                 {
                     b.HasOne("StorageSystem.Shared.Entities.MeasurementUnit", "FromUnit")
-                        .WithMany()
+                        .WithMany("ConversionsFrom")
                         .HasForeignKey("FromUnitId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("StorageSystem.Shared.Entities.MeasurementUnit", null)
-                        .WithMany("ConversionsFrom")
-                        .HasForeignKey("MeasurementUnitId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("StorageSystem.Shared.Entities.MeasurementUnit", null)
-                        .WithMany("ConversionsTo")
-                        .HasForeignKey("MeasurementUnitId1")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("StorageSystem.Shared.Entities.MeasurementUnit", "ToUnit")
-                        .WithMany()
+                        .WithMany("ConversionsTo")
                         .HasForeignKey("ToUnitId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();

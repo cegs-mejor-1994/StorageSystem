@@ -1,0 +1,49 @@
+﻿@page "/measurementConversions/create"
+<HxCard>
+    <HeaderTemplate>
+        <HxIcon Icon="@BootstrapIcon.ArrowsAngleContract" /> Edita Factor de Conversion
+        <a class="btn btn-success float-end" href="/measurementConversions">Regresar</a>
+    </HeaderTemplate>
+    <BodyTemplate>
+        <EditForm Model="measurementConversion" OnValidSubmit="EditAsync">
+            <DataAnnotationsValidator />
+            @if (measurementConversion != null)
+            {
+                <div class="mb-3">
+                    <div class="mb-3">
+                        <label class="form-label">Factor</label>
+                        <div>
+                            <HxInputNumber @bind-Value="@measurementConversion.FromUnit!.Name" Decimals="4" />
+                            <ValidationMessage For="@(() => measurementConversion.FromUnitId)" />
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="mb-3">
+                        <label class="form-label">Factor</label>
+                        <div>
+                            <HxInputNumber @bind-Value="@measurementConversion.ToUnit!.Name" Decimals="4" />
+                            <ValidationMessage For="@(() => measurementConversion.ToUnitId)" />
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Factor</label>
+                    <div>
+                        <HxInputNumber @bind-Value="@measurementConversion.Factor" Decimals="4" />
+                        <ValidationMessage For="@(() => measurementConversion.Factor)" />
+                    </div>
+                </div>
+                <div class="d-grid gap-2 d-md-block">
+                    <HxSubmit Color="ThemeColor.Primary" Text="Guardar Cambios" />
+                </div>
+            }
+        </EditForm>
+    </BodyTemplate>
+</HxCard>
+
+
+
+
+
+

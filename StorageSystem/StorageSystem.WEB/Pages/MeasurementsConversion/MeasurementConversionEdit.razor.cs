@@ -7,13 +7,12 @@ using StorageSystem.WEB.Repositories;
 using StorageSystem.WEB.Shared;
 using System.Net;
 
-namespace StorageSystem.WEB.Pages.MeasurementUnits
+namespace StorageSystem.WEB.Pages.MeasurementsConversion
 {
-    public partial class MeasurementUnitEdit
+    public partial class MeasurementConversionEdit
     {
-        private MeasurementUnit? measurementUnit;        
-
-        [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
+        private MeasurementConversion? measurementConversion;        
+        
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
         [Inject] private IRepository Repository { get; set; } = null!;
@@ -22,12 +21,12 @@ namespace StorageSystem.WEB.Pages.MeasurementUnits
 
         protected async override Task OnParametersSetAsync()
         {
-            var responseHttp = await Repository.GetAsync<MeasurementUnit>($"/api/MeasurementUnits/{Id}");
+            var responseHttp = await Repository.GetAsync<MeasurementConversion>($"/api/MeasurementConversions/{Id}");
             if (responseHttp.Error)
             {
                 if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
                 {
-                    NavigationManager.NavigateTo("/measurementUnits");
+                    NavigationManager.NavigateTo("/");
                 }
                 else
                 {
@@ -37,22 +36,22 @@ namespace StorageSystem.WEB.Pages.MeasurementUnits
             }
             else
             {
-                measurementUnit = responseHttp.Response;
+                measurementConversion = responseHttp.Response;
             }
         }
 
         private async Task EditAsync()
         {
-            var responseHttp = await Repository.PutAsync($"/api/MeasurementUnits", measurementUnit);
+            var responseHttp = await Repository.PutAsync($"/api/MeasurementConversions", measurementConversion);
             if (responseHttp.Error)
             {
                 var message = await responseHttp.GetErrorMessageAsync();
                 await SweetAlertService.FireAsync("Error", message);
                 return;
             }
+          
+            NavigationManager.NavigateTo("/measurementsConversions");
 
-            await BlazoredModal.CloseAsync(ModalResult.Ok());
-            NavigationManager.NavigateTo("/measurementUnits");
             var toast = SweetAlertService.Mixin(new SweetAlertOptions
             {
                 Toast = true,

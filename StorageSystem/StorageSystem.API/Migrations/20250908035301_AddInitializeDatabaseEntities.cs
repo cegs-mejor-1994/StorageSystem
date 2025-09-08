@@ -114,9 +114,7 @@ namespace StorageSystem.API.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     FromUnitId = table.Column<int>(type: "int", nullable: false),
                     ToUnitId = table.Column<int>(type: "int", nullable: false),
-                    Factor = table.Column<decimal>(type: "decimal(18,6)", nullable: false),
-                    MeasurementUnitId = table.Column<int>(type: "int", nullable: true),
-                    MeasurementUnitId1 = table.Column<int>(type: "int", nullable: true)
+                    Factor = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -124,18 +122,6 @@ namespace StorageSystem.API.Migrations
                     table.ForeignKey(
                         name: "FK_MeasurementConversions_MeasurementUnits_FromUnitId",
                         column: x => x.FromUnitId,
-                        principalTable: "MeasurementUnits",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_MeasurementConversions_MeasurementUnits_MeasurementUnitId",
-                        column: x => x.MeasurementUnitId,
-                        principalTable: "MeasurementUnits",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_MeasurementConversions_MeasurementUnits_MeasurementUnitId1",
-                        column: x => x.MeasurementUnitId1,
                         principalTable: "MeasurementUnits",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -423,16 +409,6 @@ namespace StorageSystem.API.Migrations
                 table: "MeasurementConversions",
                 columns: new[] { "FromUnitId", "ToUnitId" },
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_MeasurementConversions_MeasurementUnitId",
-                table: "MeasurementConversions",
-                column: "MeasurementUnitId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_MeasurementConversions_MeasurementUnitId1",
-                table: "MeasurementConversions",
-                column: "MeasurementUnitId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MeasurementConversions_ToUnitId",

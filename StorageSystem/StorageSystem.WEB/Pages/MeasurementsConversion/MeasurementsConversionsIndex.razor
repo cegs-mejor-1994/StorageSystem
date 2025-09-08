@@ -1,9 +1,9 @@
-﻿@page "/measurementConversion"
+﻿@page "/measurementConversions"
 <PageTitle>Factores de Conversion</PageTitle>
 <HxCard>
     <HeaderTemplate>
         <HxIcon Icon="@BootstrapIcon.ListCheck" /> Factores de Conversion
-        <a class="btn btn-primary float-end" href="/measurementConversion/create">Factor de Conversion</a>
+        <a class="btn btn-primary float-end" href="/measurementConversions/create">Nuevo Factor de Conversion</a>
     </HeaderTemplate>
     <BodyTemplate>
         <GenericList MyList="measurementsConversions">
@@ -25,6 +25,7 @@
                                 <td>@measurementsConversion.ToUnit!.Code</td>
                                 <td>@measurementsConversion.Factor</td>
                                 <td>
+                                    <a class="btn btn-primary float-end" href="/measurementConversions/edit/@measurementsConversion.Id">Editar</a>
                                     <HxButton Text="Borrar" Icon="BootstrapIcon.Trash" IconPlacement="ButtonIconPlacement.Start" Color="ThemeColor.Danger" Size="ButtonSize.Small" OnClick="@(() => DeleteAsync(measurementsConversion))" />
                                 </td>
                             </tr>

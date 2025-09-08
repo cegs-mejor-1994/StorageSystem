@@ -13,8 +13,7 @@ namespace StorageSystem.WEB.Pages.MeasurementUnits
     {
         private MeasurementUnit measurementUnit = new();
         private FormWithFields<MeasurementUnit>? measurementUnitForm;
-
-        [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
+        
         [Inject] private IRepository repository { get; set; } = null!;
         [Inject] private SweetAlertService sweetAlertService { get; set; } = null!;
         [Inject] private NavigationManager navigationManager { get; set; } = null!;
@@ -29,9 +28,8 @@ namespace StorageSystem.WEB.Pages.MeasurementUnits
                 await sweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
                 return;
             }
-
-            await BlazoredModal.CloseAsync(ModalResult.Ok());
-            Return();
+            
+            navigationManager.NavigateTo("/measurementUnits");
 
             var toast = sweetAlertService.Mixin(new SweetAlertOptions
             {
@@ -41,12 +39,6 @@ namespace StorageSystem.WEB.Pages.MeasurementUnits
                 Timer = 3000
             });
             await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro creado con éxito.");
-        }
-        
-        private void Return()
-        {
-            measurementUnitForm!.FormPostedSuccessfully = true;
-            navigationManager.NavigateTo("/measurementUnits");
         }
     }
 }

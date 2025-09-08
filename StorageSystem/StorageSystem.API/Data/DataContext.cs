@@ -36,13 +36,13 @@ namespace StorageSystem.API.Data
             modelBuilder.Entity<MeasurementConversion>().HasIndex(mc => new { mc.FromUnitId, mc.ToUnitId }).IsUnique();
             modelBuilder.Entity<MeasurementConversion>()
                 .HasOne(mc => mc.FromUnit)
-                .WithMany()
+                .WithMany(mu => mu.ConversionsFrom)
                 .HasForeignKey(mc => mc.FromUnitId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<MeasurementConversion>()
                 .HasOne(mc => mc.ToUnit)
-                .WithMany()
+                .WithMany(mu => mu.ConversionsTo)
                 .HasForeignKey(mc => mc.ToUnitId)
                 .OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<MeasurementUnit>().HasIndex(mu => mu.Code).IsUnique();

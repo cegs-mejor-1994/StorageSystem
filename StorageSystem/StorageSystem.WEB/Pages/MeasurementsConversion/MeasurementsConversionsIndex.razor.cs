@@ -46,10 +46,10 @@ namespace StorageSystem.WEB.Pages.MeasurementsConversion
             {
                 return;
             }
-            var responseHttp = await Repository.DeleteAsync<MeasurementConversion>($"api/MeasurementConversions/{measurementConversion.Id}");
+            var responseHttp = await Repository.DeleteAsync<MeasurementConversion>($"api/MeasurementConverisons/{measurementConversion.Id}");
             if (responseHttp.Error)
             {
-                if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
+                if (responseHttp.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
                     NavigationManager.NavigateTo("/");
                 }
@@ -61,7 +61,6 @@ namespace StorageSystem.WEB.Pages.MeasurementsConversion
                 return;
             }
             await LoadMeasurementConversionsAsync();
-
             var toast = SweetAlertService.Mixin(new SweetAlertOptions
             {
                 Toast = true,
@@ -69,7 +68,7 @@ namespace StorageSystem.WEB.Pages.MeasurementsConversion
                 ShowConfirmButton = true,
                 Timer = 3000,
             });
-            await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro eliminado correctamente");
-        }
+            await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro borrado con exito");
+        }           
     }
 }

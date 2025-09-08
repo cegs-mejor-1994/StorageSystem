@@ -1,3 +1,53 @@
-﻿<h3>MeasurementConversionCreate</h3>
+﻿@page "/measurementConversions/create"
+<HxCard>
+    <HeaderTemplate>
+        <HxIcon Icon="@BootstrapIcon.ArrowsAngleContract" /> Nueva Conversion de Unidad de Medida
+        <a class="btn btn-success float-end" href="/measurementConversions">Regresar</a>
+    </HeaderTemplate>
+    <BodyTemplate>
+        <EditForm Model="measurementConversion" OnValidSubmit="CreateAsync">
+            <DataAnnotationsValidator />
+            @if (measurementUnits?.Any() == true)
+            {
+                <div class="mb-3">
+                    <select @bind="@measurementConversion.FromUnitId">
+                        <option value="0">Seleccione una unidad de medida</option>
+                        @foreach (var measurementUnit in measurementUnits!)
+                        {
+                            <option value="@measurementUnit.Id">@measurementUnit.Name</option>
+                        }
+                    </select>
+                    <ValidationMessage For="@(() => measurementConversion.FromUnitId)" />
+                </div>
+                <div class="mb-3">
+                    <select @bind="@measurementConversion.ToUnitId">
+                        <option value="0">Seleccione una unidad de medida</option>
+                        @foreach (var measurementUnit in measurementUnits!)
+                        {
+                            <option value="@measurementUnit.Id">@measurementUnit.Name</option>
+                        }
+                    </select>
+                    <ValidationMessage For="@(() => measurementConversion.ToUnitId)" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Factor</label>
+                    <div>
+                        <HxInputNumber @bind-Value="@measurementConversion.Factor" Decimals="4" />
+                        <ValidationMessage For="@(() => measurementConversion.Factor)" />
+                    </div>
+                </div>
+                <div class="d-grid gap-2 d-md-block">
+                    <HxSubmit Color="ThemeColor.Primary" Text="Guardar Cambios" />
+                </div>
+            }
+            else
+            {
+                <p>No hay unidades de medida para convertir. Crea una nueva unidad de medida?</p>
+                <a class="btn btn-primary float-end" href="/measurementUnits/create">Nueva unidad de medida</a>
+            }
+        </EditForm>
+    </BodyTemplate>
+</HxCard>
+
 
 

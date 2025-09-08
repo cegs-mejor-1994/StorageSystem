@@ -21,32 +21,12 @@ namespace StorageSystem.WEB.Pages.MeasurementUnits
         [Inject] private IRepository Repository { get; set; } = null!;
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
-
-        [CascadingParameter] IModalService Modal { get; set; } = default!;
+        
         public List<MeasurementUnit>? MeasurementUnits { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
             await LoadAsync();
-        }
-
-        private async Task ShowModalAsync(int id = 0, bool isEdit = false)
-        {
-            IModalReference modalReference;
-            if (isEdit)
-            {
-                modalReference = Modal.Show<MeasurementUnitEdit>(string.Empty, new ModalParameters().Add("Id", id));
-            }
-            else
-            {
-                modalReference = Modal.Show<MeasurementUnitCreate>();
-            }
-
-            var result = await modalReference.Result;
-            if (result.Confirmed)
-            {
-                await LoadAsync();
-            }
         }
 
         private async Task FilterCallBack(string filter)
@@ -150,20 +130,16 @@ namespace StorageSystem.WEB.Pages.MeasurementUnits
             {
                 return;
             }
-            var responseHttp = await Repository.DeleteAsync<Category>($"api/MeasurementUnits/{measurementUnit.Id}");
+            
+            measurementUnit.State = "Eliminado";
+            var responseHttp = await Repository.PutAsync($"/api/MeasurementUnits", measurementUnit);
             if (responseHttp.Error)
             {
-                if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
-                {
-                    NavigationManager.NavigateTo("/");
-                }
-                else
-                {
-                    var messageError = await responseHttp.GetErrorMessageAsync();
-                    await SweetAlertService.FireAsync("Error", messageError, SweetAlertIcon.Error);
-                }
+                var message = await responseHttp.GetErrorMessageAsync();
+                await SweetAlertService.FireAsync("Error", message);
                 return;
             }
+            
             await LoadAsync();
             var toast = SweetAlertService.Mixin(new SweetAlertOptions
             {
@@ -172,7 +148,7 @@ namespace StorageSystem.WEB.Pages.MeasurementUnits
                 ShowConfirmButton = true,
                 Timer = 3000,
             });
-            await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro borrado con exito");
+            await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro borrado con exito");                 
         }
     }
 }
