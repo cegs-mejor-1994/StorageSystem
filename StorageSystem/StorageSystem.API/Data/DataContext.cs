@@ -22,8 +22,7 @@ namespace StorageSystem.API.Data
         public DbSet<ProductionGap> ProductionGaps { get; set; }
         public DbSet<RawMaterial> RawMaterials { get; set; }
         public DbSet<Recipe> Recipes { get; set; }
-        public DbSet<RecipeDetail> RecipeDetails { get; set; }
-        public DbSet<RecipeDetail> RecipeTotals { get; set; }
+        public DbSet<RecipeDetail> RecipeDetails { get; set; }        
         public DbSet<Reference> References { get; set; }
         public DbSet<Supplier> Suppliers { get; set; }                 
 
@@ -34,7 +33,18 @@ namespace StorageSystem.API.Data
             modelBuilder.Entity<Client>().HasIndex(cl => cl.Nit).IsUnique();
             modelBuilder.Entity<InputInventory>();
             modelBuilder.Entity<Manufactury>();
-            modelBuilder.Entity<MeasurementConversion>().HasIndex(mc => new { mc.FromUnitId, mc.ToUnitId }).IsUnique(); 
+            modelBuilder.Entity<MeasurementConversion>().HasIndex(mc => new { mc.FromUnitId, mc.ToUnitId }).IsUnique();
+            modelBuilder.Entity<MeasurementConversion>()
+                .HasOne(mc => mc.FromUnit)
+                .WithMany()
+                .HasForeignKey(mc => mc.FromUnitId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<MeasurementConversion>()
+                .HasOne(mc => mc.ToUnit)
+                .WithMany()
+                .HasForeignKey(mc => mc.ToUnitId)
+                .OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<MeasurementUnit>().HasIndex(mu => mu.Code).IsUnique();
             modelBuilder.Entity<MeasurementUnit>().HasIndex(mu => mu.Name).IsUnique();
             modelBuilder.Entity<Order>();

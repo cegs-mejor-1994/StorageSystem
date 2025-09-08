@@ -25,12 +25,12 @@ builder.Services.AddScoped<IClientsRepository, ClientsRepository>();
 builder.Services.AddScoped<IInputInventoriesRepository, InputInventoriesRepository>();
 builder.Services.AddScoped<IMeasurementConversionsRepository, MeasurementConversionsRepository>();
 builder.Services.AddScoped<IMeasurementUnitsRepository, MeasurementUnitsRepository>();
+builder.Services.AddScoped<IProductionGapsRepository, ProductionGapsRepository>();
 builder.Services.AddScoped<IProductsRepository, ProductsRepository>();
 builder.Services.AddScoped<IProductsDetailsRepository, ProductsDetailsRepository>();
-builder.Services.AddScoped<IProductionGapsRepository, ProductionGapsRepository>();
 builder.Services.AddScoped<IRawMaterialsRepository, RawMaterialsRepository>();
-builder.Services.AddScoped<IRecipesRepository, RecipesRepository>();
 builder.Services.AddScoped<IRecipeDetailsRepository, RecipeDetailsRepository>();
+builder.Services.AddScoped<IRecipesRepository, RecipesRepository>();
 builder.Services.AddScoped<IReferencesRepository, ReferencesRepository>();
 builder.Services.AddScoped<ISuppliersRepository, SuppliersRepository>();
 
