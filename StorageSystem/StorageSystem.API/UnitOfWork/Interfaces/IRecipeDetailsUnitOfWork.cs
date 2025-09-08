@@ -4,10 +4,10 @@ using StorageSystem.Shared.Responses;
 
 namespace StorageSystem.API.UnitOfWork.Interfaces
 {
-    public interface IAppearanceReferencesUnitOfWork
+    public interface IRecipeDetailsUnitOfWork
     {
-        Task<IEnumerable<AppearanceReference>> GetComboAsync();
-        Task<ActionResponse<IEnumerable<AppearanceReference>>> GetAsync(PaginationDTO pagination);
+        Task<IEnumerable<RecipeDetail>> GetComboAsync();
+        Task<ActionResponse<IEnumerable<RecipeDetail>>> GetAsync(PaginationDTO pagination);
         Task<ActionResponse<int>> GetTotalPagesAsync(PaginationDTO pagination);
     }
 }

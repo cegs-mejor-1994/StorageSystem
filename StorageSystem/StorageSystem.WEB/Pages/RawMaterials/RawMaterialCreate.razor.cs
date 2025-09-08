@@ -33,7 +33,7 @@ namespace StorageSystem.WEB.Pages.RawMaterials
             measurementUnitName = valores[1];
         }
 
-        private async Task CreateAsync()
+        /*private async Task CreateAsync()
         {
             try
             {
@@ -69,6 +69,6 @@ namespace StorageSystem.WEB.Pages.RawMaterials
                 await SweetAlertService.FireAsync("Error", ex.Message, SweetAlertIcon.Error);
                 return;
             }
-        }
+        }*/
     }
 }

@@ -1,9 +1,11 @@
-﻿@page "/formReferences/details/{ProductId:int}"
+﻿@page "/productDetails/details/{ProductId:int}"
+@*
 
-<PageTitle>Editar Formula</PageTitle>
+
+<PageTitle>Asignacion de Etiquetas</PageTitle>
 <HxCard>
     <HeaderTemplate>
-        <h3 class="text-center">@product.Name</h3>
+        <h3 class="text-center">Asignacion de Etiquetas para: @product.Name</h3>
         <div class="row g-1 align-items-center">
             <div class="col-12 col-sm-8">
                 <InputText class="form-control" @bind-Value="appearanceReferenceName" disabled placeholder="Referencia" />
@@ -142,3 +144,4 @@
         </div>
     </div>
 </div>
+*@

@@ -1,5 +1,6 @@
 ﻿using StorageSystem.Shared.Interfaces;
 using System.ComponentModel.DataAnnotations;
+using static StorageSystem.Shared.Enums.ProductStateAndPhisical;
 
 namespace StorageSystem.Shared.Entities
 {
@@ -15,11 +16,16 @@ namespace StorageSystem.Shared.Entities
         [MaxLength(50, ErrorMessage = "El campo {0} no puede tener mas de {1} caracteres")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
         public string Name { get; set; } = null!;
+        
         public string State { get; set; } = "Disponible";
-        public DateTime DateRegister { get; set; }
 
-        public ICollection<RawMaterial>? RawMaterials { get; set; }
+        public ProductPhysicalState PhysicalState { get; set; }
+
+        public bool Base { get; set; } = false;
+
+        public ICollection<MeasurementConversion>? ConversionsFrom { get; set; }
+        public ICollection<MeasurementConversion>? ConversionsTo { get; set; }
+        public ICollection<InputInventory>? InputInventories { get; set; }
         public ICollection<Reference>? References { get; set; }
-
     }
 }

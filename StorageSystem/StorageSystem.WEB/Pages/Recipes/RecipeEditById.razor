@@ -6,7 +6,8 @@
 } 
 else 
 { 
-    <div class="row g-1 align-items-center">
+    @*
+        <div class="row g-1 align-items-center">
         <div class="col-12 col-sm-12">
             <HxInputText @bind-Value="RawMaterial!.Name" Enabled="false"/>
         </div>
@@ -23,6 +24,7 @@ else
             <HxButton Color="ThemeColor.Primary" Text="Guardar Cambios" OnClick="@(() => EditAsync())" />
         </div>
     </div>
+    *@
 }
 
 

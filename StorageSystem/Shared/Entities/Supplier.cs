@@ -33,6 +33,6 @@ namespace StorageSystem.Shared.Entities
 
         public string State { get; set; } = "Disponible";
 
-        public ICollection<InputInventory>? InputInventories { get; set; } 
+        public ICollection<RawMaterial>? RawMaterials { get; set; } 
     }
 }

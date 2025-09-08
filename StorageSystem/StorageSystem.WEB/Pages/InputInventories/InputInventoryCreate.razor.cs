@@ -39,8 +39,8 @@ namespace StorageSystem.WEB.Pages.InputInventories
             {
                 if (inputInventory.Amount > 0 && !string.IsNullOrWhiteSpace(inputInventory.Batch) && inputInventory.MatutingDate != DateTime.MinValue && rawMaterialId != 0 && supplierId != 0)
                 {
-                    inputInventory.SupplierId = supplierId;
-                    inputInventory.RawMaterialId = rawMaterialId;
+                   //inputInventory.SupplierId = supplierId;
+                    //inputInventory.RawMaterialId = rawMaterialId;
                     var responseHttp = await Repository.PostAsync("/api/InputInventories", inputInventory);
                     if (responseHttp.Error)
                     {

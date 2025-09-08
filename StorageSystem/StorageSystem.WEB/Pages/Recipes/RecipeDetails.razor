@@ -16,7 +16,8 @@
             </div>
         </div>
         <div class="row g-1 align-items-center mt-1">
-            <div class="col-12 col-sm-4 d-flex align-items-center">
+            @*
+                         <div class="col-12 col-sm-4 d-flex align-items-center">
                 <label class="me-2 mb-0">Cantidad @rawMaterialCodeMeasurementUnit</label>
                 <InputNumber class="form-control" style="max-width: 200px" @bind-Value="recipe.Amount" placeholder="Cantidad" />                
             </div>
@@ -26,6 +27,8 @@
             <div class="col-12 col-sm-4">
                 <a href="/recipes" class="btn btn-success w-100">Regresar</a>
             </div>
+            *@
+   
         </div>
         <div class="row g-1 align-items-center mt-1">
             <div class="col-12 col-sm-6 d-flex align-items-center">
@@ -53,7 +56,8 @@
                         <tbody>
                             @foreach (var recipe in Recipes!)
                             {
-                                <tr>
+                                @*
+                                                                    <tr>
                                     <td>@recipe.RawMaterial!.Name</td>
                                     <td>@recipe.Amount @recipe.RawMaterial.MeasurementUnit!.Code</td>
                                     <td>
@@ -61,6 +65,8 @@
                                         <HxButton Text="Borrar" Icon="BootstrapIcon.Trash" IconPlacement="ButtonIconPlacement.Start" Color="ThemeColor.Danger" Size="ButtonSize.Small" OnClick="@(() => DeleteAsync(recipe))" />
                                     </td>
                                 </tr>
+                                *@
+
                             }
                         </tbody>
                     </table>
@@ -90,7 +96,8 @@
                             <tbody>
                                 @foreach (var rawMaterial in rawMaterials!)
                                 {
-                                    var exists = Recipes?.Any(r => r.RawMaterialId == rawMaterial.Id) ?? false;
+                                    @* 
+                                                                            var exists = Recipes?.Any(r => r.RawMaterialId == rawMaterial.Id) ?? false;
                                     @if (!exists)
                                     {
                                         <tr>
@@ -100,6 +107,8 @@
                                             </td>
                                         </tr>
                                     }
+                                    *@
+
                                 }
                             </tbody>
                         </table>

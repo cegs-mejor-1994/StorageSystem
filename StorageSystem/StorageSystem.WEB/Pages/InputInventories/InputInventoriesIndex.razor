@@ -25,6 +25,7 @@
                     <tbody>
                         @foreach (var inputInventory in InputInventories!)
                         {
+                            @*
                             <tr>
                                 <td>@inputInventory.RawMaterial!.Name</td>
                                 <td>@inputInventory.Amount @inputInventory.RawMaterial.MeasurementUnit!.Code</td>
@@ -36,6 +37,8 @@
                                     <HxButton Color="ThemeColor.Danger" Text="Borrar" OnClick="@(() => DeleteAsync(inputInventory))" />
                                 </td>
                             </tr>
+                            *@
+
                         }
                     </tbody>
                 </table>

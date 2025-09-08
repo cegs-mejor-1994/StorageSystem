@@ -44,8 +44,8 @@ namespace StorageSystem.WEB.Pages.InputInventories
             else
             {
                 inputInventory = responseHttp.Response;
-                supplierName = GetSupplierName(inputInventory!.SupplierId);
-                rawMaterialName = GetRawMaterialName(inputInventory!.RawMaterialId);
+                //supplierName = GetSupplierName(inputInventory!.SupplierId);
+                //rawMaterialName = GetRawMaterialName(inputInventory!.RawMaterialId);
             }
         }
 
@@ -99,10 +99,10 @@ namespace StorageSystem.WEB.Pages.InputInventories
             return supplier!.Name;
         }
 
-        private string GetRawMaterialName(int id)
+        /*private string GetRawMaterialName(int id)
         {
             var rawMaterial = rawMaterials!.FirstOrDefault(x => x.Id == id);
             return rawMaterial!.Name;
-        }
+        }*/
     }
 }

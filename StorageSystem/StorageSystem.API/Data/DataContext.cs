@@ -9,41 +9,43 @@ namespace StorageSystem.API.Data
         {
             
         }
-
-        public DbSet<AppearanceReference> AppearanceReferences { get; set; }
+        
         public DbSet<Category> Categories { get; set; }
         public DbSet<Client> Clients { get; set; }        
         public DbSet<InputInventory> InputInventories { get; set; }
         public DbSet<Manufactury> Manufacturies { get; set; }
-        public DbSet<MeasurementUnit> MeasurementUnits { get; set; }                
+        public DbSet<MeasurementUnit> MeasurementUnits { get; set; }   
+        public DbSet<MeasurementConversion> MeasurementConversions { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductsDetail> ProductsDetails { get; set; }
         public DbSet<ProductionGap> ProductionGaps { get; set; }
         public DbSet<RawMaterial> RawMaterials { get; set; }
         public DbSet<Recipe> Recipes { get; set; }
-        public DbSet<RecipeTotal> RecipeTotals { get; set; }
+        public DbSet<RecipeDetail> RecipeDetails { get; set; }
+        public DbSet<RecipeDetail> RecipeTotals { get; set; }
         public DbSet<Reference> References { get; set; }
         public DbSet<Supplier> Suppliers { get; set; }                 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<AppearanceReference>().HasIndex(a => new { a.ReferenceId, a.RawMaterialId }).IsUnique();
-            modelBuilder.Entity<Category>().HasIndex(ca => new { ca.Code, ca.Name }).IsUnique();
+            modelBuilder.Entity<Category>().HasIndex(pr => pr.Code).IsUnique();
+            modelBuilder.Entity<Category>().HasIndex(pr => pr.Name).IsUnique();
             modelBuilder.Entity<Client>().HasIndex(cl => cl.Nit).IsUnique();
             modelBuilder.Entity<InputInventory>();
             modelBuilder.Entity<Manufactury>();
-            modelBuilder.Entity<MeasurementUnit>().HasIndex(me => new { me.Code, me.Name }).IsUnique();
+            modelBuilder.Entity<MeasurementConversion>().HasIndex(mc => new { mc.FromUnitId, mc.ToUnitId }).IsUnique(); 
+            modelBuilder.Entity<MeasurementUnit>().HasIndex(mu => mu.Code).IsUnique();
+            modelBuilder.Entity<MeasurementUnit>().HasIndex(mu => mu.Name).IsUnique();
             modelBuilder.Entity<Order>();
             modelBuilder.Entity<Product>().HasIndex(pr => pr.Code).IsUnique();
             modelBuilder.Entity<Product>().HasIndex(pr => pr.Name).IsUnique();
             modelBuilder.Entity<ProductionGap>();
-            modelBuilder.Entity<ProductsDetail>().HasIndex(prd => new { prd.ProductId, prd.RawMaterialId, prd.AppearanceReferenceId }).IsUnique();   
-            modelBuilder.Entity<RawMaterial>().HasIndex(r => new { r.Code, r.Name }).IsUnique();
-            modelBuilder.Entity<Recipe>().HasIndex(r => new { r.ProductId, r.RawMaterialId }).IsUnique();
-            modelBuilder.Entity<RecipeTotal>();
-            modelBuilder.Entity<Reference>().HasIndex(r => new { r.MeasurementUnitId, r.Name }).IsUnique();
+            modelBuilder.Entity<ProductsDetail>().HasIndex(prd => new { prd.ProductId, prd.ReferenceId }).IsUnique();   
+            modelBuilder.Entity<RawMaterial>().HasIndex(ra => new { ra.ProductId, ra.SupplierId }).IsUnique();
+            modelBuilder.Entity<Recipe>().HasIndex(rec =>  rec.ProductId).IsUnique();
+            modelBuilder.Entity<RecipeDetail>().HasIndex(recd => new { recd.ProductId, recd.RecipeId });
+            modelBuilder.Entity<Reference>().HasIndex(refe => new { refe.MeasurementUnitId, refe.Name }).IsUnique();
             modelBuilder.Entity<Supplier>().HasIndex(s => s.Nit).IsUnique();                       
             DisableCascadingDelete(modelBuilder);                                                                           
         }

@@ -23,18 +23,14 @@ namespace StorageSystem.Shared.Entities
         [Required(ErrorMessage = "El campo {0} es requerido")]
         public DateTime MatutingDate { get; set; }
 
-        public DateTime RegisterDate { get; set; }
+        public DateTime RegisterDate { get; set; } = DateTime.UtcNow;
 
-        [DataType(DataType.PhoneNumber)]
-        public int SupplierId { get; set; }
-        public Supplier? Supplier { get; set; }
+        public int ProductId { get; set; }  
+        public Product Product { get; set; } = null!;
 
-        [DataType(DataType.PhoneNumber)]
-        public int RawMaterialId { get; set; }
-        public RawMaterial? RawMaterial { get; set; }
+        public int MeasurementUnitId { get; set; }
+        public MeasurementUnit MeasurementUnit { get; set; } = null!;
 
-        public string State { get; set; } = "Disponible";
-
-        public ICollection<ProductionGap>? ProductionGaps { get; set; }
+        public string State { get; set; } = "Disponible";        
     }
 }

@@ -44,8 +44,8 @@ namespace StorageSystem.WEB.Pages.RawMaterials
             else
             {
                 rawMaterial = responseHttp.Response;
-                categoryName = GetCategoryName(rawMaterial!.CategoryId);
-                measurementUnitName = GetMeasurementUnitName(rawMaterial!.MeasurementUnitId);
+                /*categoryName = GetCategoryName(rawMaterial!.CategoryId);
+                measurementUnitName = GetMeasurementUnitName(rawMaterial!.MeasurementUnitId);*/
             }
         }
 

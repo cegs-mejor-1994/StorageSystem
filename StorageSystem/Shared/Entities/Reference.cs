@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using static StorageSystem.Shared.Enums.ProductStateAndPhisical;
 
 namespace StorageSystem.Shared.Entities
 {
@@ -16,6 +17,8 @@ namespace StorageSystem.Shared.Entities
 
         public string State { get; set; } = "Disponible";
 
-        public ICollection<AppearanceReference>? AppearanceReferences { get; set; }
+        public ProductPhysicalState PhysicalState { get; set; }
+
+        public ICollection<ProductsDetail>? ProductsDetails { get; set; }
     }
 }

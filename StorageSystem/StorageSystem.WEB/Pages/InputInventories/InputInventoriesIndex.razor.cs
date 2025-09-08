@@ -116,7 +116,7 @@ namespace StorageSystem.WEB.Pages.InputInventories
             var result = await SweetAlertService.FireAsync(new SweetAlertOptions
             {
                 Title = "Confirmacion",
-                Text = $"¿Estas seguro de querer eliminar el inventario de la materia prima: {inputInventory.RawMaterial!.Name}?",
+                Text = $"¿Estas seguro de querer eliminar el inventario de la materia prima: inputInventory.RawMaterial!.Name?",
                 Icon = SweetAlertIcon.Question,
                 ShowCancelButton = true,
             });

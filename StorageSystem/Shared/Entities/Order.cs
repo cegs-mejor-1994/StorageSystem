@@ -19,6 +19,6 @@ namespace StorageSystem.Shared.Entities
         public int ClientId { get; set; }
         public Client? Client { get; set; }
 
-        public DateTime RegisterDate { get; set; }
+        public DateTime RegisterDate { get; set; } = DateTime.UtcNow;
     }
 }

@@ -51,7 +51,7 @@ namespace StorageSystem.WEB.Pages.Recipes
             if (Recipe != null)
             {               
                 //await GetProduct(Recipe.ProductId);                
-                GetRawMaterial(Recipe.RawMaterialId);
+                //GetRawMaterial(Recipe.RawMaterialId);
             }
         }
 
@@ -88,12 +88,12 @@ namespace StorageSystem.WEB.Pages.Recipes
             RawMaterials = responseHttp.Response;
         }
 
-        private void GetRawMaterial(int id)
+       /* private void GetRawMaterial(int id)
         {
             if (RawMaterials != null) {                
                 RawMaterial = RawMaterials.FirstOrDefault(x => x.Id == id);
             }
-        }
+        }*/
 
         private async Task EditAsync()
         {

@@ -21,7 +21,8 @@
                     <tbody>
                         @foreach (var rawMaterial in RawMaterials!)
                         {
-                            <tr>
+                            @*
+                                                            <tr>
                                 <td>@rawMaterial.Code</td>
                                 <td>@rawMaterial.Name</td>
                                 <td>
@@ -29,6 +30,8 @@
                                     <HxButton Text="Borrar" Icon="BootstrapIcon.Trash" IconPlacement="ButtonIconPlacement.Start" Color="ThemeColor.Danger" Size="ButtonSize.Small" OnClick="@(() => DeleteAsync(rawMaterial))" />
                                 </td>
                             </tr>
+                            *@
+
                         }
                     </tbody>
                 </table>

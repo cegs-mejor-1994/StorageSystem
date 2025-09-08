@@ -16,8 +16,7 @@ namespace StorageSystem.WEB.Pages.ProductDetails
         [Inject] private IRepository Repository { get; set; } = null!;
 
         private List<ProductsDetail>? ProductsDetails { get; set; }
-        private List<RawMaterial>? rawMaterials { get; set; } = null!;
-        private List<AppearanceReference>? appearanceReferences { get; set; } = null!;
+        private List<RawMaterial>? rawMaterials { get; set; } = null!;        
 
         private ProductsDetail productsDetail = new();
         private Product product = new();
@@ -48,14 +47,14 @@ namespace StorageSystem.WEB.Pages.ProductDetails
             }
             await LoadProductDetailsAsync(ProductId);
             await LoadRawMaterialsAsync();     
-            await LoadAppearanceReferencesAsync();
+            //await LoadAppearanceReferencesAsync();
         }
 
         private async Task ClickRawMaterialCallBack(string rawMaterial)
         {
             string[] valores = rawMaterial.Split(',');
             rawMaterialId = int.Parse(valores[0]);
-            await CreateAsync();
+            //await CreateAsync();
         }
 
         private void ClickAppearanceReferenceCallBack(string appearanceReference)
@@ -78,7 +77,7 @@ namespace StorageSystem.WEB.Pages.ProductDetails
             rawMaterials = responseHttp.Response;
         }
 
-        private async Task LoadAppearanceReferencesAsync()
+        /*private async Task LoadAppearanceReferencesAsync()
         {
             var responseHttp = await Repository.GetAsync<List<AppearanceReference>>("/api/AppearanceReferences/combo");
             if (responseHttp.Error)
@@ -88,7 +87,7 @@ namespace StorageSystem.WEB.Pages.ProductDetails
                 return;
             }
             appearanceReferences = responseHttp.Response;
-        }
+        }*/
 
         private async Task LoadProductDetailsAsync(int productId)
         {
@@ -103,7 +102,7 @@ namespace StorageSystem.WEB.Pages.ProductDetails
             ProductsDetails = ProductsDetails!.Where(r => r.ProductId == productId).ToList();
         }
 
-        private async Task DeleteAsync(ProductsDetail productsDetail)
+        /*private async Task DeleteAsync(ProductsDetail productsDetail)
         {
             var result = await SweetAlertService.FireAsync(new SweetAlertOptions
             {
@@ -141,9 +140,9 @@ namespace StorageSystem.WEB.Pages.ProductDetails
                 Timer = 3000,
             });
             await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro borrado con exito");
-        }
+        }*/
 
-        private async Task CreateAsync()
+       /* private async Task CreateAsync()
         {
             try
             {
@@ -174,6 +173,6 @@ namespace StorageSystem.WEB.Pages.ProductDetails
                 await SweetAlertService.FireAsync("Error", ex.Message, SweetAlertIcon.Error);
                 return;
             }
-        }
+        }*/
     }
 }

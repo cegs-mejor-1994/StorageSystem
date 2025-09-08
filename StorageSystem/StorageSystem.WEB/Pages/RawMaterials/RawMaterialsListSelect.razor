@@ -10,12 +10,15 @@
             <tbody>
                 @foreach (var rawMaterial in rawMaterials!)
                 {
-                    <tr>
+                    @*
+                                            <tr>
                         <td>@rawMaterial.Name</td>
                         <td>
                             <HxButton Color="ThemeColor.Secondary" data-bs-dismiss="modal" Text="Seleccionar" OnClick="@(() => OnSelectedRawMaterialChanged.InvokeAsync($"{rawMaterial.Id},{rawMaterial.Name}"))" />
                         </td>
                     </tr>
+                    *@
+
                 }
             </tbody>
         </table>

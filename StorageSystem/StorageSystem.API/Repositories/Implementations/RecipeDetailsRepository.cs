@@ -8,47 +8,46 @@ using StorageSystem.Shared.Responses;
 
 namespace StorageSystem.API.Repositories.Implementations
 {
-    public class ProductsDetailsRepository : GenericRepository<ProductsDetail>, IProductsDetailsRepository
+    public class RecipeDetailsRepository : GenericRepository<RecipeDetail>, IRecipeDetailsRepository
     {
         private readonly DataContext _context;
 
-        public ProductsDetailsRepository(DataContext context) : base(context)   
+        public RecipeDetailsRepository(DataContext context) : base(context)
         {
             _context = context;
         }
 
-        public async Task<ActionResponse<IEnumerable<ProductsDetail>>> GetAsync(PaginationDTO pagination)
+        public async Task<ActionResponse<IEnumerable<RecipeDetail>>> GetAsync(PaginationDTO pagination)
         {
-            var queryable = _context.ProductsDetails.AsQueryable();
+            var queryable = _context.RecipeDetails.AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(pagination.Filter))
             {
                 queryable = queryable.Where(x => x.Product!.Name.ToLower().Contains(pagination.Filter.ToLower()));
             }
 
-            return new ActionResponse<IEnumerable<ProductsDetail>>
+            return new ActionResponse<IEnumerable<RecipeDetail>>
             {
                 WasSuccess = true,
                 Result = await queryable
-                 .OrderBy(r => r.Id)
-                 .Include(r => r.Reference)
-                 .Include(p => p.Product)
-                 .ToListAsync()
+                    .OrderBy(r => r.Id)
+                    .Include(p => p.Product)
+                    .Paginate(pagination)
+                    .ToListAsync()
             };
         }
 
-        public async Task<IEnumerable<ProductsDetail>> GetComboAsync()
+        public async Task<IEnumerable<RecipeDetail>> GetComboAsync()
         {
-            return await _context.ProductsDetails
-                 .OrderBy(r => r.Id)
-                 .Include(r=> r!.Reference)
-                 .Include(p => p.Product)
-                 .ToListAsync();
+            return await _context.RecipeDetails
+                .OrderBy(r => r.Id)
+                .Include(p => p.Product)
+                .ToListAsync();
         }
 
         public async Task<ActionResponse<int>> GetTotalPagesAsync(PaginationDTO pagination)
         {
-            var queryable = _context.ProductsDetails.AsQueryable();
+            var queryable = _context.RecipeDetails.AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(pagination.Filter))
             {

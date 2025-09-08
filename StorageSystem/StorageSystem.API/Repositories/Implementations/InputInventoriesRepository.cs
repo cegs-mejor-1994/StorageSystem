@@ -23,7 +23,7 @@ namespace StorageSystem.API.Repositories.Implementations
 
             if (!string.IsNullOrWhiteSpace(pagination.Filter))
             {
-                queryable = queryable.Where(x => x.RawMaterial!.Name.ToLower().Contains(pagination.Filter.ToLower()));
+                queryable = queryable.Where(x => x.Product!.Name.ToLower().Contains(pagination.Filter.ToLower()));
             }
 
             return new ActionResponse<IEnumerable<InputInventory>>
@@ -31,9 +31,7 @@ namespace StorageSystem.API.Repositories.Implementations
                 WasSuccess = true,
                 Result = await queryable
                     .OrderBy(i => i.Id)
-                    .Include(r => r.RawMaterial!)
-                    .ThenInclude(m => m.MeasurementUnit)
-                    .Include(s => s.Supplier!)
+                    .Include(r => r.Product!)
                     .Paginate(pagination)
                     .ToListAsync()
             };             
@@ -45,7 +43,7 @@ namespace StorageSystem.API.Repositories.Implementations
 
             if (!string.IsNullOrWhiteSpace(pagination.Filter))
             {
-                queryable = queryable.Where(x => x.RawMaterial!.Name.ToLower().Contains(pagination.Filter.ToLower()));
+                queryable = queryable.Where(x => x.Product!.Name.ToLower().Contains(pagination.Filter.ToLower()));
             }
             double count = await queryable.CountAsync();
             int totalPages = (int)Math.Ceiling(count / pagination.RecordsNumber);
@@ -60,9 +58,7 @@ namespace StorageSystem.API.Repositories.Implementations
         {
             return await _context.InputInventories
                 .OrderBy(i => i.RegisterDate)
-                .Include(i => i.RawMaterial!)
-                .ThenInclude(i => i.MeasurementUnit)
-                .Include(i => i.Supplier!)                
+                .Include(i => i.Product!)              
                 .ToListAsync();
         }
     }

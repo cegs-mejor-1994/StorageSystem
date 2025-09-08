@@ -41,8 +41,6 @@ namespace StorageSystem.API.Repositories.Implementations
         {
             return await _context.Recipes
                 .OrderBy(r => r.Id)
-                .Include(r => r.RawMaterial)
-                .ThenInclude(rm => rm!.MeasurementUnit)
                 .Include(p => p.Product)                
                 .ToListAsync();
         }

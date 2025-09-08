@@ -117,7 +117,7 @@ namespace StorageSystem.WEB.Pages.RawMaterials
             var result = await SweetAlertService.FireAsync(new SweetAlertOptions
             {
                 Title = "Confirmacion",
-                Text = $"¿Estas seguro que quieres borrar la materia prima: {rawMaterial.Name}?",
+                Text = $"¿Estas seguro que quieres borrar la materia prima: rawMaterial.Name?",
                 Icon = SweetAlertIcon.Question,
                 ShowCancelButton = true,
             });
@@ -127,7 +127,7 @@ namespace StorageSystem.WEB.Pages.RawMaterials
             {
                 return;
             }
-            var responseHttp = await Repository.DeleteAsync<RawMaterial>($"api/RawMaterials/{rawMaterial.Id}");
+            var responseHttp = await Repository.DeleteAsync<RawMaterial>($"api/RawMaterials/rawMaterial.Id");
             if (responseHttp.Error)
             {
                 if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)

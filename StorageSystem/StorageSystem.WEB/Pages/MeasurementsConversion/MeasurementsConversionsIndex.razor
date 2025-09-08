@@ -1,0 +1,41 @@
+﻿@page "/measurementConversion"
+<PageTitle>Factores de Conversion</PageTitle>
+<HxCard>
+    <HeaderTemplate>
+        <HxIcon Icon="@BootstrapIcon.ListCheck" /> Factores de Conversion
+        <a class="btn btn-primary float-end" href="/measurementConversion/create">Factor de Conversion</a>
+    </HeaderTemplate>
+    <BodyTemplate>
+        <GenericList MyList="measurementsConversions">
+            <Body>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Unidad Origen a Convertir</th>
+                            <th>Unidad Destino a Convertir</th>
+                            <th>Factor</th>
+                            <th style="width:210px">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var measurementsConversion in measurementsConversions!)
+                        {
+                            <tr>
+                                <td>@measurementsConversion.FromUnit!.Code</td>
+                                <td>@measurementsConversion.ToUnit!.Code</td>
+                                <td>@measurementsConversion.Factor</td>
+                                <td>
+                                    <HxButton Text="Borrar" Icon="BootstrapIcon.Trash" IconPlacement="ButtonIconPlacement.Start" Color="ThemeColor.Danger" Size="ButtonSize.Small" OnClick="@(() => DeleteAsync(measurementsConversion))" />
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </Body>
+        </GenericList>
+    </BodyTemplate>
+</HxCard>
+
+
+
+

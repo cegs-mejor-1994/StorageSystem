@@ -1,11 +1,11 @@
-﻿@page "/formReferences"
-<PageTitle>Presentacion de Productos</PageTitle>
+﻿@page "/productDetails"
+<PageTitle>Asignacion de Etiquetas</PageTitle>
 <HxCard>
     <HeaderTemplate>
-        <HxIcon Icon="@BootstrapIcon.ListCheck" /> Presentacion de Productos
+        <HxIcon Icon="@BootstrapIcon.ListCheck" /> Asignacion de Etiquetas
     </HeaderTemplate>
     <BodyTemplate>
-        <Filter PlaceHolder="Buscar Presentacion de Productos..." Callback="@FilterCallBack" />
+        <Filter PlaceHolder="Buscar Producto Asignado..." Callback="@FilterCallBack" />
         <GenericList MyList="Products">
             <Body>
                 <Pagination CurrentPage="currentPage" TotalPages="totalPages" SelectedPage="SelectedPageAsync" RecordsNumber="SelectedRecordsNumberAsync" />
@@ -22,7 +22,7 @@
                             <tr>
                                 <td>@product.Name</td>
                                 <td>
-                                    <a href="/formReferences/details/@product.Id" class="btn btn-warning"><i class="bi bi-pencil" /> Detalles</a>
+                                    <a href="/productDetails/details/@product.Id" class="btn btn-warning"><i class="bi bi-pencil" /> Detalles</a>
                                 </td>
                             </tr>
                         }

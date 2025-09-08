@@ -23,12 +23,12 @@ namespace StorageSystem.WEB.Pages.Recipes
         [Inject] private IRepository Repository { get; set; } = null!;
 
         private List<Recipe>? Recipes { get; set; }
-        private List<RecipeTotal>? RecipeTotals { get; set; }
+        private List<RecipeDetail>? RecipeTotals { get; set; }
         private List<RawMaterial>? rawMaterials { get; set; } = null!;
 
         private Recipe recipe = new();
         private Product product = new();
-        private RecipeTotal recipe2 = new();
+        private RecipeDetail recipe2 = new();
 
         private int rawMaterialId { get; set; }              
        
@@ -106,7 +106,7 @@ namespace StorageSystem.WEB.Pages.Recipes
             var result = await SweetAlertService.FireAsync(new SweetAlertOptions
             {
                 Title = "Confirmacion",
-                Text = $"¿Estas seguro que quieres borrar la materia prima: {recipe.RawMaterial!.Name} de la formula?",
+                Text = $"¿Estas seguro que quieres borrar la materia prima: recipe.RawMaterial!.Name de la formula?",
                 Icon = SweetAlertIcon.Question,
                 ShowCancelButton = true,
             });
@@ -145,10 +145,10 @@ namespace StorageSystem.WEB.Pages.Recipes
         {
             try
             {
-                if (recipe.Amount > 0 && rawMaterialId != 0 && ProductId != 0)
+                if (/*recipe.Amount > 0 && */rawMaterialId != 0 && ProductId != 0)
                 {
                     recipe.ProductId = ProductId;
-                    recipe.RawMaterialId = rawMaterialId;
+                   // recipe.RawMaterialId = rawMaterialId;
                     var responseHttp = await Repository.PostAsync("/api/Recipes", recipe);
                     if (responseHttp.Error)
                     {
@@ -180,7 +180,7 @@ namespace StorageSystem.WEB.Pages.Recipes
             {
                 recipe2.Id = RecipeTotals!.Where(r => r.RecipeId == ProductId).Select(r => r.Id).FirstOrDefault();
                 recipe2.RecipeId = ProductId;
-                recipe2.TotalRecipe = (decimal)batchTotal;
+                //recipe2.TotalRecipe = (decimal)batchTotal;
                 var responseHttp = await Repository.PutAsync($"/api/RecipeTotals", recipe2);
                 if (responseHttp.Error)
                 {
@@ -207,7 +207,7 @@ namespace StorageSystem.WEB.Pages.Recipes
 
         private async Task GetRecipeTotals()
         {
-            var responseHttp = await Repository.GetAsync<List<RecipeTotal>>("/api/RecipeTotals/full");
+            var responseHttp = await Repository.GetAsync<List<RecipeDetail>>("/api/RecipeTotals/full");
             if (responseHttp.Error)
             {
                 var message = await responseHttp.GetErrorMessageAsync();
@@ -215,7 +215,7 @@ namespace StorageSystem.WEB.Pages.Recipes
                 return;
             }
             RecipeTotals = responseHttp.Response;
-            batchTotal = RecipeTotals!.Where(r => r.RecipeId == ProductId).Select(r => r.TotalRecipe).FirstOrDefault();
+            //batchTotal = RecipeTotals!.Where(r => r.RecipeId == ProductId).Select(r => r.TotalRecipe).FirstOrDefault();
         }
     }
 }

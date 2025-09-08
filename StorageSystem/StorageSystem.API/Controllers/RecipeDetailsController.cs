@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using StorageSystem.API.UnitOfWork.Implementations;
 using StorageSystem.API.UnitOfWork.Interfaces;
 using StorageSystem.Shared.DTOs;
 using StorageSystem.Shared.Entities;
@@ -7,25 +8,25 @@ namespace StorageSystem.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class AppearanceReferencesController : GenericController<AppearanceReference>
+    public class RecipeDetailsController : GenericController<RecipeDetail>
     {
-        private readonly IAppearanceReferencesUnitOfWork _appearanceReferencesUnitOfWork;
+        private readonly IRecipeDetailsUnitOfWork _recipeDetailsUnitOfWork;
 
-        public AppearanceReferencesController(IGenericUnitOfWork<AppearanceReference> unitOfWork, IAppearanceReferencesUnitOfWork appearanceReferencesUnitOfWork) : base(unitOfWork)
+        public RecipeDetailsController(IGenericUnitOfWork<RecipeDetail> unitOfWork, IRecipeDetailsUnitOfWork recipeDetailsUnitOfWork) : base(unitOfWork)
         {
-            _appearanceReferencesUnitOfWork = appearanceReferencesUnitOfWork;
+            _recipeDetailsUnitOfWork = recipeDetailsUnitOfWork;
         }
 
         [HttpGet("combo")]
         public async Task<IActionResult> GetComboAsync()
         {
-            return Ok(await _appearanceReferencesUnitOfWork.GetComboAsync());
+            return Ok(await _recipeDetailsUnitOfWork.GetComboAsync());
         }
 
         [HttpGet]
         public override async Task<IActionResult> GetAsync([FromQuery] PaginationDTO pagination)
         {
-            var response = await _appearanceReferencesUnitOfWork.GetAsync(pagination);
+            var response = await _recipeDetailsUnitOfWork.GetAsync(pagination);
             if (response.WasSuccess)
             {
                 return Ok(response.Result);
@@ -36,7 +37,7 @@ namespace StorageSystem.API.Controllers
         [HttpGet("totalPages")]
         public override async Task<IActionResult> GetPagesAsync([FromQuery] PaginationDTO pagination)
         {
-            var action = await _appearanceReferencesUnitOfWork.GetTotalPagesAsync(pagination);
+            var action = await _recipeDetailsUnitOfWork.GetTotalPagesAsync(pagination);
             if (action.WasSuccess)
             {
                 return Ok(action.Result);
