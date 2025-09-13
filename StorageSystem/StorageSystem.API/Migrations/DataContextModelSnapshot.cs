@@ -124,6 +124,11 @@ namespace StorageSystem.API.Migrations
                         .HasMaxLength(25)
                         .HasColumnType("nvarchar(25)");
 
+                    b.Property<string>("ControlCode")
+                        .IsRequired()
+                        .HasMaxLength(25)
+                        .HasColumnType("nvarchar(25)");
+
                     b.Property<DateTime>("MatutingDate")
                         .HasColumnType("datetime2");
 
