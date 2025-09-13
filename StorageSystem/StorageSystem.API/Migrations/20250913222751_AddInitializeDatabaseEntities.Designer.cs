@@ -12,7 +12,7 @@ using StorageSystem.API.Data;
 namespace StorageSystem.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250913033152_AddInitializeDatabaseEntities")]
+    [Migration("20250913222751_AddInitializeDatabaseEntities")]
     partial class AddInitializeDatabaseEntities
     {
         /// <inheritdoc />
@@ -120,7 +120,7 @@ namespace StorageSystem.API.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,3)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Batch")
                         .IsRequired()
@@ -165,9 +165,9 @@ namespace StorageSystem.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<decimal>("Amount")
+                    b.Property<int>("Amount")
                         .HasMaxLength(10)
-                        .HasColumnType("decimal(18,3)");
+                        .HasColumnType("int");
 
                     b.Property<int>("ProductionGapId")
                         .HasColumnType("int");
@@ -342,8 +342,8 @@ namespace StorageSystem.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,3)");
+                    b.Property<int>("Amount")
+                        .HasColumnType("int");
 
                     b.Property<int>("RecipeId")
                         .HasColumnType("int");
@@ -447,7 +447,10 @@ namespace StorageSystem.API.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,3)");
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("MeasurementUnitId")
+                        .HasColumnType("int");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
@@ -460,6 +463,8 @@ namespace StorageSystem.API.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("MeasurementUnitId");
 
                     b.HasIndex("RecipeId");
 
@@ -689,6 +694,12 @@ namespace StorageSystem.API.Migrations
 
             modelBuilder.Entity("StorageSystem.Shared.Entities.RecipeDetail", b =>
                 {
+                    b.HasOne("StorageSystem.Shared.Entities.MeasurementUnit", "MeasurementUnit")
+                        .WithMany("RecipeDetails")
+                        .HasForeignKey("MeasurementUnitId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("StorageSystem.Shared.Entities.Product", "Product")
                         .WithMany("RecipeDetails")
                         .HasForeignKey("ProductId")
@@ -700,6 +711,8 @@ namespace StorageSystem.API.Migrations
                         .HasForeignKey("RecipeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("MeasurementUnit");
 
                     b.Navigation("Product");
                 });
@@ -737,6 +750,8 @@ namespace StorageSystem.API.Migrations
                     b.Navigation("ConversionsTo");
 
                     b.Navigation("InputInventories");
+
+                    b.Navigation("RecipeDetails");
 
                     b.Navigation("References");
                 });

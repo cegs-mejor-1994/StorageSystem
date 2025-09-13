@@ -1,77 +1,75 @@
 ﻿@page "/inputInventories/create"
-@*
-    @using StorageSystem.WEB.Pages.Suppliers
+@using StorageSystem.WEB.Pages.MeasurementUnits
+@using StorageSystem.WEB.Pages.Products
 @using StorageSystem.WEB.Pages.RawMaterials
+
 <PageTitle>Crear Inventario</PageTitle>
-<h3>Crear Inventario</h3>
-<EditForm Model="inputInventory">
-    <DataAnnotationsValidator />
-    <div class="row">
-        <div class="col-6">
-            <div class="md-3">
-                <label>Materia Prima:</label>                              
-                <InputText class="form-control" @bind-Value="rawMaterialName" disabled/>                
-                <ValidationMessage For="@(() => inputInventory.RawMaterialId)"/>
-                <div>
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#rawMaterialId">
-                        Seleccionar
-                    </button>
-                </div>                
-            </div>            
-            <div class="mb-3">
-                <label>Cantidad:</label>
-                <div>
-                    <InputNumber class="form-control" @bind-Value="inputInventory.Amount" step="0.001"/>
-                    <ValidationMessage For="@(() => inputInventory.Amount)" />
+<HxCard>
+    <HeaderTemplate>
+        <HxIcon Icon="@BootstrapIcon.ListCheck" /> Crear Inventario de Materia Prima
+        <a class="btn btn-success float-end" href="/inputInventories">Regresar</a>
+    </HeaderTemplate>
+    <BodyTemplate>
+        <EditForm Model="inputInventory" OnInvalidSubmit="CreateAsync">
+            <DataAnnotationsValidator />
+            <div class="row">
+                <div class="col-6">
+                    <div class="md-3">
+                        <label>Materia Prima:</label>
+                        <InputText class="form-control" @bind-Value="productName" disabled />
+                        <ValidationMessage For="@(() => inputInventory.ProductId)" />
+                        <div>
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#productId">
+                                Seleccionar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label>Cantidad:</label>
+                        <div class="row">
+                            <div class="col-sm-8">
+                                <InputNumber class="form-control" @bind-Value="inputInventory.Amount" step="0.001" />
+                                <ValidationMessage For="@(() => inputInventory.Amount)" />
+                            </div>
+                            <div class="col-sm-4">                                
+                                @if (measurementUnits is not null)
+                                {
+                                    <HxSelect TItem="MeasurementUnit"
+                                                TValue="int?"
+                                                Data="measurementUnits"
+                                                @bind-Value="measurementUnitId"
+                                                TextSelector="@(measurementUnit => measurementUnit.Code)"
+                                                ValueSelector="@(measurementUnit => measurementUnit.Id)"
+                                                NullText="--- Seleccione Unidad de Medida ---"
+                                                NullDataText="Cargando Unidades de Medida" />
+                                }                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label>Lote:</label>
+                        <div>
+                            <InputText class="form-control" @bind-Value="inputInventory.Batch" />
+                            <ValidationMessage For="@(() => inputInventory.Batch)" />
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="mb-3">
-                <label>Lote:</label>
-                <div>
-                    <InputText class="form-control" @bind-Value="inputInventory.Batch" />
-                    <ValidationMessage For="@(() => inputInventory.Batch)" />
+                <div class="col-6">
+                    <div class="mb-3">
+                        <label>Fecha de Vencimiento:</label>
+                        <div>
+                            <InputDate class="form-control" @bind-Value="inputInventory.MatutingDate" />
+                            <ValidationMessage For="@(() => inputInventory.MatutingDate)" />
+                        </div>
+                    </div>
                 </div>
+                <button class="btn btn-primary form-control" type="submit">Guardar Cambios</button>                
             </div>
-        </div>
-        <div class="col-6">
-            <div class="mb-3">
-                <label>Proveedor:</label>                
-                <InputText class="form-control" @bind-Value="supplierName" disabled />
-                <ValidationMessage For="@(() => inputInventory.SupplierId)" />                
-                <div>
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#supplierId">
-                        Seleccionar
-                    </button>
-                </div>
-            </div>
-            <div class="mb-3">
-                <label>Fecha de Vencimiento:</label>
-                <div>
-                    <InputDate class="form-control" @bind-Value="inputInventory.MatutingDate" />
-                    <ValidationMessage For="@(() => inputInventory.MatutingDate)" />
-                </div>
-            </div>
-        </div>       
-        <button class="btn btn-primary form-control" type="button" @onclick="@(() => CreateAsync())">Guardar Cambios</button>
-        <a href="/inputInventories" class="btn btn-success">Regresar</a>           
-    </div>
-</EditForm>
+        </EditForm>
+    </BodyTemplate>
+</HxCard>
 
-<div class="modal fade" id="supplierId" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Proveedores </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" />
-            </div>
-            <div class="modal-body">                                
-            <SuppliersListSelect OnSelectedSupplierChanged="ClickSupplierCallBack" />                                     
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="rawMaterialId" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade" id="productId" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -79,11 +77,8 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" />
             </div>
             <div class="modal-body">                
-                <RawMaterialsListSelect OnSelectedRawMaterialChanged="ClickRawMaterialCallBack"/>                            
+                <RawMaterialsListSelect OnSelectedRawMaterialChanged="ClickProductCallBack"/>                            
             </div>
         </div>
     </div>
 </div>
-
-*@
-

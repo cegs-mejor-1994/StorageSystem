@@ -14,7 +14,6 @@
                         <td>@measurementUnit.Name</td>
                         <td>
                             <HxButton Color="ThemeColor.Secondary" data-bs-dismiss="modal" Text="Seleccionar" OnClick="@(() => OnSelectedMeasurementUnitChanged.InvokeAsync($"{measurementUnit.Id},{measurementUnit.Name}"))" />
-
                         </td>
                     </tr>
                 }

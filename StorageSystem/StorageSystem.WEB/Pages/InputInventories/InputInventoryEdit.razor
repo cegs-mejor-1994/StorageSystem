@@ -1,54 +1,55 @@
 ﻿@page "/inputInventories/edit/{Id:int}"
-@*
-    @if(inputInventory == null)
+
+@if (inputInventory == null)
 {
     <Loading/>
 }
 else
 {
-    <h3>Editar Inventario</h3>
-    <EditForm Model="inputInventory" OnValidSubmit="EditAsync">
-        <DataAnnotationsValidator />
-        <div class="row">
-            <div class="col-6">
-                <div class="mb-3">
-                    <label>Materia Prima:</label>                   
-                    <InputText class="form-control" @bind-Value="rawMaterialName" disabled />
-                    <ValidationMessage For="@(() => inputInventory.RawMaterialId)" />
-                </div>
-                <div class="mb-3">
-                    <label>Cantidad:</label>
-                    <div>
-                        <InputNumber class="form-control" @bind-Value="inputInventory.Amount" />
-                        <ValidationMessage For="@(() => inputInventory.Amount)" />
+    <HxCard>
+        <HeaderTemplate>
+            <HxIcon Icon="@BootstrapIcon.ListCheck" /> Editar Inventario de Materia Prima
+            <a href="/inputInventories" class="btn btn-success float-end">Regresar</a>
+        </HeaderTemplate>
+        <BodyTemplate>
+            <EditForm Model="inputInventory" OnValidSubmit="EditAsync">
+                <DataAnnotationsValidator />
+                <div class="row">
+                    <div class="col-6">
+                        <div class="mb-3">
+                            <label>Materia Prima:</label>
+                            <InputText class="form-control" @bind-Value="product!.Name" disabled />
+                            <ValidationMessage For="@(() => inputInventory.ProductId)" />
+                        </div>
+                        <div class="mb-3">
+                            <label>Cantidad:</label>
+                            <div>
+                                <InputNumber class="form-control" @bind-Value="inputInventory.Amount" />
+                                <ValidationMessage For="@(() => inputInventory.Amount)" />
+                                @if(measurementUnit != null)
+                                {
+                                    <input class="form-control" value="@measurementUnit.Code" disabled />
+                                }
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label>Lote:</label>
+                            <div>
+                                <InputText class="form-control" @bind-Value="inputInventory.Batch" />
+                                <ValidationMessage For="@(() => inputInventory.Batch)" />
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label>Fecha de Vencimiento:</label>
+                            <div>
+                                <InputDate class="form-control" @bind-Value="inputInventory.MatutingDate" />
+                                <ValidationMessage For="@(() => inputInventory.MatutingDate)" />
+                            </div>
+                        </div>
+                        <HxSubmit Color="ThemeColor.Primary" Text="Guardar Cambios" />
                     </div>
                 </div>
-                <div class="mb-3">
-                    <label>Lote:</label>
-                    <div>
-                        <InputText class="form-control" @bind-Value="inputInventory.Batch" />
-                        <ValidationMessage For="@(() => inputInventory.Batch)" />
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <label>Fecha de Vencimiento:</label>
-                    <div>
-                        <InputDate class="form-control" @bind-Value="inputInventory.MatutingDate" />
-                        <ValidationMessage For="@(() => inputInventory.MatutingDate)" />
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <label>Proveedor:</label>                                            
-                        <InputText class="form-control" @bind-Value="supplierName" disabled />
-                        <ValidationMessage For="@(() => inputInventory.SupplierId)" />
-                </div>                
-                <HxSubmit Color="ThemeColor.Primary" Text="Guardar Cambios"/>
-                <a href="/inputInventories" class="btn btn-success">Regresar</a>
-            </div>
-        </div>
-    </EditForm>
+            </EditForm>
+        </BodyTemplate>
+    </HxCard>
 }
-
-
-
-*@

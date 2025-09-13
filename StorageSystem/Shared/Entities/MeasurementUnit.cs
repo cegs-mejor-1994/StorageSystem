@@ -27,5 +27,6 @@ namespace StorageSystem.Shared.Entities
         public ICollection<MeasurementConversion>? ConversionsTo { get; set; }
         public ICollection<InputInventory>? InputInventories { get; set; }
         public ICollection<Reference>? References { get; set; }
+        public ICollection<RecipeDetail>? RecipeDetails { get; set; }
     }
 }

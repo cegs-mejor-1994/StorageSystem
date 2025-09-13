@@ -7,11 +7,10 @@ namespace StorageSystem.Shared.Entities
     {
         public int Id { get; set; }
 
-        [Display(Name = "Cantidad")]
-        [Column(TypeName = "decimal(18,3)")]
+        [Display(Name = "Cantidad")]        
         [MaxLength(10, ErrorMessage = "El campo {0} no puede tener mas de {1} caracteres")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
-        public decimal Amount { get; set; }
+        public int Amount { get; set; }
 
         public int ProductionGapId { get; set; }
         public ProductionGap? ProductionGap { get; set; }

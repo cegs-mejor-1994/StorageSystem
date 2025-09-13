@@ -1,24 +1,32 @@
 ﻿<GenericList MyList="categories">
     <Body>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th style="width:168px">Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var category in categories!)
-                {
+        @if (categories is not null)
+        {
+            <table class="table table-striped">
+                <thead>
                     <tr>
-                        <td>@category.Name</td>
-                        <td>
-                            <HxButton Color="ThemeColor.Secondary" data-bs-dismiss="modal" Text="Seleccionar" OnClick="@(() => OnSelectedCategoryChanged.InvokeAsync($"{category.Id},{category.Name}"))" />
-                        </td>
+                        <th>Nombre</th>
+                        <th style="width:168px">Acciones</th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach (var category in categories!)
+                    {
+                        <tr>
+                            <td>@category.Name</td>
+                            <td>
+                                <HxButton Color="ThemeColor.Secondary" data-bs-dismiss="modal" Text="Seleccionar" OnClick="@(() => OnSelectedCategoryChanged.InvokeAsync($"{category.Id},{category.Name}"))" />
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>No hay categorías disponibles. </p>
+            <a href="/categories/create" class="btn btn-primary">Crear Categoría</a>
+        }
     </Body>
 </GenericList>
 

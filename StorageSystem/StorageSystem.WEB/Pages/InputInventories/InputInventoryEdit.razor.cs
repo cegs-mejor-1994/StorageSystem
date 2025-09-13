@@ -8,11 +8,11 @@ namespace StorageSystem.WEB.Pages.InputInventories
 {
     public partial class InputInventoryEdit
     {
-        private InputInventory? inputInventory;
-        private List<Supplier>? suppliers;
-        private List<RawMaterial>? rawMaterials;
-        private string supplierName { get; set; } = null!;
-        private string rawMaterialName { get; set; } = null!;
+        private InputInventory? inputInventory;        
+        private Product? product;
+        private MeasurementUnit? measurementUnit;
+
+        private string productlName { get; set; } = null!;
 
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
@@ -20,10 +20,11 @@ namespace StorageSystem.WEB.Pages.InputInventories
 
         [EditorRequired, Parameter] public int Id { get; set; }
 
-        protected override async Task OnInitializedAsync()
+        private List<MeasurementUnit>? measurementUnits { get; set; }
+
+        protected async override Task OnInitializedAsync()
         {
-            await LoadSuppliersAsync();
-            await LoadRawMaterialsAsync();
+            await LoadMeasurementUnitsAsync();
         }
 
         protected async override Task OnParametersSetAsync()
@@ -43,10 +44,43 @@ namespace StorageSystem.WEB.Pages.InputInventories
             }
             else
             {
-                inputInventory = responseHttp.Response;
-                //supplierName = GetSupplierName(inputInventory!.SupplierId);
-                //rawMaterialName = GetRawMaterialName(inputInventory!.RawMaterialId);
+                inputInventory = responseHttp.Response;                
+                await LoadProduct(inputInventory!.ProductId);
+                measurementUnit = measurementUnits!.FirstOrDefault(x => x.Id == inputInventory.MeasurementUnitId);
             }
+        }
+
+        private async Task LoadProduct(int id)
+        {
+            var responseHttp = await Repository.GetAsync<Product>($"/api/Products/{id}");
+            if (responseHttp.Error)
+            {
+                if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
+                {
+                    NavigationManager.NavigateTo("/");
+                }
+                else
+                {
+                    var message = await responseHttp.GetErrorMessageAsync();
+                    await SweetAlertService.FireAsync(new SweetAlertOptions { Title = "Error", Text = message, Icon = SweetAlertIcon.Error });
+                }
+            }
+            else
+            {
+                product = responseHttp.Response;                
+            }
+        }
+
+        private async Task LoadMeasurementUnitsAsync()
+        {
+            var responseHttp = await Repository.GetAsync<List<MeasurementUnit>>("/api/MeasurementUnits/combo");
+            if (responseHttp.Error)
+            {
+                var message = await responseHttp.GetErrorMessageAsync();
+                await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+                return;
+            }
+            measurementUnits = responseHttp.Response;
         }
 
         private async Task EditAsync()
@@ -67,42 +101,6 @@ namespace StorageSystem.WEB.Pages.InputInventories
                 Timer = 3000,
             });
             await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Cambios guardados con exito");
-        }
-
-        private async Task LoadRawMaterialsAsync()
-        {
-            var responseHttp = await Repository.GetAsync<List<RawMaterial>>("/api/RawMaterials/combo");
-            if (responseHttp.Error)
-            {
-                var message = await responseHttp.GetErrorMessageAsync();
-                await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
-                return;
-            }
-            rawMaterials = responseHttp.Response;
-        }
-
-        private async Task LoadSuppliersAsync()
-        {
-            var responseHttp = await Repository.GetAsync<List<Supplier>>("/api/Suppliers/combo");
-            if (responseHttp.Error)
-            {
-                var message = await responseHttp.GetErrorMessageAsync();
-                await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
-                return;
-            }
-            suppliers = responseHttp.Response;
-        }
-
-        private string GetSupplierName(int id)
-        {
-            var supplier = suppliers!.FirstOrDefault(x => x.Id == id);
-            return supplier!.Name;
-        }
-
-        /*private string GetRawMaterialName(int id)
-        {
-            var rawMaterial = rawMaterials!.FirstOrDefault(x => x.Id == id);
-            return rawMaterial!.Name;
-        }*/
+        }       
     }
 }

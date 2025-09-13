@@ -29,7 +29,8 @@ namespace StorageSystem.API.Repositories.Implementations
             return new ActionResponse<IEnumerable<InputInventory>>
             {
                 WasSuccess = true,
-                Result = await queryable                    
+                Result = await queryable 
+                    .OrderBy(i => i.Id)
                     .Include(p => p.Product!)
                     .Include(mu => mu.MeasurementUnit!)
                     .Paginate(pagination)
@@ -56,10 +57,7 @@ namespace StorageSystem.API.Repositories.Implementations
 
         public async Task<IEnumerable<InputInventory>> GetWithRawMaterialsAndSuppliersAsync()
         {
-            return await _context.InputInventories                
-                .Include(i => i.Product!)     
-                .Include(mu => mu.MeasurementUnit!)
-                .ToListAsync();
+            return await _context.InputInventories.ToListAsync();
         }
     }
 }

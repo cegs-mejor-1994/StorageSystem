@@ -30,8 +30,8 @@ namespace StorageSystem.API.Repositories.Implementations
             {
                 WasSuccess = true,
                 Result = await queryable
-                    .OrderBy(r => r.Id)                    
-                    .Include(p => p.Product)   
+                    .OrderBy(p => p.Product!.Name)
+                    .Include(p => p.Product)                    
                     .Paginate(pagination)
                     .ToListAsync()
             };
@@ -40,7 +40,7 @@ namespace StorageSystem.API.Repositories.Implementations
         public async Task<IEnumerable<Recipe>> GetComboAsync()
         {
             return await _context.Recipes
-                .OrderBy(r => r.Id)
+                .OrderBy(p => p.Product!.Name)
                 .Include(p => p.Product)                
                 .ToListAsync();
         }

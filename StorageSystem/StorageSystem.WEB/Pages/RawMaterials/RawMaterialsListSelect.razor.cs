@@ -7,7 +7,7 @@ namespace StorageSystem.WEB.Pages.RawMaterials
 {
     public partial class RawMaterialsListSelect
     {
-        [CascadingParameter] List<RawMaterial>? rawMaterials { get; set; }
+        [CascadingParameter] List<Product>? products { get; set; }
         [Parameter] public EventCallback<string> OnSelectedRawMaterialChanged { get; set; }
 
         [Inject] private IRepository Repository { get; set; } = null!;
@@ -20,14 +20,15 @@ namespace StorageSystem.WEB.Pages.RawMaterials
 
         private async Task LoadRawMaterialsAsync()
         {
-            var responseHttp = await Repository.GetAsync<List<RawMaterial>>("/api/RawMaterials/combo");
+            var responseHttp = await Repository.GetAsync<List<Product>>("/api/Products/combo");
             if (responseHttp.Error)
             {
                 var message = await responseHttp.GetErrorMessageAsync();
                 await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
                 return;
             }
-            rawMaterials = responseHttp.Response;
+            products = responseHttp.Response;
+            products = products?.Where(p => p.Role == StorageSystem.Shared.Enums.ProductStateAndPhisical.ProductRole.MateriaPrima).ToList();
         }
     }
 }

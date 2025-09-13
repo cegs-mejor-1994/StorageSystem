@@ -14,24 +14,28 @@ namespace StorageSystem.WEB.Pages.Recipes
 
         [CascadingParameter] IModalService Modal { get; set; } = default!;        
 
-        private string rawMaterialName = "Materia prima";        
-        private string rawMaterialCodeMeasurementUnit = string.Empty;
+        private string productRawMaterialName = "Materia prima";                
         private decimal? batchTotal;
 
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
         [Inject] private IRepository Repository { get; set; } = null!;
+        
+        private List<RecipeDetail>? RecipeProductDetails { get; set; }        
+        private List<Product>? productRecipeRawMaterials { get; set; } = null!;
+        private List<Product>? productRawMaterials { get; set; } = null!;        
+        private List<MeasurementUnit>? measurementUnits { get; set; }
+        private List<MeasurementUnit>? allMeasurementUnits { get; set; }
+        private List<Recipe>? Recipe { get; set; }
 
-        private List<Recipe>? Recipes { get; set; }
-        private List<RecipeDetail>? RecipeTotals { get; set; }
-        private List<RawMaterial>? rawMaterials { get; set; } = null!;
-
-        private Recipe recipe = new();
         private Product product = new();
-        private RecipeDetail recipe2 = new();
+        private RecipeDetail recipeDetail = new();        
 
-        private int rawMaterialId { get; set; }              
-       
+        private int productRawMaterialId { get; set; }
+        private int? measurementUnitId { get; set; }
+        private int recipeId { get; set; }
+        private decimal TotalRecipe { get; set; }   
+
         protected async override Task OnParametersSetAsync()
         {
             var responseHttp = await Repository.GetAsync<Product>($"/api/Products/{ProductId}");
@@ -51,17 +55,43 @@ namespace StorageSystem.WEB.Pages.Recipes
             {
                 product = responseHttp.Response!;
             }
-            await LoadRecipesAsync(ProductId);
-            await LoadRawMaterialsAsync();     
-            await GetRecipeTotals();
+            await LoadRawMaterialsAsync();   
+            await LoadMeasurementUnitsAsync();
+            await GetRecipeByProductId(ProductId);
+            await LoadRecipesDetailsAsync(recipeId);
         }
 
-        private void ClickRawMaterialCallBack(string rawMaterial)
+        private async Task GetRecipeByProductId(int productId)
         {
-            string[] valores = rawMaterial.Split(',');
-            rawMaterialId = int.Parse(valores[0]);
-            rawMaterialName = valores[1];
-            rawMaterialCodeMeasurementUnit = "(" + valores[2] + ")";
+            var responseHttp = await Repository.GetAsync<List<Recipe>>("/api/Recipes/combo");
+            if (responseHttp.Error)
+            {
+                var message = await responseHttp.GetErrorMessageAsync();
+                await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+                return;
+            }
+            Recipe = responseHttp.Response;
+            Recipe = Recipe!.Where(r => r.ProductId == productId).ToList();
+            if (Recipe.Count > 0)
+            {
+                recipeId = Recipe!.Select(r => r.Id).FirstOrDefault();                
+            }
+        }
+
+        private void ClickRawMaterialCallBack(string productRawMaterial)
+        {
+            string[] valores = productRawMaterial.Split(',');
+            productRawMaterialId = int.Parse(valores[0]);
+            productRawMaterialName = valores[1];
+            if(product.PhysicalState == StorageSystem.Shared.Enums.ProductStateAndPhisical.ProductPhysicalState.Solido)
+            {
+                measurementUnits = new List<MeasurementUnit>(allMeasurementUnits!);
+                measurementUnits = measurementUnits.Where(mu => mu.PhysicalState.ToString() == "Solido").ToList();
+                measurementUnitId = null;
+            }
+            measurementUnits = new List<MeasurementUnit>(allMeasurementUnits!);
+            measurementUnits = measurementUnits.Where(mu => mu.PhysicalState.ToString() == valores[2]).ToList();
+            measurementUnitId = null;
         }
 
         private async Task ShowModalAsync(int id)
@@ -72,41 +102,64 @@ namespace StorageSystem.WEB.Pages.Recipes
             var result = await modalReference.Result;
             if (result.Confirmed)
             {
-                await LoadRecipesAsync(ProductId);
+                await LoadRecipesDetailsAsync(recipeId);
             }
         }
 
-        private async Task LoadRecipesAsync(int productId)
+        private async Task LoadRecipesDetailsAsync(int recipeId)
         {
-            var responseHttp = await Repository.GetAsync<List<Recipe>>("/api/Recipes/combo");
+            var responseHttp = await Repository.GetAsync<List<RecipeDetail>>("/api/RecipeDetails/combo");
             if (responseHttp.Error)
             {
                 var message = await responseHttp.GetErrorMessageAsync();
                 await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
                 return;
             }
-            Recipes = responseHttp.Response;
-            Recipes = Recipes!.Where(r => r.ProductId == productId).ToList();
-        }        
+            RecipeProductDetails = responseHttp.Response;
+            RecipeProductDetails = RecipeProductDetails!.Where(r => r.RecipeId == recipeId).ToList();
+        }
+
+        private async Task LoadMeasurementUnitsAsync()
+        {
+            var responseHttp = await Repository.GetAsync<List<MeasurementUnit>>("/api/MeasurementUnits/combo");
+            if (responseHttp.Error)
+            {
+                var message = await responseHttp.GetErrorMessageAsync();
+                await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+                return;
+            }
+            allMeasurementUnits = responseHttp.Response;
+        }
 
         private async Task LoadRawMaterialsAsync()
         {
-            var responseHttp = await Repository.GetAsync<List<RawMaterial>>("/api/RawMaterials/combo");
+            var responseHttp = await Repository.GetAsync<List<Product>>("/api/Products/combo");
             if (responseHttp.Error)
             {
                 var message = await responseHttp.GetErrorMessageAsync();
                 await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
                 return;
             }
-            rawMaterials = responseHttp.Response;
+            productRawMaterials = responseHttp.Response;
+            if (product.PhysicalState.ToString() == "Solido")
+            {
+                productRecipeRawMaterials = new List<Product>(productRawMaterials!);
+                productRecipeRawMaterials!.Where(p => p.Role.ToString() == "MateriaPrima" && p.PhysicalState.ToString() == "Solido").ToList();
+            }
+            else
+            {
+                productRecipeRawMaterials = new List<Product>(productRawMaterials!);
+                productRecipeRawMaterials.RemoveAll(p => p.Id == product.Id);
+                productRecipeRawMaterials!.Where(p => p.Role.ToString() == "MateriaPrima").ToList();
+            }
         }
 
-        private async Task DeleteAsync(Recipe recipe)
+        private async Task DeleteAsync(RecipeDetail recipeDetail)
         {
             var result = await SweetAlertService.FireAsync(new SweetAlertOptions
             {
                 Title = "Confirmacion",
-                Text = $"¿Estas seguro que quieres borrar la materia prima: recipe.RawMaterial!.Name de la formula?",
+                Text = $"¿Estas seguro que quieres borrar la materia prima: {recipeDetail.Product!.Name} de la formula?",
                 Icon = SweetAlertIcon.Question,
                 ShowCancelButton = true,
             });
@@ -116,7 +169,7 @@ namespace StorageSystem.WEB.Pages.Recipes
             {
                 return;
             }
-            var responseHttp = await Repository.DeleteAsync<Recipe>($"api/Recipes/{recipe.Id}");
+            var responseHttp = await Repository.DeleteAsync<Recipe>($"api/RecipeDetails/{recipeDetail.Id}");
             if (responseHttp.Error)
             {
                 if (responseHttp.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
@@ -130,7 +183,7 @@ namespace StorageSystem.WEB.Pages.Recipes
                 }
                 return;
             }
-            await LoadRecipesAsync(ProductId);
+            await LoadRecipesDetailsAsync(recipeId);
             var toast = SweetAlertService.Mixin(new SweetAlertOptions
             {
                 Toast = true,
@@ -145,21 +198,21 @@ namespace StorageSystem.WEB.Pages.Recipes
         {
             try
             {
-                if (/*recipe.Amount > 0 && */rawMaterialId != 0 && ProductId != 0)
+                if (recipeDetail.Amount > 0 && productRawMaterialId != 0 && ProductId != 0 && measurementUnitId != 0)
                 {
-                    recipe.ProductId = ProductId;
-                   // recipe.RawMaterialId = rawMaterialId;
-                    var responseHttp = await Repository.PostAsync("/api/Recipes", recipe);
+                    recipeDetail.RecipeId = recipeId; 
+                    recipeDetail.ProductId = productRawMaterialId;
+                    recipeDetail.MeasurementUnitId = measurementUnitId!.Value;
+                    var responseHttp = await Repository.PostAsync("/api/RecipeDetails", recipeDetail);
                     if (responseHttp.Error)
                     {
                         var message = await responseHttp.GetErrorMessageAsync();
                         await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
                         return;
                     }
-                    await LoadRecipesAsync(ProductId);
-                    rawMaterialName = "Materia prima";
-                    rawMaterialCodeMeasurementUnit = string.Empty;
-                    recipe = new Recipe();
+                    await LoadRecipesDetailsAsync(recipeId);
+                    productRawMaterialName = "Materia prima";                    
+                    recipeDetail = new RecipeDetail();
                 }
                 else
                 {
@@ -176,7 +229,7 @@ namespace StorageSystem.WEB.Pages.Recipes
 
         private async Task EditBatchTotalAsync()
         {
-            if (batchTotal > 0)
+            /*if (batchTotal > 0)
             {
                 recipe2.Id = RecipeTotals!.Where(r => r.RecipeId == ProductId).Select(r => r.Id).FirstOrDefault();
                 recipe2.RecipeId = ProductId;
@@ -202,12 +255,12 @@ namespace StorageSystem.WEB.Pages.Recipes
             {
                 await SweetAlertService.FireAsync("Error", "El total de la formula no puede estar vacio.", SweetAlertIcon.Error);
                 return;
-            }
+            }*/
         }
 
         private async Task GetRecipeTotals()
         {
-            var responseHttp = await Repository.GetAsync<List<RecipeDetail>>("/api/RecipeTotals/full");
+           /* var responseHttp = await Repository.GetAsync<List<RecipeDetail>>("/api/RecipeTotals/full");
             if (responseHttp.Error)
             {
                 var message = await responseHttp.GetErrorMessageAsync();
@@ -215,7 +268,7 @@ namespace StorageSystem.WEB.Pages.Recipes
                 return;
             }
             RecipeTotals = responseHttp.Response;
-            //batchTotal = RecipeTotals!.Where(r => r.RecipeId == ProductId).Select(r => r.TotalRecipe).FirstOrDefault();
+            batchTotal = RecipeTotals!.Where(r => r.RecipeId == ProductId).Select(r => r.TotalRecipe).FirstOrDefault();*/
         }
     }
 }

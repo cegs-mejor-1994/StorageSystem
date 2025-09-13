@@ -1,27 +1,33 @@
-﻿<GenericList MyList="rawMaterials">
+﻿<GenericList MyList="products">
     <Body>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th style="width:168px">Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var rawMaterial in rawMaterials!)
-                {
-                    @*
-                                            <tr>
-                        <td>@rawMaterial.Name</td>
-                        <td>
-                            <HxButton Color="ThemeColor.Secondary" data-bs-dismiss="modal" Text="Seleccionar" OnClick="@(() => OnSelectedRawMaterialChanged.InvokeAsync($"{rawMaterial.Id},{rawMaterial.Name}"))" />
-                        </td>
+        @if (products is not null)
+        {
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th style="width:210px">Acciones</th>
                     </tr>
-                    *@
+                </thead>
+                <tbody>
+                    @foreach (var product in products!)
+                    {
 
-                }
-            </tbody>
-        </table>
+                        <tr>
+                            <td>@product.Name</td>
+                            <td>
+                                <HxButton Color="ThemeColor.Secondary" data-bs-dismiss="modal" Text="Seleccionar" OnClick="@(() => OnSelectedRawMaterialChanged.InvokeAsync($"{product.Id},{product.Name},{product.PhysicalState}"))" />
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else 
+        {
+            <p>No hay materias primas disponibles. </p>
+            <a href="/products/create" class="btn btn-primary">Crear Materia Prima</a>
+        }
     </Body>
 </GenericList>
 

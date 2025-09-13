@@ -10,10 +10,9 @@ namespace StorageSystem.WEB.Pages.Recipes
 {
     public partial class RecipeEditById
     {
-        private Recipe? Recipe;
-        //private Product? Product { get; set; }
-        private List<RawMaterial>? RawMaterials { get; set; }
-        private RawMaterial? RawMaterial { get; set; }
+        private RecipeDetail? RecipeDetail;
+        private Product? Product;
+        private MeasurementUnit? MeasurementUnit;
 
         [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
 
@@ -23,14 +22,16 @@ namespace StorageSystem.WEB.Pages.Recipes
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
         [Inject] private IRepository Repository { get; set; } = null!;
 
+        private List<MeasurementUnit>? measurementUnits { get; set; }
+
         protected async override Task OnInitializedAsync()
         {
-            await GetRawMaterials();
+            await GetMeasurementUnits();
         }
 
         protected async override Task OnParametersSetAsync()
         {
-            var responseHttp = await Repository.GetAsync<Recipe>($"/api/Recipes/{Id}");
+            var responseHttp = await Repository.GetAsync<RecipeDetail>($"/api/RecipeDetails/{Id}");
             if (responseHttp.Error)
             {
                 if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
@@ -45,17 +46,17 @@ namespace StorageSystem.WEB.Pages.Recipes
             }
             else
             {
-                Recipe = responseHttp.Response;
+                RecipeDetail = responseHttp.Response;
             }
 
-            if (Recipe != null)
+            if (RecipeDetail != null)
             {               
-                //await GetProduct(Recipe.ProductId);                
-                //GetRawMaterial(Recipe.RawMaterialId);
+                await GetProduct(RecipeDetail.ProductId);   
+                GetMeasurementUnitById(RecipeDetail.MeasurementUnitId);
             }
         }
 
-       /* private async Task GetProduct(int id)
+        private async Task GetProduct(int id)
         {
             var responseHttp = await Repository.GetAsync<Product>($"/api/Products/{id}");
             if (responseHttp.Error)
@@ -74,32 +75,32 @@ namespace StorageSystem.WEB.Pages.Recipes
             {
                 Product = responseHttp.Response;
             }
-        }*/
+        }
 
-        private async Task GetRawMaterials()
+        private async Task GetMeasurementUnits()
         {
-            var responseHttp = await Repository.GetAsync<List<RawMaterial>>("/api/RawMaterials/combo");
+            var responseHttp = await Repository.GetAsync<List<MeasurementUnit>>("/api/MeasurementUnits/combo");
             if (responseHttp.Error)
             {
                 var message = await responseHttp.GetErrorMessageAsync();
                 await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
                 return;
             }
-            RawMaterials = responseHttp.Response;
+            measurementUnits = responseHttp.Response;
         }
 
-       /* private void GetRawMaterial(int id)
+       private void GetMeasurementUnitById(int id)
         {
-            if (RawMaterials != null) {                
-                RawMaterial = RawMaterials.FirstOrDefault(x => x.Id == id);
+            if (measurementUnits != null) {
+                MeasurementUnit = measurementUnits.FirstOrDefault(x => x.Id == id);
             }
-        }*/
+        }
 
         private async Task EditAsync()
         {
-            //Recipe!.ProductId = Product!.Id;
-            //Recipe.RawMaterialId = RawMaterial!.Id;
-            var responseHttp = await Repository.PutAsync($"/api/Recipes", Recipe);
+            RecipeDetail!.ProductId = Product!.Id;
+            RecipeDetail!.MeasurementUnitId = MeasurementUnit!.Id;
+            var responseHttp = await Repository.PutAsync($"/api/RecipeDetails", RecipeDetail);
             if (responseHttp.Error)
             {
                 var message = await responseHttp.GetErrorMessageAsync();

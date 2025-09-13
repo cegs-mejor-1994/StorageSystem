@@ -161,7 +161,7 @@ namespace StorageSystem.API.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ControlCode = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: false),
-                    Amount = table.Column<decimal>(type: "decimal(18,3)", nullable: false),
+                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Batch = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: false),
                     MatutingDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     RegisterDate = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -265,7 +265,7 @@ namespace StorageSystem.API.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Amount = table.Column<decimal>(type: "decimal(18,3)", nullable: false),
+                    Amount = table.Column<int>(type: "int", nullable: false),
                     RecipeId = table.Column<int>(type: "int", nullable: false),
                     State = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     RegisterDate = table.Column<DateTime>(type: "datetime2", nullable: false)
@@ -289,12 +289,19 @@ namespace StorageSystem.API.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     RecipeId = table.Column<int>(type: "int", nullable: false),
                     ProductId = table.Column<int>(type: "int", nullable: false),
-                    Amount = table.Column<decimal>(type: "decimal(18,3)", nullable: false),
+                    MeasurementUnitId = table.Column<int>(type: "int", nullable: false),
+                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     State = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_RecipeDetails", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RecipeDetails_MeasurementUnits_MeasurementUnitId",
+                        column: x => x.MeasurementUnitId,
+                        principalTable: "MeasurementUnits",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_RecipeDetails_Products_ProductId",
                         column: x => x.ProductId,
@@ -315,7 +322,7 @@ namespace StorageSystem.API.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Amount = table.Column<decimal>(type: "decimal(18,3)", maxLength: 10, nullable: false),
+                    Amount = table.Column<int>(type: "int", maxLength: 10, nullable: false),
                     ProductionGapId = table.Column<int>(type: "int", nullable: false),
                     ProductsDetailId = table.Column<int>(type: "int", nullable: false),
                     State = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -480,6 +487,11 @@ namespace StorageSystem.API.Migrations
                 name: "IX_RawMaterials_SupplierId",
                 table: "RawMaterials",
                 column: "SupplierId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RecipeDetails_MeasurementUnitId",
+                table: "RecipeDetails",
+                column: "MeasurementUnitId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RecipeDetails_ProductId_RecipeId",

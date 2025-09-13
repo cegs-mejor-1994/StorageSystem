@@ -1,5 +1,3 @@
-using Blazored.Modal;
-using Blazored.Modal.Services;
 using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components;
 using StorageSystem.Shared.Entities;
@@ -9,38 +7,73 @@ namespace StorageSystem.WEB.Pages.InputInventories
 {
     public partial class InputInventoryCreate
     {        
-        private InputInventory inputInventory = new();       
-        private string supplierName = "Proveedor";
-        private string rawMaterialName = "Materia prima";        
+        private InputInventory inputInventory = new();  
+        
+        private string productName = "Materia prima";        
 
-        private int rawMaterialId { get; set; } 
-        private int supplierId { get; set; }
+        private int productlId { get; set; }       
+        private int? measurementUnitId { get; set; }
+        private int CountInputInventories { get; set; }
 
         [Inject] private IRepository Repository { get; set; } = null!;
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
+        [Inject] private NavigationManager NavigationManager { get; set; } = null!;
 
-        private void ClickSupplierCallBack (string supplier)
-        {            
-            string[] valores = supplier.Split(',');
-            supplierId = int.Parse(valores[0]);
-            supplierName = valores[1];             
+        private List<MeasurementUnit>? allMeasurementUnits { get; set; }
+        private List<MeasurementUnit>? measurementUnits { get; set; }
+        private List<InputInventory>? inputInventories { get; set; }
+
+        protected override async Task OnInitializedAsync()
+        {                      
+            await LoadMeasurementUnitsAsync();
         }
 
-        private void ClickRawMaterialCallBack(string rawMaterial)
+        private async Task LoadMeasurementUnitsAsync()
+        {
+            var responseHttp = await Repository.GetAsync<List<MeasurementUnit>>("/api/MeasurementUnits/combo");
+            if (responseHttp.Error)
+            {
+                var message = await responseHttp.GetErrorMessageAsync();
+                await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+                return;
+            }
+            allMeasurementUnits = responseHttp.Response;
+        }
+
+        private async Task LoadInputInventoriesAsync()
+        {
+            var responseHttp = await Repository.GetAsync<List<InputInventory>>("/api/InputInventories/InputInventoryWithRawMaterialsAndSuppliers");
+            if (responseHttp.Error)
+            {
+                var message = await responseHttp.GetErrorMessageAsync();
+                await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+                return;
+            }
+            inputInventories = responseHttp.Response;
+            CountInputInventories = inputInventories!.Count + 1;
+        }
+
+        private void ClickProductCallBack(string product)
         {            
-            string[] valores = rawMaterial.Split(',');
-            rawMaterialId = int.Parse(valores[0]);
-            rawMaterialName = valores[1];              
+            string[] valores = product.Split(',');
+            productlId = int.Parse(valores[0]);
+            productName = valores[1];
+            measurementUnits = new List<MeasurementUnit>(allMeasurementUnits!);     
+            measurementUnits = measurementUnits.Where(mu => mu.PhysicalState.ToString() == valores[2]).ToList();
+            measurementUnitId = null;
         }
 
         private async Task CreateAsync()
         {
             try
             {
-                if (inputInventory.Amount > 0 && !string.IsNullOrWhiteSpace(inputInventory.Batch) && inputInventory.MatutingDate != DateTime.MinValue && rawMaterialId != 0 && supplierId != 0)
+                if (inputInventory.Amount > 0 && !string.IsNullOrWhiteSpace(inputInventory.Batch) && inputInventory.MatutingDate != DateTime.MinValue && productlId != 0 && measurementUnitId != 0)
                 {
-                   //inputInventory.SupplierId = supplierId;
-                    //inputInventory.RawMaterialId = rawMaterialId;
+                    await LoadInputInventoriesAsync();
+                    inputInventory.ProductId = productlId;
+                    inputInventory.ControlCode = CountInputInventories.ToString();
+                    inputInventory.MeasurementUnitId = measurementUnitId!.Value;
+
                     var responseHttp = await Repository.PostAsync("/api/InputInventories", inputInventory);
                     if (responseHttp.Error)
                     {
@@ -55,16 +88,12 @@ namespace StorageSystem.WEB.Pages.InputInventories
                         ShowConfirmButton = true,
                         Timer = 3000
                     });
-                    await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro creado con éxito.");
-                    supplierName = "Proveedor";
-                    rawMaterialName = "Materia prima";
-                    inputInventory = new InputInventory();
+                    NavigationManager.NavigateTo("/inputinventories");
+                    await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro creado con éxito.");                    
                 } else {                     
-                    await SweetAlertService.FireAsync("Error", "Todos los campos son obligatorios.", SweetAlertIcon.Error);
+                    await SweetAlertService.FireAsync("Error", "Todos los campos son obligatorios ", SweetAlertIcon.Error);
                     return;
-                }
-
-                
+                }               
             }
             catch (Exception ex)
             {

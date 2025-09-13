@@ -1,49 +1,55 @@
 ﻿@page "/recipes/details/{ProductId:int}"
 @using StorageSystem.WEB.Pages.RawMaterials
 
-<PageTitle>Editar Formula</PageTitle>
+<PageTitle>Detalle Formula de: @product.Name</PageTitle>
 <HxCard>
     <HeaderTemplate>
-        <h3 class="text-center">@product.Name</h3>
+        <div class="row g-1">
+            <div class="col-12 col-sm 12">
+                <HxIcon Icon="@BootstrapIcon.ListCheck" /> Detalle Formula de @product.Name
+                <a href="/recipes" class="btn btn-success float-end">Regresar</a>
+            </div>
+        </div>
         <div class="row g-1 align-items-center">
             <div class="col-12 col-sm-8">
-                <InputText class="form-control" @bind-Value="rawMaterialName" disabled placeholder="Materia Prima" />                
+                <InputText class="form-control" @bind-Value="productRawMaterialName" placeholder="Materia Prima" disabled />
             </div>
             <div class="col-12 col-sm-4">
-                <button type="button" class="btn btn-info w-100" data-bs-toggle="modal" data-bs-target="#rawMaterialId">
+                <button type="button" class="btn btn-info w-100" data-bs-toggle="modal" data-bs-target="#productRawMaterialsId">
                     Seleccionar
                 </button>
             </div>
         </div>
-        <div class="row g-1 align-items-center mt-1">
-            @*
-                         <div class="col-12 col-sm-4 d-flex align-items-center">
-                <label class="me-2 mb-0">Cantidad @rawMaterialCodeMeasurementUnit</label>
-                <InputNumber class="form-control" style="max-width: 200px" @bind-Value="recipe.Amount" placeholder="Cantidad" />                
-            </div>
+        <div class="row g-1 align-items-center mt-1">           
+            <div class="col-12 col-sm-8 d-flex align-items-center">
+                <label class="me-2 mb-0">Cantidad</label>
+                <InputNumber class="form-control" style="max-width: 200px" @bind-Value="recipeDetail.Amount" placeholder="Cantidad" />                
+            </div>           
             <div class="col-12 col-sm-4">
+                @if (measurementUnits is not null)
+                {
+                    <HxSelect TItem="MeasurementUnit"
+                                TValue="int?"
+                                Data="measurementUnits"
+                                @bind-Value="measurementUnitId"
+                                TextSelector="@(measurementUnit => measurementUnit.Code)"
+                                ValueSelector="@(measurementUnit => measurementUnit.Id)"
+                                NullText="--- Seleccione Unidad de Medida ---"
+                                NullDataText="Cargando Unidades de Medida" />
+                }
+            </div>              
+        </div>
+        <div class="row">            
+            <div class="col-12 col-sm-12 mt-1">
                 <button class="btn btn-primary w-100" type="button" onclick="@(() => CreateAsync())">Guardar Cambios</button>
-            </div>
-            <div class="col-12 col-sm-4">
-                <a href="/recipes" class="btn btn-success w-100">Regresar</a>
-            </div>
-            *@
-   
+            </div>            
         </div>
-        <div class="row g-1 align-items-center mt-1">
-            <div class="col-12 col-sm-6 d-flex align-items-center">
-                <label class="me-2 mb-0">Total Bache:</label>
-                <InputNumber class="form-control" style="max-width: 200px" @bind-Value="batchTotal" placeholder="Total Bache:" />
-            </div>
-            <div class="col-12 col-sm-6">
-                <button class="btn btn-secondary w-100" type="button" onclick="@(() => EditBatchTotalAsync())">Actualizar Bache</button>
-            </div>
-        </div>
+
     </HeaderTemplate>
     <BodyTemplate>
-        @if (Recipes != null)
+        @if (RecipeProductDetails != null)
         {
-            <GenericList MyList="Recipes">
+            <GenericList MyList="RecipeProductDetails">
                 <Body>
                     <table class="table table-striped">
                         <thead>
@@ -54,19 +60,16 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var recipe in Recipes!)
+                            @foreach (var recipeProductDetail in RecipeProductDetails!)
                             {
-                                @*
-                                                                    <tr>
-                                    <td>@recipe.RawMaterial!.Name</td>
-                                    <td>@recipe.Amount @recipe.RawMaterial.MeasurementUnit!.Code</td>
+                                <tr>
+                                    <td>@recipeProductDetail.Product!.Name</td>
+                                    <td>@recipeProductDetail.Amount @recipeProductDetail.MeasurementUnit!.Code</td>
                                     <td>
-                                        <HxButton Text="Editar" Color="ThemeColor.Warning" IconPlacement="ButtonIconPlacement.Start" Icon="BootstrapIcon.Pencil" Size="ButtonSize.Small" OnClick="@(() => ShowModalAsync(recipe.Id))" />
-                                        <HxButton Text="Borrar" Icon="BootstrapIcon.Trash" IconPlacement="ButtonIconPlacement.Start" Color="ThemeColor.Danger" Size="ButtonSize.Small" OnClick="@(() => DeleteAsync(recipe))" />
+                                        <HxButton Text="Editar" Color="ThemeColor.Warning" IconPlacement="ButtonIconPlacement.Start" Icon="BootstrapIcon.Pencil" Size="ButtonSize.Small" OnClick="@(() => ShowModalAsync(recipeProductDetail.Id))" />
+                                        <HxButton Text="Borrar" Icon="BootstrapIcon.Trash" IconPlacement="ButtonIconPlacement.Start" Color="ThemeColor.Danger" Size="ButtonSize.Small" OnClick="@(() => DeleteAsync(recipeProductDetail))" />
                                     </td>
                                 </tr>
-                                *@
-
                             }
                         </tbody>
                     </table>
@@ -76,7 +79,7 @@
     </BodyTemplate>
 </HxCard>
 
-<div class="modal fade" id="rawMaterialId" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade" id="productRawMaterialsId" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -84,7 +87,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" />
             </div>
             <div class="modal-body">
-                <GenericList MyList="rawMaterials">
+                <GenericList MyList="productRecipeRawMaterials">
                     <Body>
                         <table class="table table-striped">
                             <thead>
@@ -94,21 +97,18 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var rawMaterial in rawMaterials!)
+                                @foreach (var productRecipeRawMaterial in productRecipeRawMaterials!)
                                 {
-                                    @* 
-                                                                            var exists = Recipes?.Any(r => r.RawMaterialId == rawMaterial.Id) ?? false;
+                                    var exists = RecipeProductDetails?.Any(r => r.ProductId == productRecipeRawMaterial.Id) ?? false;
                                     @if (!exists)
                                     {
                                         <tr>
-                                            <td>@rawMaterial.Name</td>
+                                            <td>@productRecipeRawMaterial.Name</td>
                                             <td>
-                                                <HxButton Color="ThemeColor.Secondary" data-bs-dismiss="modal" Text="Seleccionar" OnClick="@(() => ClickRawMaterialCallBack($"{rawMaterial.Id},{rawMaterial.Name},{rawMaterial.MeasurementUnit!.Code}"))" />
+                                                <HxButton Color="ThemeColor.Secondary" data-bs-dismiss="modal" Text="Seleccionar" OnClick="@(() => ClickRawMaterialCallBack($"{productRecipeRawMaterial.Id},{productRecipeRawMaterial.Name},{productRecipeRawMaterial.PhysicalState}"))" />
                                             </td>
                                         </tr>
-                                    }
-                                    *@
-
+                                    }                                   
                                 }
                             </tbody>
                         </table>

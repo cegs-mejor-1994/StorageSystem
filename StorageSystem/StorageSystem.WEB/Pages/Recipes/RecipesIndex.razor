@@ -2,11 +2,11 @@
 <PageTitle>Formulas</PageTitle>
 <HxCard>
     <HeaderTemplate>
-        <HxIcon Icon="@BootstrapIcon.ListCheck" /> Formulas        
+        <HxIcon Icon="@BootstrapIcon.ListCheck" /> Formulas          
     </HeaderTemplate>
     <BodyTemplate>
         <Filter PlaceHolder="Buscar formula..." Callback="@FilterCallBack" />
-        <GenericList MyList="Products">
+        <GenericList MyList="Recipes">
             <Body>
                 <Pagination CurrentPage="currentPage" TotalPages="totalPages" SelectedPage="SelectedPageAsync" RecordsNumber="SelectedRecordsNumberAsync" />
                 <table class="table table-striped">
@@ -17,12 +17,12 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var product in Products!)
+                        @foreach (var recipe in Recipes!)
                         {
-                            <tr>                                
-                                <td>@product.Name</td>
+                            <tr>
+                                <td>@recipe.Product!.Name</td>
                                 <td>
-                                    <a href="/recipes/details/@product.Id" class="btn btn-warning"><i class="bi bi-pencil" /> Detalles</a>
+                                    <a href="/recipes/details/@recipe.ProductId" class="btn btn-warning"><i class="bi bi-pencil" /> Detalles</a>
                                 </td>
                             </tr>
                         }

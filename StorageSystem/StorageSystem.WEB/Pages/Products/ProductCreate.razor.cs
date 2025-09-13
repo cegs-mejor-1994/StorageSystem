@@ -1,6 +1,7 @@
 using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components;
 using StorageSystem.Shared.Entities;
+using StorageSystem.WEB.Pages.Recipes;
 using StorageSystem.WEB.Repositories;
 using static StorageSystem.Shared.Enums.ProductStateAndPhisical;
 
@@ -8,7 +9,8 @@ namespace StorageSystem.WEB.Pages.Products
 {
     public partial class ProductCreate
     {
-        private Product product = new() { Role = ProductRole.ProductoFinal};
+        private Product product = new() { Role = ProductRole.ProductoFinal, PhysicalState = ProductPhysicalState.Solido };
+        private Recipe recipe = new();
         private RawMaterial rawMaterial = new();
 
         public ProductRole Role { get; set; }
@@ -19,6 +21,7 @@ namespace StorageSystem.WEB.Pages.Products
         private int supplierId { get; set; }        
         private int categoryId { get; set; }
         private int productId { get; set; } 
+        private int productRecipeId { get; set; }
 
         [Inject] private IRepository repository { get; set; } = null!;
         [Inject] private SweetAlertService sweetAlertService { get; set; } = null!;
@@ -59,7 +62,6 @@ namespace StorageSystem.WEB.Pages.Products
                 return;
             }
 
-
             if (categoryId == 0 && product.Role == ProductRole.MateriaPrima)
             {
                 await sweetAlertService.FireAsync("Error", "Debe seleccionar una categoria la materia prima.", SweetAlertIcon.Error);
@@ -71,11 +73,17 @@ namespace StorageSystem.WEB.Pages.Products
             {
                 var message = await responseHttp.GetErrorMessageAsync();
                 await sweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
-                return;
+                return;                
             }
 
-            if (product.Role == ProductRole.MateriaPrima) {                 
-                await LoadProductsAsync();
+            await LoadProductsAsync();
+
+            if (product.Role == ProductRole.ProductoFinal || product.Role == ProductRole.ProductoIntermedio)
+            {                
+                await CreateRecipeOfProductAsync();
+            }
+
+            if (product.Role == ProductRole.MateriaPrima) {                                 
                 await CreateRawMaterialAsync();
             }
             else
@@ -116,6 +124,24 @@ namespace StorageSystem.WEB.Pages.Products
                 Timer = 3000
             });
             await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro creado con éxito.");
+        }
+
+        private async Task CreateRecipeOfProductAsync()
+        {
+            GetProductIdByName(product.Name);
+            recipe.ProductId = productId;
+            recipe.TotalRecipe = 1; 
+
+            if (recipe != null)
+            {
+                var responseHttp = await repository.PostAsync("/api/Recipes", recipe);
+                if (responseHttp.Error)
+                {
+                    var message = await responseHttp.GetErrorMessageAsync();
+                    await sweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+                    return;
+                }
+            }          
         }
 
         private void Return()
