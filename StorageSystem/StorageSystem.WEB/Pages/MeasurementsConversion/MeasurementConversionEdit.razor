@@ -1,28 +1,33 @@
-﻿@page "/measurementConversions/create"
-<HxCard>
-    <HeaderTemplate>
-        <HxIcon Icon="@BootstrapIcon.ArrowsAngleContract" /> Edita Factor de Conversion
-        <a class="btn btn-success float-end" href="/measurementConversions">Regresar</a>
-    </HeaderTemplate>
-    <BodyTemplate>
-        <EditForm Model="measurementConversion" OnValidSubmit="EditAsync">
-            <DataAnnotationsValidator />
-            @if (measurementConversion != null)
-            {
+﻿@page "/measurementConversions/edit/{Id:int}"
+
+@if (measurementConversion is null)
+{
+    <Loading/>
+}
+else
+{
+    <HxCard>
+        <HeaderTemplate>
+            <HxIcon Icon="@BootstrapIcon.ArrowsAngleContract" /> Edita Factor de Conversion
+            <a class="btn btn-success float-end" href="/measurementConversions">Regresar</a>
+        </HeaderTemplate>
+        <BodyTemplate>
+            <EditForm Model="measurementConversion" OnValidSubmit="EditAsync">
+                <DataAnnotationsValidator />
                 <div class="mb-3">
                     <div class="mb-3">
-                        <label class="form-label">Factor</label>
+                        <label class="form-label">Unidad Origen a Convertir</label>
                         <div>
-                            <HxInputNumber @bind-Value="@measurementConversion.FromUnit!.Name" Decimals="4" />
+                            <HxInputText @bind-Value="@fromUnitCode" Decimals="4" Enabled="false"/>
                             <ValidationMessage For="@(() => measurementConversion.FromUnitId)" />
                         </div>
                     </div>
                 </div>
                 <div class="mb-3">
                     <div class="mb-3">
-                        <label class="form-label">Factor</label>
+                        <label class="form-label">Unidad Destino a Convertir</label>
                         <div>
-                            <HxInputNumber @bind-Value="@measurementConversion.ToUnit!.Name" Decimals="4" />
+                            <HxInputText @bind-Value="@toUnitCode" Decimals="4" Enabled="false"/>
                             <ValidationMessage For="@(() => measurementConversion.ToUnitId)" />
                         </div>
                     </div>
@@ -37,10 +42,10 @@
                 <div class="d-grid gap-2 d-md-block">
                     <HxSubmit Color="ThemeColor.Primary" Text="Guardar Cambios" />
                 </div>
-            }
-        </EditForm>
-    </BodyTemplate>
-</HxCard>
+            </EditForm>            
+        </BodyTemplate>
+    </HxCard>
+}
 
 
 

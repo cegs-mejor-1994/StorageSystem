@@ -50,9 +50,19 @@ namespace StorageSystem.API.Data
             modelBuilder.Entity<Order>();
             modelBuilder.Entity<Product>().HasIndex(pr => pr.Code).IsUnique();
             modelBuilder.Entity<Product>().HasIndex(pr => pr.Name).IsUnique();
+            modelBuilder.Entity<Product>()
+                .HasOne(p => p.RawMaterial)
+                .WithOne(r => r.Product)
+                .HasForeignKey<RawMaterial>(r => r.ProductId)
+                .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<ProductionGap>();
             modelBuilder.Entity<ProductsDetail>().HasIndex(prd => new { prd.ProductId, prd.ReferenceId }).IsUnique();   
             modelBuilder.Entity<RawMaterial>().HasIndex(ra => new { ra.ProductId, ra.SupplierId }).IsUnique();
+            modelBuilder.Entity<RawMaterial>()
+                .HasOne(r => r.Supplier)
+                .WithMany(s => s.RawMaterials)
+                .HasForeignKey(r => r.SupplierId)
+                .OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<Recipe>().HasIndex(rec =>  rec.ProductId).IsUnique();
             modelBuilder.Entity<RecipeDetail>().HasIndex(recd => new { recd.ProductId, recd.RecipeId });
             modelBuilder.Entity<Reference>().HasIndex(refe => new { refe.MeasurementUnitId, refe.Name }).IsUnique();

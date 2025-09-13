@@ -1,13 +1,58 @@
 ﻿@page "/products/edit/{Id:int}"
 
-
 @if (product is null)
 {
     <Loading />
 }
 else
 {
-    <FormWithFields @ref="productForm" Label="Producto:" Model="product" OnValidSubmit="EditAsync" ReturnAction="Return" />
+    <HxCard>
+        <HeaderTemplate>
+            <HxIcon Icon="@BootstrapIcon.ListCheck" /> Editar Producto o Materia Prima
+            <a class="btn btn-success float-end" href="/products">Regresar</a>
+        </HeaderTemplate>
+        <BodyTemplate>
+            <EditForm Model="product" OnValidSubmit="EditAsync">
+                <DataAnnotationsValidator />
+                <div class="mb-3">
+                    <label class="form-label">Codigo</label>
+                    <HxInputText @bind-Value="@product.Code" />
+                    <ValidationMessage For="@(() => product.Code)"/>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Nombre</label>
+                    <div>
+                        <HxInputText @bind-Value="@product.Name" />
+                        <ValidationMessage For="@(() => product.Name)" />
+                    </div>
+                </div>
+                @if (product.Role == StorageSystem.Shared.Enums.ProductStateAndPhisical.ProductRole.MateriaPrima)
+                {
+                    @if (supplier != null)
+                    {
+                        <div class="mb-3">
+                            <label class="form-label">Proveedor</label>
+                            <div>
+                                <HxInputText @bind-Value="@supplier!.Name" Enabled="false" />
+                            </div>
+                        </div>
+                    }
+                    @if (category != null)
+                    {
+                        <div class="mb-3">
+                            <label class="form-label">Categoria</label>
+                            <div>
+                                <HxInputText @bind-Value="@category!.Name" Enabled="false" />
+                            </div>
+                        </div>
+                    }
+                }
+                <div class="d-grid gap-2 d-md-block">
+                    <HxSubmit Color="ThemeColor.Primary" Text="Guardar Cambios" />
+                </div>
+            </EditForm>
+        </BodyTemplate>
+    </HxCard>
 }
 
 

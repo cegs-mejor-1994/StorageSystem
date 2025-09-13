@@ -1,5 +1,6 @@
 ﻿using StorageSystem.Shared.Interfaces;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using static StorageSystem.Shared.Enums.ProductStateAndPhisical;
 
 namespace StorageSystem.Shared.Entities
@@ -18,22 +19,26 @@ namespace StorageSystem.Shared.Entities
         [Required(ErrorMessage = "El campo {0} es requerido")]
         public string Name { get; set; } = null!;
 
+        [Display(Name = "Estado")]
+        [Required(ErrorMessage = "El campo {0} es requerido")]
         public ProductPhysicalState PhysicalState { get; set; }
 
+        [Display(Name = "Rol")]
+        [Required(ErrorMessage = "El campo {0} es requerido")]
         public ProductRole Role { get; set; }
 
         public DateTime RegisterDate { get; set; } = DateTime.UtcNow;
 
         public string State { get; set; } = "Disponible";
-
+        
         public RawMaterial? RawMaterial { get; set; }
 
         public ICollection<ProductsDetail>? ProductsDetails { get; set; }
         public ICollection<InputInventory>? InputInventories { get; set; }
         public ICollection<Recipe>? Recipes { get; set; }
         public ICollection<RecipeDetail>? RecipeDetails { get; set; }
-
-        public int CategoryId { get; set; }
+        
+        public int? CategoryId { get; set; }
         public Category? Category { get; set; }
     }
 }

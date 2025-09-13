@@ -11,8 +11,12 @@ namespace StorageSystem.WEB.Pages.MeasurementsConversion
 {
     public partial class MeasurementConversionEdit
     {
-        private MeasurementConversion? measurementConversion;        
-        
+        private MeasurementConversion? measurementConversion; 
+        private List<MeasurementUnit>? measurementUnits;
+
+        private string? fromUnitCode;
+        private string? toUnitCode;
+
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
         [Inject] private IRepository Repository { get; set; } = null!;
@@ -20,7 +24,7 @@ namespace StorageSystem.WEB.Pages.MeasurementsConversion
         [EditorRequired, Parameter] public int Id { get; set; }
 
         protected async override Task OnParametersSetAsync()
-        {
+        {            
             var responseHttp = await Repository.GetAsync<MeasurementConversion>($"/api/MeasurementConversions/{Id}");
             if (responseHttp.Error)
             {
@@ -37,7 +41,32 @@ namespace StorageSystem.WEB.Pages.MeasurementsConversion
             else
             {
                 measurementConversion = responseHttp.Response;
+                await LoadMeasurementConversionsAsync();
+                fromUnitCode = GetMeasurementCodeById(measurementConversion!.FromUnitId);
+                toUnitCode = GetMeasurementCodeById(measurementConversion!.ToUnitId);
             }
+        }
+
+        private async Task LoadMeasurementConversionsAsync()
+        {
+            var responseHttp = await Repository.GetAsync<List<MeasurementUnit>>("/api/MeasurementUnits/combo");
+            if (responseHttp.Error)
+            {
+                var message = await responseHttp.GetErrorMessageAsync();
+                await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+                return;
+            }
+            measurementUnits = responseHttp.Response;
+        }
+
+        private string GetMeasurementCodeById(int id)
+        {
+            var measurementUnit = measurementUnits?.FirstOrDefault(mu => mu.Id == id);
+            if (measurementUnit != null)
+            {
+                return measurementUnit.Code;
+            }
+            return string.Empty;
         }
 
         private async Task EditAsync()

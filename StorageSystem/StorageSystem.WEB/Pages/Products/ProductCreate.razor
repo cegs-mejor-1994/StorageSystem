@@ -1,33 +1,131 @@
 ﻿@page "/products/create"
+@using StorageSystem.WEB.Pages.Suppliers
+@using StorageSystem.WEB.Pages.Categories
 
-<FormWithFields @ref="productForm" Label="Producto:" Model="product" OnValidSubmit="CreateAsync" ReturnAction="Return" />
-@*
-    <div class="mb-3">                                               
-    <div>
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#referenceId">
-            Seleccionar Referencias
-        </button>
-    </div>
-</div>
-<p class="mt-2">
-    Selected employee IDs: @String.Join(", ", ListIdsReferences.Select(i => i.ToString()) ?? Enumerable.Empty<string>())
-</p>
-*@
-@*
-<div class="modal fade" id="referenceId" tabindex="-1" role="dialog" aria-hidden="true">
+<HxCard>
+    <HeaderTemplate>
+        <HxIcon Icon="@BootstrapIcon.ListCheck" /> Productos y Materias Primas
+        <HxButton Color="ThemeColor.Warning" Outline="true" Icon="BootstrapIcon.Question" data-bs-toggle="modal" data-bs-target="#productInfoId" />
+        <a class="btn btn-success float-end" href="/products">Regresar</a>
+    </HeaderTemplate>
+    <BodyTemplate>
+        <EditForm Model="product" OnValidSubmit="CreateProductAsync">
+            <DataAnnotationsValidator />
+            <div class="mb-3">
+                <label class="form-label">Tipo de producto:</label>
+                <InputRadioGroup @bind-value="@product.Role" Name="rol">
+                    @foreach (var role in Roles)
+                    {
+                        <div class="form-check form-check-inline">
+                            <InputRadio class="form-check-input" Value="@role" />
+                            <label class="form-check-label">@role</label>
+                        </div>
+                    }
+                </InputRadioGroup>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Estado de producto:</label>
+                <InputRadioGroup @bind-value="@product.PhysicalState" Name="estado">
+                    @foreach (var physicalState in PhysicalState)
+                    {
+                        <div class="form-check form-check-inline">
+                            <InputRadio class="form-check-input" Value="@physicalState" />
+                            <label class="form-check-label">@physicalState</label>
+                        </div>
+                    }
+                </InputRadioGroup>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Codigo</label>
+                <HxInputText @bind-Value="@product.Code" />
+                <ValidationMessage For="@(() => product.Code)" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Nombre</label>
+                <div>
+                    <HxInputText @bind-Value="@product.Name" />
+                    <ValidationMessage For="@(() => product.Name)" />
+                </div>
+            </div>
+            @if (product.Role == StorageSystem.Shared.Enums.ProductStateAndPhisical.ProductRole.MateriaPrima)
+            {
+                <div class="mb-3">
+                    <div>
+                        <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#supplierId">
+                            Seleccionar Proveedor
+                        </button>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Proveedor</label>
+                        <HxInputText @bind-Value="@supplierName" Enabled="false"/>                        
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div>
+                        <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#categoryId">
+                            Seleccionar Categoria
+                        </button>
+                        <div class="mb-3">
+                            <label class="form-label">Categoria</label>
+                            <HxInputText @bind-Value="@categoryName" Enabled="false"/>
+                        </div>
+                    </div>
+                </div>
+            }      
+            <div class="d-grid gap-2 d-md-block">
+                <HxSubmit Color="ThemeColor.Primary" Text="Guardar Cambios" />                
+            </div>
+        </EditForm>
+    </BodyTemplate>
+</HxCard>
+
+<div class="modal fade" id="supplierId" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Referencias </h5>
+                <h5 class="modal-title">Proveedores </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" />
             </div>
             <div class="modal-body">
-                <ReferencesListSelect OnSelectedReferenceClick="ClickReferenceCallBack" />
+                <SuppliersListSelect OnSelectedSupplierChanged="ClickSupplierCallBack" />
             </div>
         </div>
     </div>
 </div>
-*@
+
+<div class="modal fade" id="categoryId" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Categorias </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" />
+            </div>
+            <div class="modal-body">
+                <CategoriesListSelect OnSelectedCategoryChanged="ClickCategoryCallBack" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="productInfoId" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Info de tipo de producto </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" />
+            </div>
+            <div class="modal-body">
+                <ol class="list-group list-group-numbered">
+                    <li class="list-group-item">Materia Prima: Es un producto a utilizar en una fabricacion adquirida desde un proveedor</li>
+                    <li class="list-group-item">Producto Intermedio: es un producto interno que se usa para fabricar otro producto.</li>
+                    <li class="list-group-item">Producto Final: es un producto que no se va a utilizar en otro proceso de fabricacion.</li>
+                </ol>
+
+            </div>
+        </div>
+    </div>
+</div>
+
 
 
 

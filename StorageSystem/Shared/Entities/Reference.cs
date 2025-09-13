@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using static StorageSystem.Shared.Enums.ProductStateAndPhisical;
 
 namespace StorageSystem.Shared.Entities
 {
@@ -15,9 +14,7 @@ namespace StorageSystem.Shared.Entities
         public int MeasurementUnitId { get; set; }
         public MeasurementUnit? MeasurementUnit { get; set; }
 
-        public string State { get; set; } = "Disponible";
-
-        public ProductPhysicalState PhysicalState { get; set; }
+        public string State { get; set; } = "Disponible";        
 
         public ICollection<ProductsDetail>? ProductsDetails { get; set; }
     }

@@ -15,7 +15,7 @@ namespace StorageSystem.API.Repositories.Implementations
         public ProductsRepository(DataContext context) : base(context)
         {
             _context = context;
-        }
+        }      
 
         public async Task<ActionResponse<IEnumerable<Product>>> GetAsync(PaginationDTO pagination)
         {
@@ -31,6 +31,8 @@ namespace StorageSystem.API.Repositories.Implementations
                 WasSuccess = true,
                 Result = await queryable
                     .OrderBy(x => x.Name)
+                    .Include(c => c.Category)
+                    .Include(r => r.RawMaterial)
                     .Paginate(pagination)
                     .ToListAsync()
             };
@@ -40,6 +42,8 @@ namespace StorageSystem.API.Repositories.Implementations
         {
             return await _context.Products
                 .OrderBy(s => s.Name)
+                .Include(c => c.Category)
+                .Include(r => r.RawMaterial)
                 .ToListAsync();
         }
 

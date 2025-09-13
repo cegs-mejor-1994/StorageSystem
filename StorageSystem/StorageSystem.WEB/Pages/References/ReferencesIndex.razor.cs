@@ -120,7 +120,7 @@ namespace StorageSystem.WEB.Pages.References
             var result = await SweetAlertService.FireAsync(new SweetAlertOptions
             {
                 Title = "Confirmacion",
-                Text = $"¿Estas seguro que quieres borrar la referencia de producto: {reference.Name}?",
+                Text = $"¿Estas seguro que quieres borrar la referencia de producto: {reference.Name} {reference.MeasurementUnit?.Code}?",
                 Icon = SweetAlertIcon.Question,
                 ShowCancelButton = true,
             });

@@ -1,11 +1,9 @@
-using Blazored.Modal;
-using Blazored.Modal.Services;
 using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components;
 using StorageSystem.Shared.Entities;
-using StorageSystem.WEB.Pages.Suppliers;
 using StorageSystem.WEB.Repositories;
 using System.Net;
+using static StorageSystem.Shared.Enums.ProductStateAndPhisical;
 
 namespace StorageSystem.WEB.Pages.Products
 {
@@ -22,6 +20,8 @@ namespace StorageSystem.WEB.Pages.Products
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
         public List<Product>? Products { get; set; }
+
+        private Product? ProductSelected;
 
         protected async override Task OnInitializedAsync()
         {
@@ -114,12 +114,14 @@ namespace StorageSystem.WEB.Pages.Products
             await SelectedPageAsync(page);
         }
 
+        // Cambio a futuro con estado
         private async Task DeleteAsync(Product product)
         {
+            ProductSelected = product;
             var result = await SweetAlertService.FireAsync(new SweetAlertOptions
             {
                 Title = "Confirmacion",
-                Text = $"¿Estas seguro de querer eliminar el producto: {product.Name}?",
+                Text = $"¿Estas seguro de querer eliminar el producto o materia prima: {product.Name}?",
                 Icon = SweetAlertIcon.Question,
                 ShowCancelButton = true,
             });
@@ -129,6 +131,7 @@ namespace StorageSystem.WEB.Pages.Products
             {
                 return;
             }
+
             var responseHttp = await Repository.DeleteAsync<Product>($"api/Products/{product.Id}");
             if (responseHttp.Error)
             {
@@ -143,6 +146,12 @@ namespace StorageSystem.WEB.Pages.Products
                 }
                 return;
             }
+
+            if (product.Role == ProductRole.MateriaPrima)
+            {
+                await DeleteRawMaterialAsync();
+            }
+
             await LoadAsync();
 
             var toast = SweetAlertService.Mixin(new SweetAlertOptions
@@ -153,6 +162,28 @@ namespace StorageSystem.WEB.Pages.Products
                 Timer = 3000,
             });
             await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro eliminado correctamente");
+        }
+
+        // Cambio a futuro con estado
+        private async Task DeleteRawMaterialAsync()
+        {
+            if(ProductSelected != null)
+            {
+                var responseHttp = await Repository.DeleteAsync<RawMaterial>($"api/RawMaterials/{ProductSelected.Id}");
+                if (responseHttp.Error)
+                {
+                    if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
+                    {
+                        NavigationManager.NavigateTo("/");
+                    }
+                    else
+                    {
+                        var messageError = await responseHttp.GetErrorMessageAsync();
+                        await SweetAlertService.FireAsync("Error", messageError, SweetAlertIcon.Error);
+                    }
+                    return;
+                }
+            }
         }
     }
 }

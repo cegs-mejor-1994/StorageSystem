@@ -1,24 +1,32 @@
 ﻿<GenericList MyList="suppliers">
     <Body>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th style="width:168px">Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var supplier in suppliers!)
-                {
+        @if(suppliers is not null)
+        {
+            <table class="table table-striped">
+                <thead>
                     <tr>
-                        <td>@supplier.Name</td>
-                        <td>
-                            <HxButton Color="ThemeColor.Secondary" data-bs-dismiss="modal" Text="Seleccionar" OnClick="@(() => OnSelectedSupplierChanged.InvokeAsync($"{supplier.Id},{supplier.Name}"))" />
-                        </td>
+                        <th>Nombre</th>
+                        <th style="width:168px">Acciones</th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach (var supplier in suppliers!)
+                    {
+                        <tr>
+                            <td>@supplier.Name</td>
+                            <td>
+                                <HxButton Color="ThemeColor.Secondary" data-bs-dismiss="modal" Text="Seleccionar" OnClick="@(() => OnSelectedSupplierChanged.InvokeAsync($"{supplier.Id},{supplier.Name}"))" />
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>No hay proveedores disponibles. </p>
+            <a href="/suppliers/create" class="btn btn-primary">Crear Proveedor</a>
+        }
     </Body>
 </GenericList>
      

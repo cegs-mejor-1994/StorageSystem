@@ -1,4 +1,5 @@
 ﻿@page "/measurementUnits/create"
+
 <HxCard>
     <HeaderTemplate>
         <HxIcon Icon="@BootstrapIcon.ListCheck" /> Unidades de Medida
@@ -22,7 +23,7 @@
             <div class="mb-3">
                 <select @bind="@measurementUnit.PhysicalState">
                     <option value="0">Seleccione un tipo de producto</option>
-                    @foreach (var productPS in Enum.GetValues(typeof(StorageSystem.Shared.Enums.ProductStateAndPhisical.ProductPhysicalState)))
+                    @foreach (var productPS in PhysicalStats)
                     {
                         <option value="@productPS">@productPS.ToString()</option>
                     }

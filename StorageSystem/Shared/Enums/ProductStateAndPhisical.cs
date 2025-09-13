@@ -5,8 +5,8 @@
         public enum ProductRole
         {
             MateriaPrima = 1,
-            Intermedio = 2,
-            Final = 3
+            ProductoIntermedio = 2,
+            ProductoFinal = 3
         }
 
         public enum ProductPhysicalState

@@ -10,10 +10,9 @@ namespace StorageSystem.WEB.Pages.Suppliers
 {
     public partial class SupplierCreate
     {
-        private Supplier supplier = new();
-        private SupplierForm? supplierForm;
+        private Supplier supplier = new();     
+        private SupplierForm supplierForm = new();
 
-        [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
         [Inject] private IRepository repository { get; set; } = null!;
         [Inject] private SweetAlertService sweetAlertService { get; set; } = null!;
         [Inject] private NavigationManager navigationManager { get; set; } = null!;
@@ -26,8 +25,7 @@ namespace StorageSystem.WEB.Pages.Suppliers
                 var message = await responseHttp.GetErrorMessageAsync();
                 await sweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
                 return;
-            }
-            await BlazoredModal.CloseAsync(ModalResult.Ok());
+            }            
             Return();
             var toast = sweetAlertService.Mixin(new SweetAlertOptions
             {
@@ -39,8 +37,7 @@ namespace StorageSystem.WEB.Pages.Suppliers
             await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro creado con éxito.");
         }
         private void Return()
-        {
-            supplierForm!.FormPostedSuccessfully = true;
+        {            
             navigationManager.NavigateTo("/suppliers");
         }
     }

@@ -21,32 +21,12 @@ namespace StorageSystem.WEB.Pages.Suppliers
         [Inject] private IRepository Repository { get; set; } = null!;
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
-
-        [CascadingParameter] IModalService Modal { get; set; } = default!;
+        
         public List<Supplier>? Suppliers { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
             await LoadAsync();
-        }
-
-        private async Task ShowModalAsync(int id = 0, bool isEdit = false)
-        {
-            IModalReference modalReference;
-            if (isEdit)
-            {
-                modalReference = Modal.Show<SupplierEdit>(string.Empty, new ModalParameters().Add("Id", id));
-            }
-            else
-            {
-                modalReference = Modal.Show<SupplierCreate>();
-            }
-
-            var result = await modalReference.Result;
-            if (result.Confirmed)
-            {
-                await LoadAsync();
-            }
         }
 
         private async Task FilterCallBack(string filter)

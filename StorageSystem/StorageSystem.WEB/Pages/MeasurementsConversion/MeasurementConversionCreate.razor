@@ -11,7 +11,7 @@
             {
                 <div class="mb-3">
                     <select @bind="@measurementConversion.FromUnitId">
-                        <option value="0">Seleccione una unidad de medida</option>
+                        <option value="0">Unidad de medida origen</option>
                         @foreach (var measurementUnit in measurementUnits!)
                         {
                             <option value="@measurementUnit.Id">@measurementUnit.Name</option>
@@ -21,7 +21,7 @@
                 </div>
                 <div class="mb-3">
                     <select @bind="@measurementConversion.ToUnitId">
-                        <option value="0">Seleccione una unidad de medida</option>
+                        <option value="0">Unidad de medida destino</option>
                         @foreach (var measurementUnit in measurementUnits!)
                         {
                             <option value="@measurementUnit.Id">@measurementUnit.Name</option>

@@ -15,6 +15,8 @@
                         <tr>
                             <th>Codigo</th>
                             <th>Nombre</th>
+                            <th>Tipo</th>
+                            <th>Rol</th>
                             <th style="width: 210px">Acciones</th>
                         </tr>
                     </thead>
@@ -24,6 +26,8 @@
                             <tr>
                                 <td>@product.Code</td>
                                 <td>@product.Name</td>
+                                <td>@product.PhysicalState</td>
+                                <td>@product.Role</td>
                                 <td>
                                     <a href="/products/edit/@product.Id" class="btn btn-warning"><i class="bi bi-pencil" /> Editar</a>
                                     <HxButton Color="ThemeColor.Danger" Text="Borrar" OnClick="@(() => DeleteAsync(product))" />

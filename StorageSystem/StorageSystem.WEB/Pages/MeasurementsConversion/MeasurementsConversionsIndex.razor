@@ -25,7 +25,7 @@
                                 <td>@measurementsConversion.ToUnit!.Code</td>
                                 <td>@measurementsConversion.Factor</td>
                                 <td>
-                                    <a class="btn btn-primary float-end" href="/measurementConversions/edit/@measurementsConversion.Id">Editar</a>
+                                    <a class="btn btn-warning" href="/measurementConversions/edit/@measurementsConversion.Id">Editar</a>
                                     <HxButton Text="Borrar" Icon="BootstrapIcon.Trash" IconPlacement="ButtonIconPlacement.Start" Color="ThemeColor.Danger" Size="ButtonSize.Small" OnClick="@(() => DeleteAsync(measurementsConversion))" />
                                 </td>
                             </tr>

@@ -46,7 +46,7 @@ namespace StorageSystem.WEB.Pages.MeasurementsConversion
             {
                 return;
             }
-            var responseHttp = await Repository.DeleteAsync<MeasurementConversion>($"api/MeasurementConverisons/{measurementConversion.Id}");
+            var responseHttp = await Repository.DeleteAsync<MeasurementConversion>($"api/MeasurementConversions/{measurementConversion.Id}");
             if (responseHttp.Error)
             {
                 if (responseHttp.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)

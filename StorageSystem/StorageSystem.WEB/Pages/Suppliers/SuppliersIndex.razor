@@ -3,7 +3,7 @@
 <HxCard>
     <HeaderTemplate>
         <HxIcon Icon="@BootstrapIcon.ListCheck" /> Proveedores
-        <HxButton CssClass="float-end" Text="Nuevo Proveedor" Color="ThemeColor.Primary" Size="ButtonSize.Small" Icon="BootstrapIcon.PlusSquare" IconPlacement="ButtonIconPlacement.Start" OnClick="@(() => ShowModalAsync())" />
+        <a class="btn btn-success float-end" href="/suppliers/create">Crear Proveedor</a>
     </HeaderTemplate>
     <BodyTemplate>
         <Filter PlaceHolder="Buscar Proveedor..." Callback="@FilterCallBack" />
@@ -31,7 +31,7 @@
                                 <td>@supplier.Phone</td>
                                 <td>@supplier.City</td>
                                 <td>
-                                    <a @onclick="@(() => ShowModalAsync(supplier.Id, true))" class="btn btn-sm btn-warning"><i class="bi bi-pencil" /> Editar</a>
+                                    <a class="btn btn-warning" href="/suppliers/edit/@supplier.Id"><i class="bi bi-pencil" /> Editar</a>
                                     <HxButton Text="Borrar" Icon="BootstrapIcon.Trash" IconPlacement="ButtonIconPlacement.Start" Color="ThemeColor.Danger" Size="ButtonSize.Small" OnClick="@(() => DeleteAsync(supplier))" />
                                 </td>
                             </tr>

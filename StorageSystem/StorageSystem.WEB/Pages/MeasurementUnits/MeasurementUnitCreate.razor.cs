@@ -6,6 +6,7 @@ using StorageSystem.Shared.Entities;
 using StorageSystem.WEB.Repositories;
 using StorageSystem.WEB.Shared;
 using System.Net;
+using static StorageSystem.Shared.Enums.ProductStateAndPhisical;
 
 namespace StorageSystem.WEB.Pages.MeasurementUnits
 {
@@ -17,6 +18,8 @@ namespace StorageSystem.WEB.Pages.MeasurementUnits
         [Inject] private IRepository repository { get; set; } = null!;
         [Inject] private SweetAlertService sweetAlertService { get; set; } = null!;
         [Inject] private NavigationManager navigationManager { get; set; } = null!;
+
+        public List<ProductPhysicalState> PhysicalStats { get; set; } = Enum.GetValues(typeof(ProductPhysicalState)).Cast<ProductPhysicalState>().ToList();
 
         private async Task CreateAsync()
         {
