@@ -1,6 +1,5 @@
 ﻿using StorageSystem.Shared.Interfaces;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using static StorageSystem.Shared.Enums.ProductStateAndPhisical;
 
 namespace StorageSystem.Shared.Entities

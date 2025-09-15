@@ -1,0 +1,49 @@
+﻿@page "/productDetails/create/"
+@using StorageSystem.WEB.Pages.Products
+
+<PageTitle>Crear Presentacion</PageTitle>
+<HxCard>
+    <HeaderTemplate>
+        <HxIcon Icon="@BootstrapIcon.ListCheck" /> Crear Presentacion
+        <a class="btn btn-success float-end" href="/productDetails">Regresar</a>
+    </HeaderTemplate>
+    <BodyTemplate>
+        <EditForm Model="productsDetail" OnValidSubmit="CreateAsync">
+            <div class="row">
+                <div class="col-6">
+                    <div class="md-3">
+                        <label>Producto:</label>
+                        <InputText class="form-control" @bind-Value="productName" disabled />
+                        <ValidationMessage For="@(() => productsDetail.ProductId)" />
+                        <div>
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#productId">
+                                Seleccionar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @if(References is not null)
+            {
+                <HxCheckboxList TItem="Reference" TValue="int" Label="Referencias: " Data="References" ItemTextSelector="@(reference => reference.MeasurementUnit?.Name)" ItemValueSelector="@(reference => reference.Id)" @bind-Value="ReferencesIds" Inline=true />
+            }
+            <button class="btn btn-primary form-control" type="submit">Guardar Cambios</button>
+        </EditForm>
+    </BodyTemplate>
+</HxCard>
+
+
+<div class="modal fade" id="productId" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Productos </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" />
+            </div>
+            <div class="modal-body">
+                <ProductsListSelectReference OnSelectedProductChanged="ClickProductCallBack" />
+            </div>
+        </div>
+    </div>
+</div>
+

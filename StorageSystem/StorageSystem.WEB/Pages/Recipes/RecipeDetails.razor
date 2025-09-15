@@ -44,9 +44,14 @@
                 <button class="btn btn-primary w-100" type="button" onclick="@(() => CreateAsync())">Guardar Cambios</button>
             </div>            
         </div>
-
     </HeaderTemplate>
     <BodyTemplate>
+        <div class="row">
+            <div class="col-12 col-sm-12 mt-1 align-items-center">
+                <label>Total bache: @TotalRecipe @unitBaseProduct</label>
+            </div>
+        </div>
+       
         @if (RecipeProductDetails != null)
         {
             <GenericList MyList="RecipeProductDetails">
@@ -92,7 +97,7 @@
                         <table class="table table-striped">
                             <thead>
                                 <tr>
-                                    <th>Nombre</th>
+                                    <th>Nombre</th>                                    
                                     <th style="width:168px">Acciones</th>
                                 </tr>
                             </thead>
@@ -103,7 +108,7 @@
                                     @if (!exists)
                                     {
                                         <tr>
-                                            <td>@productRecipeRawMaterial.Name</td>
+                                            <td>@productRecipeRawMaterial.Name</td>                                            
                                             <td>
                                                 <HxButton Color="ThemeColor.Secondary" data-bs-dismiss="modal" Text="Seleccionar" OnClick="@(() => ClickRawMaterialCallBack($"{productRecipeRawMaterial.Id},{productRecipeRawMaterial.Name},{productRecipeRawMaterial.PhysicalState}"))" />
                                             </td>

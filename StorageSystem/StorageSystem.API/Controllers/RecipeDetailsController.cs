@@ -44,5 +44,16 @@ namespace StorageSystem.API.Controllers
             }
             return BadRequest();
         }
+
+        [HttpGet("totalAmount")]
+        public async Task<IActionResult> GetTotalAmountAsync(int recipeID)
+        {
+            var action = await _recipeDetailsUnitOfWork.GetTotalAmountOfRecipeDetails(recipeID);
+            if (action.WasSuccess)
+            {
+                return Ok(action.Result);
+            }
+            return BadRequest();
+        }
     }
 }

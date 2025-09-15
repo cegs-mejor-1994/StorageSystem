@@ -32,6 +32,7 @@ namespace StorageSystem.API.Repositories.Implementations
                 Result = await queryable
                  .OrderBy(r => r.Id)
                  .Include(r => r.Reference)
+                 .ThenInclude(mu => mu!.MeasurementUnit)
                  .Include(p => p.Product)
                  .ToListAsync()
             };
@@ -42,6 +43,7 @@ namespace StorageSystem.API.Repositories.Implementations
             return await _context.ProductsDetails
                  .OrderBy(r => r.Id)
                  .Include(r=> r!.Reference)
+                 .ThenInclude(mu => mu!.MeasurementUnit)
                  .Include(p => p.Product)
                  .ToListAsync();
         }

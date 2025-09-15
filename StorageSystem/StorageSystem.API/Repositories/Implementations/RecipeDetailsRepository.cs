@@ -63,5 +63,42 @@ namespace StorageSystem.API.Repositories.Implementations
                 Result = totalPages
             };
         }
+
+        public async Task<ActionResponse<double>> GetTotalAmountOfRecipeDetails(int recipeID)
+        {
+            double totalRecipe = 0;
+            var productRecipeDetails = await _context.RecipeDetails.Where(rd => rd.RecipeId == recipeID)
+                .Include(rd => rd.MeasurementUnit)
+                .ToListAsync(); 
+
+            if (productRecipeDetails == null || productRecipeDetails.Count == 0)
+            {
+                return new ActionResponse<double>
+                {
+                    WasSuccess = true,
+                    Result = 0
+                };
+            }
+
+            foreach (var productRecipeDetail in productRecipeDetails)
+            {
+                var currenUnit = productRecipeDetail.MeasurementUnit;
+
+                var baseUnit = await _context.MeasurementUnits.Where(mu => mu.PhysicalState == currenUnit!.PhysicalState && mu.Base).FirstAsync();
+
+                var factorConversion = await _context.MeasurementConversions.Where(cf => cf.FromUnitId == currenUnit!.Id && cf.ToUnitId == baseUnit.Id).Select(cf => cf.Factor).FirstOrDefaultAsync();
+
+                var amountBase = (double)productRecipeDetail.Amount * factorConversion;
+
+                totalRecipe += (double)amountBase;
+            }
+
+            return new ActionResponse<double>
+            {
+                WasSuccess = true,
+                Result = totalRecipe
+            };
+
+        }
     }
 }

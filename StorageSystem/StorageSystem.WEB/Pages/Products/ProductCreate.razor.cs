@@ -130,7 +130,7 @@ namespace StorageSystem.WEB.Pages.Products
         {
             GetProductIdByName(product.Name);
             recipe.ProductId = productId;
-            recipe.TotalRecipe = 1; 
+            recipe.TotalRecipe = 0; 
 
             if (recipe != null)
             {

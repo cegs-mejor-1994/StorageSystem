@@ -9,11 +9,13 @@ namespace StorageSystem.WEB.Pages.ProductionGAPs
 {
     public partial class ProductionGAPCreate
     {
-        private ProductionGap ProductionGap = new();
+        private ProductionGap productionGap = new();
         private Recipe Recipe = new();
 
         private int productId;
-        private string productName = "Producto";        
+        private string productName = "Producto";
+        private decimal totalBache;
+        private decimal cantidadBache;
 
         private List<Recipe>? Recipes { get; set; }
 
@@ -50,16 +52,17 @@ namespace StorageSystem.WEB.Pages.ProductionGAPs
         {
             try
             {
-                if (ProductionGap.Amount > 0 && productId != 0)
+                if (productionGap.Amount > 0 && productId != 0)
                 {
-                    var responseHttp = await Repository.PostAsync("/api/ProductionGaps", ProductionGap);
+                    productionGap.Amount = totalBache * cantidadBache;
+                    var responseHttp = await Repository.PostAsync("/api/ProductionGaps", productionGap);
                     if (responseHttp.Error)
                     {
                         var message = await responseHttp.GetErrorMessageAsync();
                         await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
                         return;
                     }
-                    NavigationManager.NavigateTo("/productiongaps");
+                    NavigationManager.NavigateTo("/productionsgaps");
                     var toast = SweetAlertService.Mixin(new SweetAlertOptions
                     {
                         Toast = true,
@@ -89,7 +92,8 @@ namespace StorageSystem.WEB.Pages.ProductionGAPs
             if (Recipes.Count > 0)
             {
                 Recipe = Recipes[0];
-                ProductionGap.RecipeId = Recipe.Id;
+                productionGap.RecipeId = Recipe.Id;
+                totalBache = Recipe.TotalRecipe;
             }
         }
     }

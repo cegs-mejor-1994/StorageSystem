@@ -2,6 +2,8 @@ using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components;
 using StorageSystem.Shared.Entities;
 using StorageSystem.WEB.Repositories;
+using System.Net;
+using static StorageSystem.Shared.Enums.ProductStateAndPhisical;
 
 namespace StorageSystem.WEB.Pages.ProductDetails
 {
@@ -16,7 +18,9 @@ namespace StorageSystem.WEB.Pages.ProductDetails
 
         [Inject] private IRepository Repository { get; set; } = null!;        
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
-        public List<Product>? Products { get; set; }
+        [Inject] private NavigationManager NavigationManager { get; set; } = null!;
+
+        public List<ProductsDetail>? ProductsDetails { get; set; }
 
         protected async override Task OnInitializedAsync()
         {
@@ -68,26 +72,26 @@ namespace StorageSystem.WEB.Pages.ProductDetails
         private async Task<bool> LoadListAsync(int page)
         {
             ValidateRecordsNumber(RecordsNumber);
-            var url = $"api/Products/?page={page}&recordsnumber={RecordsNumber}";
+            var url = $"api/ProductsDetails/?page={page}&recordsnumber={RecordsNumber}";
             if (!string.IsNullOrWhiteSpace(Filter))
             {
                 url += $"&filter={Filter}";
             }
-            var responseHttp = await Repository.GetAsync<List<Product>>(url);
+            var responseHttp = await Repository.GetAsync<List<ProductsDetail>>(url);
             if (responseHttp.Error)
             {
                 var messageError = await responseHttp.GetErrorMessageAsync();
                 await SweetAlertService.FireAsync("Error", messageError, SweetAlertIcon.Error);
                 return false;
             }
-            Products = responseHttp.Response;
+            ProductsDetails = responseHttp.Response;
             return true;
         }
 
         private async Task LoadPagesAsync()
         {
             ValidateRecordsNumber(RecordsNumber);
-            var url = $"api/Products/totalPages?recordsnumber={RecordsNumber}";
+            var url = $"api/ProductsDetails/totalPages?recordsnumber={RecordsNumber}";
             if (!string.IsNullOrWhiteSpace(Filter))
             {
                 url += $"&filter={Filter}";
@@ -107,6 +111,49 @@ namespace StorageSystem.WEB.Pages.ProductDetails
             int page = 1;
             await LoadAsync(page);
             await SelectedPageAsync(page);
+        }
+
+        private async Task DeleteAsync(ProductsDetail productsDetail)
+        {            
+            var result = await SweetAlertService.FireAsync(new SweetAlertOptions
+            {
+                Title = "Confirmacion",
+                Text = $"¿Estas seguro de querer eliminar la referencia {productsDetail.Reference!.Name} {productsDetail.Reference.MeasurementUnit!.Code} del producto: {productsDetail.Product!.Name}?",
+                Icon = SweetAlertIcon.Question,
+                ShowCancelButton = true,
+            });
+
+            var confirm = string.IsNullOrEmpty(result.Value);
+            if (confirm)
+            {
+                return;
+            }
+
+            var responseHttp = await Repository.DeleteAsync<ProductsDetail>($"api/ProductsDetails/{productsDetail.Id}");
+            if (responseHttp.Error)
+            {
+                if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
+                {
+                    NavigationManager.NavigateTo("/");
+                }
+                else
+                {
+                    var messageError = await responseHttp.GetErrorMessageAsync();
+                    await SweetAlertService.FireAsync("Error", messageError, SweetAlertIcon.Error);
+                }
+                return;
+            }
+
+            await LoadAsync();
+
+            var toast = SweetAlertService.Mixin(new SweetAlertOptions
+            {
+                Toast = true,
+                Position = SweetAlertPosition.BottomEnd,
+                ShowConfirmButton = true,
+                Timer = 3000,
+            });
+            await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro eliminado correctamente");
         }
     }
 }

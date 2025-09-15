@@ -6,11 +6,11 @@ namespace StorageSystem.Shared.Entities
     public class ProductionGap
     {
         public int Id { get; set; }
-        
-        [Display(Name = "Cantidad")]
-        [Range(0.001, 9999999999, ErrorMessage = "El campo {0} debe ser mayor a 0 y menor que 9999999999")]
+
+        [Column(TypeName = "decimal(18,3)")]
+        [Display(Name = "Total Bache")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
-        public int Amount { get; set; }
+        public decimal Amount { get; set; }
 
         public int RecipeId { get; set; }
         public Recipe? Recipe { get; set; }        

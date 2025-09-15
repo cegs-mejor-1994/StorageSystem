@@ -21,17 +21,3 @@
         </table>
     </Body>
 </GenericList>
-@*
-	<GenericList MyList="references">
-    <Body>
-		<HxCheckboxList TItem="Reference"
-						TValue="int"
-						Label="Referencias"
-						Data="references"
-						ItemTextSelector="@(reference => reference.MeasurementUnit?.Name)"
-						ItemValueSelector="@(reference => reference.Id)"
-						@bind-Value="selectedReferenceIds" />
-		<HxButton Color="ThemeColor.Secondary" data-bs-dismiss="modal" Text="Seleccionar" OnClick="@(() => OnSelectedReferenceClick.InvokeAsync(selectedReferenceIds))"/>
-    </Body>
-</GenericList>
-*@
