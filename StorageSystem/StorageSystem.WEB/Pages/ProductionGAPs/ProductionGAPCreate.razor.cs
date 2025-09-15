@@ -52,9 +52,23 @@ namespace StorageSystem.WEB.Pages.ProductionGAPs
         {
             try
             {
-                if (productionGap.Amount > 0 && productId != 0)
+                if (cantidadBache > 0 && productId != 0)
                 {
                     productionGap.Amount = totalBache * cantidadBache;
+
+                    var result = await SweetAlertService.FireAsync(new SweetAlertOptions
+                    {
+                        Title = "Confirmacion",
+                        Text = $"¿Estas seguro de querer crear cantidad de baches: {cantidadBache} del producto: {productName}?",
+                        Icon = SweetAlertIcon.Question,
+                        ShowCancelButton = true,
+                    });
+
+                    var confirm = string.IsNullOrEmpty(result.Value);
+                    if (confirm)
+                    {
+                        return;
+                    }
                     var responseHttp = await Repository.PostAsync("/api/ProductionGaps", productionGap);
                     if (responseHttp.Error)
                     {

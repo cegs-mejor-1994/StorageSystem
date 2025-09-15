@@ -339,8 +339,8 @@ namespace StorageSystem.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("Amount")
-                        .HasColumnType("int");
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,3)");
 
                     b.Property<int>("RecipeId")
                         .HasColumnType("int");
