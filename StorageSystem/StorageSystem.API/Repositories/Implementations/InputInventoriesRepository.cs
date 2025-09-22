@@ -60,6 +60,7 @@ namespace StorageSystem.API.Repositories.Implementations
             return await _context.InputInventories
                 .OrderBy(i => i.Id)
                 .Include(inp => inp.Product!)
+                .Include(mu => mu.MeasurementUnit)
                 .ToListAsync();
         }
     }

@@ -15,6 +15,8 @@ namespace StorageSystem.API.UnitOfWork.Implementations
             _recipeDetailsRepository = recipeDetailsRepository;
         }
 
+        public async Task<ActionResponse<IEnumerable<RecipeDetail>>> FactorConversionInRecipeDetailsByRecipeId(int recipeID) => await _recipeDetailsRepository.FactorConversionInRecipeDetailsByRecipeId(recipeID);
+
         public async Task<ActionResponse<IEnumerable<RecipeDetail>>> GetAsync(PaginationDTO pagination) => await _recipeDetailsRepository.GetAsync(pagination);
 
         public async Task<IEnumerable<RecipeDetail>> GetComboAsync() => await _recipeDetailsRepository.GetComboAsync();

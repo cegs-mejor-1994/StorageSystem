@@ -10,5 +10,6 @@ namespace StorageSystem.API.UnitOfWork.Interfaces
         Task<ActionResponse<double>> GetTotalAmountOfRecipeDetails(int recipeID);
         Task<ActionResponse<IEnumerable<RecipeDetail>>> GetAsync(PaginationDTO pagination);
         Task<ActionResponse<int>> GetTotalPagesAsync(PaginationDTO pagination);
+        Task<ActionResponse<IEnumerable<RecipeDetail>>> FactorConversionInRecipeDetailsByRecipeId(int recipeID);
     }
 }

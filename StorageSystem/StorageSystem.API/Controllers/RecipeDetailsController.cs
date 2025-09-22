@@ -55,5 +55,16 @@ namespace StorageSystem.API.Controllers
             }
             return BadRequest();
         }
+
+        [HttpGet("FactorConversionDetails")]
+        public async Task<IActionResult> GetRecipeDetailsConversion(int recipeID)
+        {
+            var action = await _recipeDetailsUnitOfWork.FactorConversionInRecipeDetailsByRecipeId(recipeID);
+            if (action.WasSuccess)
+            {
+                return Ok(action.Result);
+            }
+            return BadRequest();
+        }
     }
 }

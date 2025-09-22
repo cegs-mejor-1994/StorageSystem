@@ -100,5 +100,73 @@ namespace StorageSystem.API.Repositories.Implementations
             };
 
         }
+
+        public async Task<ActionResponse<IEnumerable<RecipeDetail>>> FactorConversionInRecipeDetailsByRecipeId(int recipeID)
+        {
+            List<RecipeDetail>? recipeDetails = new List<RecipeDetail>();
+            var productRecipeDetails = await _context.RecipeDetails
+                    .Where(rd => rd.RecipeId == recipeID)
+                    .Include(rd => rd.MeasurementUnit)
+                    .Include(pr => pr.Product)
+                    .ToListAsync();
+
+            if (productRecipeDetails == null || productRecipeDetails.Count == 0)
+            {
+                return new ActionResponse<IEnumerable<RecipeDetail>>
+                {
+                    WasSuccess = true,
+                    Result = new List<RecipeDetail>()
+                };
+            }            
+
+            foreach (var productRecipeDetail in productRecipeDetails)
+            {
+                var currenUnit = productRecipeDetail.MeasurementUnit;
+                if (currenUnit == null)
+                {
+                    return new ActionResponse<IEnumerable<RecipeDetail>>
+                    {
+                        WasSuccess = false,
+                        Message = "El detalle no tiene unidad de medida asignada."
+                    };
+                }
+
+                var baseUnit = await _context.MeasurementUnits
+                    .Where(mu => mu.PhysicalState == currenUnit.PhysicalState && mu.Base)
+                    .FirstOrDefaultAsync();
+
+                if (baseUnit == null)
+                {
+                    return new ActionResponse<IEnumerable<RecipeDetail>>
+                    {
+                        WasSuccess = false,
+                        Message = $"No hay unidad base para el estado {currenUnit.PhysicalState}."
+                    };
+                }
+
+                var factorConversion = await _context.MeasurementConversions
+                    .Where(cf => cf.FromUnitId == currenUnit.Id && cf.ToUnitId == baseUnit.Id)
+                    .Select(cf => cf.Factor)
+                    .FirstOrDefaultAsync();
+
+                if (factorConversion == 0)
+                {
+                    return new ActionResponse<IEnumerable<RecipeDetail>>
+                    {
+                        WasSuccess = false,
+                        Message = $"No hay factor de conversión de {currenUnit.Name} a {baseUnit.Name}."
+                    };
+                }
+
+                productRecipeDetail.Amount = (decimal)((double)productRecipeDetail.Amount * factorConversion);
+                recipeDetails.Add(productRecipeDetail);
+            }            
+
+            return new ActionResponse<IEnumerable<RecipeDetail>>
+            {
+                WasSuccess = true,
+                Result = recipeDetails
+            };
+        }
     }
 }
