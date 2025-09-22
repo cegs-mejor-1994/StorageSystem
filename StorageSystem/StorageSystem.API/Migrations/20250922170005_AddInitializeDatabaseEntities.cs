@@ -162,6 +162,7 @@ namespace StorageSystem.API.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ControlCode = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: false),
                     Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    LeftAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Batch = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: false),
                     MatutingDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     RegisterDate = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -266,6 +267,7 @@ namespace StorageSystem.API.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Amount = table.Column<decimal>(type: "decimal(18,3)", nullable: false),
+                    LeftAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     RecipeId = table.Column<int>(type: "int", nullable: false),
                     State = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     RegisterDate = table.Column<DateTime>(type: "datetime2", nullable: false)
@@ -341,6 +343,41 @@ namespace StorageSystem.API.Migrations
                         name: "FK_Manufacturies_ProductsDetails_ProductsDetailId",
                         column: x => x.ProductsDetailId,
                         principalTable: "ProductsDetails",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProductionGapDetails",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ProductionGapId = table.Column<int>(type: "int", nullable: false),
+                    ProductId = table.Column<int>(type: "int", nullable: false),
+                    MeasurementUnitId = table.Column<int>(type: "int", nullable: false),
+                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    State = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductionGapDetails", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProductionGapDetails_MeasurementUnits_MeasurementUnitId",
+                        column: x => x.MeasurementUnitId,
+                        principalTable: "MeasurementUnits",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ProductionGapDetails_ProductionGaps_ProductionGapId",
+                        column: x => x.ProductionGapId,
+                        principalTable: "ProductionGaps",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ProductionGapDetails_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -445,6 +482,21 @@ namespace StorageSystem.API.Migrations
                 column: "ManuFacturyId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ProductionGapDetails_MeasurementUnitId",
+                table: "ProductionGapDetails",
+                column: "MeasurementUnitId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductionGapDetails_ProductId",
+                table: "ProductionGapDetails",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductionGapDetails_ProductionGapId",
+                table: "ProductionGapDetails",
+                column: "ProductionGapId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ProductionGaps_RecipeId",
                 table: "ProductionGaps",
                 column: "RecipeId");
@@ -533,6 +585,9 @@ namespace StorageSystem.API.Migrations
 
             migrationBuilder.DropTable(
                 name: "Orders");
+
+            migrationBuilder.DropTable(
+                name: "ProductionGapDetails");
 
             migrationBuilder.DropTable(
                 name: "RawMaterials");

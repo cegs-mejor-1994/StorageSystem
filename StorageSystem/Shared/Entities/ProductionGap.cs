@@ -12,6 +12,10 @@ namespace StorageSystem.Shared.Entities
         [Required(ErrorMessage = "El campo {0} es requerido")]
         public decimal Amount { get; set; }
 
+        [Display(Name = "Cantidad Restante")]
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal LeftAmount { get; set; }
+
         public int RecipeId { get; set; }
         public Recipe? Recipe { get; set; }        
         

@@ -4,20 +4,31 @@ using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components;
 using StorageSystem.Shared.Entities;
 using StorageSystem.WEB.Repositories;
+using System.Net;
 
 namespace StorageSystem.WEB.Pages.ProductionGAPs
 {
     public partial class ProductionGAPCreate
     {
         private ProductionGap productionGap = new();
-        private Recipe Recipe = new();
+        private Recipe Recipe = new();         
+        private InputInventory? inputInventory;
 
         private int productId;
         private string productName = "Producto";
+        private string productNamesNotExists = "";
+        private string productsWithLowAmount = "";
         private decimal totalBache;
-        private decimal cantidadBache;
+        private decimal cantidadBache = 1;
+        private bool GAPValidated = true;
 
+        private List<Recipe>? RecipesMain { get; set; }
+        private List<RecipeDetail>? RecipeDetailsMain { get; set; }
         private List<Recipe>? Recipes { get; set; }
+        private List<RecipeDetail>? RecipeDetails { get; set; }
+        private List<InputInventory>? InputInventories { get; set; }  
+        private List<MeasurementUnit>? MeasurementUnits { get; set; }
+        private List<MeasurementConversion>? MeasurementConversions { get; set; }
 
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
@@ -25,7 +36,9 @@ namespace StorageSystem.WEB.Pages.ProductionGAPs
 
         protected async override Task OnInitializedAsync()
         {
-            await LoadRecipesAsync();            
+            await LoadRecipesAsync();
+            await LoadRecipeDetailsAsync();
+            await LoadInputInventoriesAsync();
         }
 
         private void ClickProductCallBack(string product)
@@ -34,6 +47,7 @@ namespace StorageSystem.WEB.Pages.ProductionGAPs
             productId = int.Parse(valores[0]);
             productName = valores[1];
             SelectRecipeId(productId);
+            SelectRecipeDetailsId(Recipe.Id);
         }
 
         private async Task LoadRecipesAsync()
@@ -45,35 +59,139 @@ namespace StorageSystem.WEB.Pages.ProductionGAPs
                 await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
                 return;
             }
-            Recipes = responseHttp.Response;  
+            RecipesMain = responseHttp.Response;  
+        }
+
+        private async Task LoadMeasurementUnitsAsync()
+        {
+            var responseHttp = await Repository.GetAsync<List<MeasurementUnit>>("/api/MeasurementUnits/combo");
+            if (responseHttp.Error)
+            {
+                var message = await responseHttp.GetErrorMessageAsync();
+                await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+                return;
+            }
+            MeasurementUnits = responseHttp.Response;
+        }
+
+        private async Task LoadMeasurementConversionsAsync()
+        {
+            var responseHttp = await Repository.GetAsync<List<MeasurementConversion>>("/api/MeasurementConversions/combo");
+            if (responseHttp.Error)
+            {
+                var message = await responseHttp.GetErrorMessageAsync();
+                await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+                return;
+            }
+            MeasurementConversions = responseHttp.Response;
+        }
+
+        private async Task LoadInputInventoriesAsync()
+        {
+            var responseHttp = await Repository.GetAsync<List<InputInventory>>("/api/InputInventories/InputInventoriesCombo");
+            if (responseHttp.Error)
+            {
+                var message = await responseHttp.GetErrorMessageAsync();
+                await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+                return;
+            }
+            InputInventories = responseHttp.Response;
+            InputInventories = InputInventories?.Where(p => p.Product!.Role == StorageSystem.Shared.Enums.ProductStateAndPhisical.ProductRole.MateriaPrima).ToList();
+        }
+
+        private async Task LoadRecipeDetailsAsync()
+        {
+            var responseHttp = await Repository.GetAsync<List<RecipeDetail>>("/api/RecipeDetails/combo");
+            if (responseHttp.Error)
+            {
+                var message = await responseHttp.GetErrorMessageAsync();
+                await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+                return;
+            }
+            RecipeDetailsMain = responseHttp.Response;
+        }
+
+        private void CompareInputInventoryWithRecipeDetails(decimal cantidadBache)
+        {
+            if (RecipeDetails!.Count == 0)
+            {
+                SweetAlertService.FireAsync("Error", "No hay receta creada.", SweetAlertIcon.Error);
+                return;
+            }
+
+            foreach (var RecipeDetail in RecipeDetails!)
+            {
+                var primerInventario = InputInventories!.Where(ii => ii.LeftAmount > 0 && RecipeDetails.Any(rd => rd.ProductId == ii.ProductId)).OrderBy(ii => ii.RegisterDate).FirstOrDefault();
+
+                if (primerInventario == null)
+                {
+                    productNamesNotExists += $"{RecipeDetail.Product!.Name},";
+                    GAPValidated = false;
+                    return;
+                }
+
+                if (primerInventario != null)
+                {
+                    var amountRecipeDetail = ConvertToUnitBaseFromRecipeDetail(RecipeDetail);
+                    var amountInputInventory = ConvertToUnitBaseFromInputInventory(primerInventario);
+                    var amountNeccesaryForBatch = amountRecipeDetail * (double)cantidadBache;
+                    if (amountInputInventory < amountNeccesaryForBatch)
+                    {
+                        productsWithLowAmount += $"{RecipeDetail.Product!.Name}, Cantidad: {amountInputInventory}{primerInventario.MeasurementUnit!.Code}, se necesita: {amountNeccesaryForBatch} {RecipeDetail.MeasurementUnit!.Code};";
+                        GAPValidated = false;
+                        return;
+                    }
+                }                
+            }
         }
 
         private async Task CreateAsync()
         {
-            try
+            productNamesNotExists.TrimEnd(new char[] { ',' });
+            productsWithLowAmount.TrimEnd(new char[] { ';' });
+            CompareInputInventoryWithRecipeDetails(cantidadBache);
+            if (GAPValidated && cantidadBache > 0 && productId != 0)
             {
-                if (cantidadBache > 0 && productId != 0)
+                var result = await SweetAlertService.FireAsync(new SweetAlertOptions
                 {
+                    Title = "Confirmacion",
+                    Text = $"¿Estas seguro de querer crear cantidad de baches: {cantidadBache} del producto: {productName}?",
+                    Icon = SweetAlertIcon.Question,
+                    ShowCancelButton = true,
+                });
+
+                var confirm = string.IsNullOrEmpty(result.Value);
+                if (confirm)
+                {
+                    return;
+                }
+                
+                foreach (var RecipeDetail in RecipeDetails!)
+                {
+                    var primerInventario = InputInventories!.Where(ii => ii.LeftAmount > 0 && RecipeDetails.Any(rd => rd.ProductId == ii.ProductId)).OrderBy(ii => ii.RegisterDate).FirstOrDefault();
+
+                    if (primerInventario != null)
+                    {
+                        await GetInputInventoryById(primerInventario.Id);
+                        if(inputInventory != null)
+                        {
+                            var amountRecipeDetail = ConvertToUnitBaseFromRecipeDetail(RecipeDetail);
+                            var amountInputInventory = ConvertToUnitBaseFromInputInventory(inputInventory);
+                            var amountLeftAfterCreateBatch = amountInputInventory - amountRecipeDetail;
+                            inputInventory.LeftAmount = (decimal)amountLeftAfterCreateBatch;
+                            await UpdateLeftAmount(inputInventory);
+                        }                        
+                    }
+                }       
+                
+               /* try {                    
                     productionGap.Amount = totalBache * cantidadBache;
 
-                    var result = await SweetAlertService.FireAsync(new SweetAlertOptions
-                    {
-                        Title = "Confirmacion",
-                        Text = $"¿Estas seguro de querer crear cantidad de baches: {cantidadBache} del producto: {productName}?",
-                        Icon = SweetAlertIcon.Question,
-                        ShowCancelButton = true,
-                    });
-
-                    var confirm = string.IsNullOrEmpty(result.Value);
-                    if (confirm)
-                    {
-                        return;
-                    }
                     var responseHttp = await Repository.PostAsync("/api/ProductionGaps", productionGap);
                     if (responseHttp.Error)
                     {
                         var message = await responseHttp.GetErrorMessageAsync();
-                        await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+                        await SweetAlertService.FireAsync("Error", "Error al guardar bache", SweetAlertIcon.Error);
                         return;
                     }
                     NavigationManager.NavigateTo("/productionsgaps");
@@ -86,29 +204,100 @@ namespace StorageSystem.WEB.Pages.ProductionGAPs
                     });
                     await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro creado con éxito.");                                                          
                 }
-                else
+                catch (Exception ex)
                 {
-                    await SweetAlertService.FireAsync("Error", "Todos los campos son obligatorios.", SweetAlertIcon.Error);
+                    await SweetAlertService.FireAsync("Error", ex.Message, SweetAlertIcon.Error);
                     return;
-                }
-
+                }*/
             }
-            catch (Exception ex)
+            else
             {
-                await SweetAlertService.FireAsync("Error", ex.Message, SweetAlertIcon.Error);
-                return;
-            }
+                await SweetAlertService.FireAsync("Error", $"No se pudo crear el bache. \n\n Materias primas sin inventario: {productNamesNotExists}. \n\n Materias primas con cantidades insuficientes: {productsWithLowAmount}", SweetAlertIcon.Error);
+            }          
         }
 
         private void SelectRecipeId(int productId)
         {
-            Recipes = Recipes!.Where(r => r.ProductId == productId).ToList();
-            if (Recipes.Count > 0)
+            if(RecipesMain != null)
             {
-                Recipe = Recipes[0];
-                productionGap.RecipeId = Recipe.Id;
-                totalBache = Recipe.TotalRecipe;
+                if (RecipesMain.Count > 0)
+                {
+                    Recipes = new List<Recipe>(RecipesMain);
+                    Recipes = Recipes.Where(r => r.ProductId == productId).ToList();
+                    Recipe = Recipes[0];
+                    productionGap.RecipeId = Recipe.Id;
+                    totalBache = Recipe.TotalRecipe;
+                }
             }
+        }
+
+        private void SelectRecipeDetailsId(int recipeId)
+        {            
+            if(RecipeDetailsMain != null)
+            {
+                if (RecipeDetailsMain.Count > 0)
+                {
+                    RecipeDetails = new List<RecipeDetail>(RecipeDetailsMain);
+                    RecipeDetails = RecipeDetails!.Where(r => r.RecipeId == recipeId).ToList();
+                }
+            }
+        }
+
+        private async Task UpdateLeftAmount(InputInventory inputRDInventory)
+        {
+            if(inputRDInventory != null)
+            {
+                var responseHttp = await Repository.PutAsync($"/api/InputInventories", inputRDInventory);
+                if (responseHttp.Error)
+                {
+                    var message = await responseHttp.GetErrorMessageAsync();
+                    await SweetAlertService.FireAsync("Error", "Error al actualizar cantidad de bache");
+                    return;
+                }
+            }
+        }
+
+        private async Task GetInputInventoryById(int Id)
+        {
+            var responseHttp = await Repository.GetAsync<InputInventory>($"/api/InputInventories/{Id}");
+            if (responseHttp.Error)
+            {
+                if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
+                {
+                    NavigationManager.NavigateTo("/");
+                }
+                else
+                {
+                    var message = await responseHttp.GetErrorMessageAsync();
+                    await SweetAlertService.FireAsync(new SweetAlertOptions { Title = "Error", Text = message, Icon = SweetAlertIcon.Error });
+                }
+            }
+            else
+            {
+                inputInventory = responseHttp.Response;
+            }
+        }
+
+        private double ConvertToUnitBaseFromRecipeDetail(RecipeDetail productRecipeDetail)
+        {
+            var currenUnit = productRecipeDetail.MeasurementUnit;
+
+            var baseUnit = MeasurementUnits!.Where(mu => mu.PhysicalState == currenUnit!.PhysicalState && mu.Base).First();
+
+            var factorConversion = MeasurementConversions!.Where(cf => cf.FromUnitId == currenUnit!.Id && cf.ToUnitId == baseUnit.Id).Select(cf => cf.Factor).FirstOrDefault();
+
+            return (double)productRecipeDetail.Amount * factorConversion;
+        }
+
+        private double ConvertToUnitBaseFromInputInventory(InputInventory inputInventory)
+        {
+            var currenUnit = inputInventory.MeasurementUnit;
+
+            var baseUnit = MeasurementUnits!.Where(mu => mu.PhysicalState == currenUnit!.PhysicalState && mu.Base).First();
+
+            var factorConversion = MeasurementConversions!.Where(cf => cf.FromUnitId == currenUnit!.Id && cf.ToUnitId == baseUnit.Id).Select(cf => cf.Factor).FirstOrDefault();
+
+            return (double)inputInventory.LeftAmount * factorConversion;
         }
     }
 }

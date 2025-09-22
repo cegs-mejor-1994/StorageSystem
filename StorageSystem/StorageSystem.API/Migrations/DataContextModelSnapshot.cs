@@ -129,6 +129,9 @@ namespace StorageSystem.API.Migrations
                         .HasMaxLength(25)
                         .HasColumnType("nvarchar(25)");
 
+                    b.Property<decimal>("LeftAmount")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<DateTime>("MatutingDate")
                         .HasColumnType("datetime2");
 
@@ -342,6 +345,9 @@ namespace StorageSystem.API.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,3)");
 
+                    b.Property<decimal>("LeftAmount")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<int>("RecipeId")
                         .HasColumnType("int");
 
@@ -357,6 +363,41 @@ namespace StorageSystem.API.Migrations
                     b.HasIndex("RecipeId");
 
                     b.ToTable("ProductionGaps");
+                });
+
+            modelBuilder.Entity("StorageSystem.Shared.Entities.ProductionGapDetail", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("MeasurementUnitId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductionGapId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MeasurementUnitId");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("ProductionGapId");
+
+                    b.ToTable("ProductionGapDetails");
                 });
 
             modelBuilder.Entity("StorageSystem.Shared.Entities.ProductsDetail", b =>
@@ -638,6 +679,33 @@ namespace StorageSystem.API.Migrations
                         .IsRequired();
 
                     b.Navigation("Recipe");
+                });
+
+            modelBuilder.Entity("StorageSystem.Shared.Entities.ProductionGapDetail", b =>
+                {
+                    b.HasOne("StorageSystem.Shared.Entities.MeasurementUnit", "MeasurementUnit")
+                        .WithMany()
+                        .HasForeignKey("MeasurementUnitId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("StorageSystem.Shared.Entities.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("StorageSystem.Shared.Entities.ProductionGap", "ProductionGap")
+                        .WithMany()
+                        .HasForeignKey("ProductionGapId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("MeasurementUnit");
+
+                    b.Navigation("Product");
+
+                    b.Navigation("ProductionGap");
                 });
 
             modelBuilder.Entity("StorageSystem.Shared.Entities.ProductsDetail", b =>

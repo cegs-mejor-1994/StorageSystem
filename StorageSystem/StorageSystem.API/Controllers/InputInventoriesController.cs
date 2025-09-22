@@ -16,7 +16,7 @@ namespace StorageSystem.API.Controllers
             _inputInventoriesUnitOfWork = inputInventoriesUnitOfWork;
         }
 
-        [HttpGet("InputInventoryWithRawMaterialsAndSuppliers")]
+        [HttpGet("InputInventoriesCombo")]
         public async Task<IActionResult> GetInputInventoryWithRSAsync()
         {
             return Ok(await _inputInventoriesUnitOfWork.GetWithRawMaterialsAndSuppliersAsync());

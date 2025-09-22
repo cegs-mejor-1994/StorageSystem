@@ -85,22 +85,30 @@ namespace StorageSystem.WEB.Pages.InputInventories
 
         private async Task EditAsync()
         {
-            var responseHttp = await Repository.PutAsync($"/api/InputInventories", inputInventory);
-            if (responseHttp.Error)
+            if (inputInventory!.LeftAmount == inputInventory!.Amount)
             {
-                var message = await responseHttp.GetErrorMessageAsync();
-                await SweetAlertService.FireAsync("Error", message);
+                var responseHttp = await Repository.PutAsync($"/api/InputInventories", inputInventory);
+                if (responseHttp.Error)
+                {
+                    var message = await responseHttp.GetErrorMessageAsync();
+                    await SweetAlertService.FireAsync("Error", message);
+                    return;
+                }
+                NavigationManager.NavigateTo("/inputInventories");
+                var toast = SweetAlertService.Mixin(new SweetAlertOptions
+                {
+                    Toast = true,
+                    Position = SweetAlertPosition.BottomEnd,
+                    ShowConfirmButton = true,
+                    Timer = 3000,
+                });
+                await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Cambios guardados con exito");
+            }
+            else
+            {
+                await SweetAlertService.FireAsync("Error", "No puede modificar la cantidad llegada de la materia prima. Ya ha sido utilizada para un proceso", SweetAlertIcon.Error);
                 return;
             }
-            NavigationManager.NavigateTo("/inputInventories");
-            var toast = SweetAlertService.Mixin(new SweetAlertOptions
-            {
-                Toast = true,
-                Position = SweetAlertPosition.BottomEnd,
-                ShowConfirmButton = true,
-                Timer = 3000,
-            });
-            await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Cambios guardados con exito");
         }       
     }
 }

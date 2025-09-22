@@ -42,7 +42,7 @@ namespace StorageSystem.WEB.Pages.InputInventories
 
         private async Task LoadInputInventoriesAsync()
         {
-            var responseHttp = await Repository.GetAsync<List<InputInventory>>("/api/InputInventories/InputInventoryWithRawMaterialsAndSuppliers");
+            var responseHttp = await Repository.GetAsync<List<InputInventory>>("/api/InputInventories/InputInventoriesCombo");
             if (responseHttp.Error)
             {
                 var message = await responseHttp.GetErrorMessageAsync();
@@ -73,6 +73,7 @@ namespace StorageSystem.WEB.Pages.InputInventories
                     inputInventory.ProductId = productlId;
                     inputInventory.ControlCode = CountInputInventories.ToString();
                     inputInventory.MeasurementUnitId = measurementUnitId!.Value;
+                    inputInventory.LeftAmount = inputInventory.Amount;
 
                     var responseHttp = await Repository.PostAsync("/api/InputInventories", inputInventory);
                     if (responseHttp.Error)

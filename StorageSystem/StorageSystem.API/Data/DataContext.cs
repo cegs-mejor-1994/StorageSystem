@@ -20,6 +20,7 @@ namespace StorageSystem.API.Data
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductsDetail> ProductsDetails { get; set; }
         public DbSet<ProductionGap> ProductionGaps { get; set; }
+        public DbSet<ProductionGapDetail> ProductionGapDetails { get; set; }
         public DbSet<RawMaterial> RawMaterials { get; set; }
         public DbSet<Recipe> Recipes { get; set; }
         public DbSet<RecipeDetail> RecipeDetails { get; set; }        
@@ -56,7 +57,8 @@ namespace StorageSystem.API.Data
                 .HasForeignKey<RawMaterial>(r => r.ProductId)
                 .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<ProductionGap>();
-            modelBuilder.Entity<ProductsDetail>().HasIndex(prd => new { prd.ProductId, prd.ReferenceId }).IsUnique();   
+            modelBuilder.Entity<ProductsDetail>().HasIndex(prd => new { prd.ProductId, prd.ReferenceId }).IsUnique();
+            modelBuilder.Entity<ProductionGapDetail>();
             modelBuilder.Entity<RawMaterial>().HasIndex(ra => new { ra.ProductId, ra.SupplierId }).IsUnique();
             modelBuilder.Entity<RawMaterial>()
                 .HasOne(r => r.Supplier)

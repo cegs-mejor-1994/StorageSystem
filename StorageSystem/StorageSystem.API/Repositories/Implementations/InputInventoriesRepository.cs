@@ -57,7 +57,10 @@ namespace StorageSystem.API.Repositories.Implementations
 
         public async Task<IEnumerable<InputInventory>> GetWithRawMaterialsAndSuppliersAsync()
         {
-            return await _context.InputInventories.ToListAsync();
+            return await _context.InputInventories
+                .OrderBy(i => i.Id)
+                .Include(inp => inp.Product!)
+                .ToListAsync();
         }
     }
 }
