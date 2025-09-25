@@ -2,7 +2,7 @@
 @using StorageSystem.WEB.Pages.Products
 
 <PageTitle>Crear Bache</PageTitle>
-<EditForm Model="productionGap">
+<EditForm Model="productionGap" OnValidSubmit="CreateAsync">
     <HxCard>
         <HeaderTemplate>
             <h3>Crear Bache</h3>
@@ -24,7 +24,7 @@
                     <InputNumber class="form-control" style="max-width: 200px" @bind-Value="cantidadBache" placeholder="Cantidad Bache" min="1" max="9" step="1" />
                 </div>
                 <div class="col-12 col-sm-6">
-                    <button class="btn btn-primary w-100" type="button" onclick="@(() => CreateAsync())">Guardar Cambios</button>
+                    <HxSubmit Text="Guardar Cambios" Color="ThemeColor.Primary" CssClass="w-100"/>
                 </div>
             </div>
         </BodyTemplate>

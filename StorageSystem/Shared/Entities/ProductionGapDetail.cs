@@ -1,4 +1,7 @@
-﻿namespace StorageSystem.Shared.Entities
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace StorageSystem.Shared.Entities
 {
     public class ProductionGapDetail
     {
@@ -9,6 +12,10 @@
 
         public int InputInventoryId { get; set; }
         public InputInventory? InputInventory { get; set; } = null!;
+
+        [Display(Name = "Cantidad")]
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal Amount { get; set; }
 
         public string State { get; set; } = "Disponible";
     }

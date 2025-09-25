@@ -16,6 +16,7 @@
                             <th>Nombre</th>
                             <th>Cantidad proceso</th>
                             <th>Lote / Vence</th>
+                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -24,7 +25,10 @@
                             <tr>
                                 <td>@productionGap.Recipe!.Product!.Name</td>
                                 <td>@productionGap.Amount</td>
-                                <td>@productionGap.RegisterDate</td>                                
+                                <td>@productionGap.RegisterDate</td>  
+                                <td>
+                                    <a href="/products/details/@productionGap.Id" class="btn btn-warning"><i class="bi bi-pencil" /> Detalles</a>
+                                </td>
                             </tr>
                         }
                     </tbody>

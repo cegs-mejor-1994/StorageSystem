@@ -59,7 +59,7 @@ namespace StorageSystem.WEB.Pages.InputInventories
             productlId = int.Parse(valores[0]);
             productName = valores[1];
             measurementUnits = new List<MeasurementUnit>(allMeasurementUnits!);     
-            measurementUnits = measurementUnits.Where(mu => mu.PhysicalState.ToString() == valores[2]).ToList();
+            measurementUnits = measurementUnits.Where(mu => mu.PhysicalState.ToString() == valores[2] && mu.Base).ToList();
             measurementUnitId = null;
         }
 

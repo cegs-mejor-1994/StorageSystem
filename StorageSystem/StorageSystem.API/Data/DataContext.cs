@@ -18,9 +18,9 @@ namespace StorageSystem.API.Data
         public DbSet<MeasurementConversion> MeasurementConversions { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<Product> Products { get; set; }
-        public DbSet<ProductsDetail> ProductsDetails { get; set; }
         public DbSet<ProductionGap> ProductionGaps { get; set; }
         public DbSet<ProductionGapDetail> ProductionGapDetails { get; set; }
+        public DbSet<ProductsDetail> ProductsDetails { get; set; }
         public DbSet<RawMaterial> RawMaterials { get; set; }
         public DbSet<Recipe> Recipes { get; set; }
         public DbSet<RecipeDetail> RecipeDetails { get; set; }        
