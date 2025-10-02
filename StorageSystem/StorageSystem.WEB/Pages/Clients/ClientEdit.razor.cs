@@ -3,7 +3,6 @@ using Blazored.Modal.Services;
 using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components;
 using StorageSystem.Shared.Entities;
-using StorageSystem.WEB.Pages.Suppliers;
 using StorageSystem.WEB.Repositories;
 using System.Net;
 

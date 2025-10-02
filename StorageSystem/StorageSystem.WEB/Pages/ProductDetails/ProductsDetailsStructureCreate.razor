@@ -1,0 +1,106 @@
+﻿@page "/productDetails/details/{Id:int}"
+
+@using StorageSystem.WEB.Pages.RawMaterials
+
+@if(productsDetail != null)
+{
+    <PageTitle>Editar Presentacion de @productNameSelected</PageTitle>
+    <h3>Editar Presentacion de @productNameSelected @referenceNameSelected</h3>
+}
+else
+{
+    <PageTitle>Editar Presentacion</PageTitle>
+}
+<HxCard>
+    <HeaderTemplate>
+        <HxIcon Icon="@BootstrapIcon.ListCheck" /> Editar Presentacion
+        <a class="btn btn-secondary float-end" href="/productDetails">Regresar</a>
+        <EditForm Model="productsDetailStructure" OnValidSubmit="CreateAsync">
+            <div class="row g-1 align-items-center">
+                <div class="col-12 col-sm-12">                    
+                    <label>Producto:</label>
+                    <InputText class="form-control" @bind-Value="productName" disabled />
+                    <ValidationMessage For="@(() => productsDetailStructure.ProductId)" />
+                    <div>
+                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#productRawMaterialsId">
+                            Seleccionar
+                        </button>
+                    </div>                    
+                </div>
+                <div class="col-12 col-sm-12">
+                    <HxSubmit Color="ThemeColor.Primary" Text="Guardar Cambios"/>
+                </div>
+            </div>
+        </EditForm>
+    </HeaderTemplate>
+    <BodyTemplate>
+        @if (productsDetailStructures != null)
+        {
+            <GenericList MyList="productsDetailStructures">
+                <Body>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Materia prima</th>                                
+                                <th style="width: 210px">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var productsDetailStructure in productsDetailStructures)
+                            {
+                                <tr>
+                                    <td>@productsDetailStructure.Product!.Name</td>
+                                    <td>
+                                        <HxButton Text="Borrar" Icon="BootstrapIcon.Trash" IconPlacement="ButtonIconPlacement.Start" Color="ThemeColor.Danger" Size="ButtonSize.Small" OnClick="@(() => DeleteAsync(productsDetailStructure))" />
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </Body>
+            </GenericList>
+        }
+    </BodyTemplate>
+</HxCard>
+
+<div class="modal fade" id="productRawMaterialsId" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Materias Primas </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" />
+            </div>
+            <div class="modal-body">
+                <GenericList MyList="productRawMaterials">
+                    <Body>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th style="width:168px">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var productRawMaterial in productRawMaterials!)
+                                {
+                                    var exists = productsDetailStructures?.Any(pds => pds.ProductId == productRawMaterial.Id) ?? false;
+
+                                    @if (!exists)
+                                    {
+                                        <tr>
+                                            <td>@productRawMaterial.Name</td>
+                                            <td>
+                                                <HxButton Color="ThemeColor.Secondary" data-bs-dismiss="modal" Text="Seleccionar" OnClick="@(() => ClickProductCallBack($"{productRawMaterial.Id},{productRawMaterial.Name},{productRawMaterial.Category!.Name}"))" />
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </Body>
+                </GenericList>
+            </div>
+        </div>
+    </div>
+</div>
+

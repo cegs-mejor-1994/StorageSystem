@@ -47,7 +47,7 @@ namespace StorageSystem.WEB.Pages.Products
 
         private async Task CreateProductAsync()
         {
-            if (product.Role == ProductRole.MateriaPrima)
+            if (product.Role == ProductRole.MateriaPrima || product.Role == ProductRole.Presentacion)
             {
                 product.CategoryId = categoryId;                
             }
@@ -56,13 +56,13 @@ namespace StorageSystem.WEB.Pages.Products
                 product.CategoryId = null;
             }
 
-            if (supplierId == 0 && product.Role == ProductRole.MateriaPrima)
+            if (supplierId == 0 && (product.Role == ProductRole.MateriaPrima || product.Role == ProductRole.Presentacion))
             {
                 await sweetAlertService.FireAsync("Error", "Debe seleccionar un proveedor para la materia prima.", SweetAlertIcon.Error);
                 return;
             }
 
-            if (categoryId == 0 && product.Role == ProductRole.MateriaPrima)
+            if (categoryId == 0 && (product.Role == ProductRole.MateriaPrima || product.Role == ProductRole.Presentacion))
             {
                 await sweetAlertService.FireAsync("Error", "Debe seleccionar una categoria la materia prima.", SweetAlertIcon.Error);
                 return;
@@ -83,7 +83,7 @@ namespace StorageSystem.WEB.Pages.Products
                 await CreateRecipeOfProductAsync();
             }
 
-            if (product.Role == ProductRole.MateriaPrima) {                                 
+            if (product.Role == ProductRole.MateriaPrima || product.Role == ProductRole.Presentacion) {                                 
                 await CreateRawMaterialAsync();
             }
             else

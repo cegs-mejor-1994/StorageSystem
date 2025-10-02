@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -319,6 +318,34 @@ namespace StorageSystem.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ProductsDetailStructures",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ProductsDetailId = table.Column<int>(type: "int", nullable: false),
+                    ProductId = table.Column<int>(type: "int", nullable: false),
+                    State = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RegisterDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductsDetailStructures", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProductsDetailStructures_ProductsDetails_ProductsDetailId",
+                        column: x => x.ProductsDetailId,
+                        principalTable: "ProductsDetails",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ProductsDetailStructures_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Manufacturies",
                 columns: table => new
                 {
@@ -518,6 +545,17 @@ namespace StorageSystem.API.Migrations
                 column: "ReferenceId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ProductsDetailStructures_ProductId",
+                table: "ProductsDetailStructures",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductsDetailStructures_ProductsDetailId_ProductId",
+                table: "ProductsDetailStructures",
+                columns: new[] { "ProductsDetailId", "ProductId" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_RawMaterials_ProductId_SupplierId",
                 table: "RawMaterials",
                 columns: new[] { "ProductId", "SupplierId" },
@@ -573,6 +611,9 @@ namespace StorageSystem.API.Migrations
 
             migrationBuilder.DropTable(
                 name: "ProductionGapDetails");
+
+            migrationBuilder.DropTable(
+                name: "ProductsDetailStructures");
 
             migrationBuilder.DropTable(
                 name: "RawMaterials");

@@ -6,7 +6,8 @@
         {
             MateriaPrima = 1,
             ProductoIntermedio = 2,
-            ProductoFinal = 3
+            ProductoFinal = 3,
+            Presentacion = 4,
         }
 
         public enum ProductPhysicalState

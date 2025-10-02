@@ -13,5 +13,6 @@
         public string State { get; set; } = "Disponible";        
 
         public ICollection<Manufactury>? Manufacturies { get; set; }
+        public ICollection<ProductsDetailStructure>? ProductsDetailStructures { get; set; }
     }
 }

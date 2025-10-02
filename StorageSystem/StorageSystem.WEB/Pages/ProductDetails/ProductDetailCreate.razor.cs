@@ -2,7 +2,6 @@ using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components;
 using StorageSystem.Shared.Entities;
 using StorageSystem.WEB.Repositories;
-using System.Threading.Tasks;
 
 namespace StorageSystem.WEB.Pages.ProductDetails
 {

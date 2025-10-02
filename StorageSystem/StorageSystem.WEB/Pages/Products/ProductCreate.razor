@@ -47,7 +47,7 @@
                     <ValidationMessage For="@(() => product.Name)" />
                 </div>
             </div>
-            @if (product.Role == StorageSystem.Shared.Enums.ProductStateAndPhisical.ProductRole.MateriaPrima)
+            @if (product.Role == StorageSystem.Shared.Enums.ProductStateAndPhisical.ProductRole.MateriaPrima || product.Role == StorageSystem.Shared.Enums.ProductStateAndPhisical.ProductRole.Presentacion)
             {
                 <div class="mb-3">
                     <div>
@@ -119,6 +119,7 @@
                     <li class="list-group-item">Materia Prima: Es un producto a utilizar en una fabricacion adquirida desde un proveedor</li>
                     <li class="list-group-item">Producto Intermedio: es un producto interno que se usa para fabricar otro producto.</li>
                     <li class="list-group-item">Producto Final: es un producto que no se va a utilizar en otro proceso de fabricacion.</li>
+                    <li class="list-group-item">Presentacion: es un producto que se utiliza en presentacion de los productos (Envase, Tapa, Asa, Etiqueta, etc).</li>
                 </ol>
             </div>
         </div>

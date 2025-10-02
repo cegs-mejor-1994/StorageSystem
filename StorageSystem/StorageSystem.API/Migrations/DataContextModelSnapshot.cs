@@ -423,6 +423,37 @@ namespace StorageSystem.API.Migrations
                     b.ToTable("ProductsDetails");
                 });
 
+            modelBuilder.Entity("StorageSystem.Shared.Entities.ProductsDetailStructure", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductsDetailId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("RegisterDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("ProductsDetailId", "ProductId")
+                        .IsUnique();
+
+                    b.ToTable("ProductsDetailStructures");
+                });
+
             modelBuilder.Entity("StorageSystem.Shared.Entities.RawMaterial", b =>
                 {
                     b.Property<int>("ProductId")
@@ -714,6 +745,25 @@ namespace StorageSystem.API.Migrations
                     b.Navigation("Reference");
                 });
 
+            modelBuilder.Entity("StorageSystem.Shared.Entities.ProductsDetailStructure", b =>
+                {
+                    b.HasOne("StorageSystem.Shared.Entities.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("StorageSystem.Shared.Entities.ProductsDetail", "ProductDetail")
+                        .WithMany("ProductsDetailStructures")
+                        .HasForeignKey("ProductsDetailId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("ProductDetail");
+                });
+
             modelBuilder.Entity("StorageSystem.Shared.Entities.RawMaterial", b =>
                 {
                     b.HasOne("StorageSystem.Shared.Entities.Product", "Product")
@@ -834,6 +884,8 @@ namespace StorageSystem.API.Migrations
             modelBuilder.Entity("StorageSystem.Shared.Entities.ProductsDetail", b =>
                 {
                     b.Navigation("Manufacturies");
+
+                    b.Navigation("ProductsDetailStructures");
                 });
 
             modelBuilder.Entity("StorageSystem.Shared.Entities.Recipe", b =>

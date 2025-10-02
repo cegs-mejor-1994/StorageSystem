@@ -21,6 +21,7 @@ namespace StorageSystem.API.Data
         public DbSet<ProductionGap> ProductionGaps { get; set; }
         public DbSet<ProductionGapDetail> ProductionGapDetails { get; set; }
         public DbSet<ProductsDetail> ProductsDetails { get; set; }
+        public DbSet<ProductsDetailStructure> ProductsDetailStructures { get; set; }
         public DbSet<RawMaterial> RawMaterials { get; set; }
         public DbSet<Recipe> Recipes { get; set; }
         public DbSet<RecipeDetail> RecipeDetails { get; set; }        
@@ -59,6 +60,7 @@ namespace StorageSystem.API.Data
             modelBuilder.Entity<ProductionGap>();
             modelBuilder.Entity<ProductsDetail>().HasIndex(prd => new { prd.ProductId, prd.ReferenceId }).IsUnique();
             modelBuilder.Entity<ProductionGapDetail>();
+            modelBuilder.Entity<ProductsDetailStructure>().HasIndex(prds => new { prds.ProductsDetailId, prds.ProductId }).IsUnique();
             modelBuilder.Entity<RawMaterial>().HasIndex(ra => new { ra.ProductId, ra.SupplierId }).IsUnique();
             modelBuilder.Entity<RawMaterial>()
                 .HasOne(r => r.Supplier)
