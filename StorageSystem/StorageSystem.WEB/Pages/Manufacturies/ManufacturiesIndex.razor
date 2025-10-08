@@ -1,0 +1,40 @@
+﻿@page "/manufacturies"
+<PageTitle>Productos Terminados</PageTitle>
+<HxCard>
+    <HeaderTemplate>
+        <HxIcon Icon="@BootstrapIcon.ListCheck" /> Productos Terminados
+        <a class="btn btn-primary float-end" href="/manufacturies/create">Nuevo producto terminado</a>
+    </HeaderTemplate>
+    <BodyTemplate>
+        <Filter PlaceHolder="Buscar producto terminado..." Callback="@FilterCallBack" />
+        <GenericList MyList="Manufacturies">
+            <Body>
+                <Pagination CurrentPage="currentPage" TotalPages="totalPages" SelectedPage="SelectedPageAsync" RecordsNumber="SelectedRecordsNumberAsync" />
+                <table class="table table-striped">
+                    <thead>
+                        <tr>                            
+                            <th>Producto</th>
+                            <th>Cantidad Fabricado</th>
+                            <th>Fecha de fabricacion</th>
+                            <th>Lote / Vence</th>                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var manufactury in Manufacturies!)
+                        {
+                            <tr>
+                                <td>@manufactury.ProductsDetail?.Product?.Name @manufactury.ProductsDetail?.Reference?.Name @manufactury.ProductsDetail?.Reference?.MeasurementUnit?.Code</td>
+                                <td>@manufactury.Amount</td>
+                                <td>@manufactury.RegisterDate</td>
+                                <td>@manufactury.RegisterDate.AddYears(1)</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </Body>
+        </GenericList>
+    </BodyTemplate>
+</HxCard>
+
+
+

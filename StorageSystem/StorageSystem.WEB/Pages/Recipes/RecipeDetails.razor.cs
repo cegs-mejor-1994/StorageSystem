@@ -152,12 +152,12 @@ namespace StorageSystem.WEB.Pages.Recipes
             if (product.PhysicalState.ToString() == "Solido")
             {
                 productRecipeRawMaterials = new List<Product>(productRawMaterials!);
-                productRecipeRawMaterials.RemoveAll(p => p.Id == product.Id || p.PhysicalState.ToString() == "Liquido" || p.Role.ToString() == "ProductoFinal");                
+                productRecipeRawMaterials.RemoveAll(p => p.Id == product.Id || p.PhysicalState.ToString() == "Liquido" || (p.Role.ToString() == "ProductoFinal" || p.Role.ToString() == "Presentacion"));                
             }
             else
             {
                 productRecipeRawMaterials = new List<Product>(productRawMaterials!);
-                productRecipeRawMaterials.RemoveAll(p => p.Id == product.Id || p.Role.ToString() == "ProductoFinal");                
+                productRecipeRawMaterials.RemoveAll(p => p.Id == product.Id || (p.Role.ToString() == "ProductoFinal" || p.Role.ToString() == "Presentacion"));                
             }
         }
 

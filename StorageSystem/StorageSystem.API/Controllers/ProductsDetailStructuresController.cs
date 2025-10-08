@@ -17,9 +17,9 @@ namespace StorageSystem.API.Controllers
         }
 
         [HttpGet("combo")]
-        public async Task<IActionResult> GetComboAsync()
+        public async Task<IActionResult> GetComboAsync(int productDetailID)
         {
-            return Ok(await _productsDetailStructuresUnitOfWork.GetComboAsync());
+            return Ok(await _productsDetailStructuresUnitOfWork.GetComboAsync(productDetailID));
         }
     }
 }

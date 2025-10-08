@@ -19,7 +19,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Pages\Manufacturies\" />
     <Folder Include="Pages\Orders\" />
   </ItemGroup>
 

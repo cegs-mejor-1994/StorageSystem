@@ -9,5 +9,6 @@ namespace StorageSystem.API.Repositories.Interfaces
         Task <IEnumerable<MeasurementUnit>> GetComboAsync();
         Task<ActionResponse<IEnumerable<MeasurementUnit>>> GetAsync(PaginationDTO pagination);
         Task<ActionResponse<int>> GetTotalPagesAsync(PaginationDTO pagination);
+        Task<ActionResponse<double>> GetBaseUnitWithFactor(string physycalState, int meausementUnitFactorId);
     }
 }

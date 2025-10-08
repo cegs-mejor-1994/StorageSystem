@@ -22,6 +22,12 @@ namespace StorageSystem.API.Controllers
             return Ok(await _recipesUnitOfWork.GetComboAsync());
         }
 
+        [HttpGet("comboForManufactury")]
+        public async Task<IActionResult> GetComboForManufacturyAsync()
+        {
+            return Ok(await _recipesUnitOfWork.GetComboForManufacturyAsync());
+        }
+
         [HttpGet]
         public override async Task<IActionResult> GetAsync([FromQuery] PaginationDTO pagination)
         {

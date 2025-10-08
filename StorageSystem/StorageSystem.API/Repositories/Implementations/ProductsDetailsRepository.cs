@@ -12,7 +12,7 @@ namespace StorageSystem.API.Repositories.Implementations
     {
         private readonly DataContext _context;
 
-        public ProductsDetailsRepository(DataContext context) : base(context)   
+        public ProductsDetailsRepository(DataContext context) : base(context)
         {
             _context = context;
         }
@@ -41,11 +41,28 @@ namespace StorageSystem.API.Repositories.Implementations
         public async Task<IEnumerable<ProductsDetail>> GetComboAsync()
         {
             return await _context.ProductsDetails
-                 .OrderBy(r => r.Id)
-                 .Include(r=> r!.Reference)
-                 .ThenInclude(mu => mu!.MeasurementUnit)
-                 .Include(p => p.Product)
-                 .ToListAsync();
+                .OrderBy(r => r.Id)
+                .Include(r => r!.Reference)
+                .ThenInclude(mu => mu!.MeasurementUnit)
+                .Include(p => p.Product)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<ProductDetailDTO>> GetWithReferencesAsync()
+        {
+            return await _context.ProductsDetails
+                .OrderBy(prD => prD.Product!.Name)
+                .Select(prD => new ProductDetailDTO
+                {
+                    ProductDetailID = prD.Id,
+                    productID = prD.Product!.Id,
+                    FullName = prD.Product!.Name + " " + prD.Reference!.Name + " " + prD.Reference!.MeasurementUnit!.Code,
+                    ReferenceValue = prD.Reference!.Name,
+                    MeasurementUnitID = prD.Reference!.MeasurementUnitId,
+                    PhysicalState = prD.Product.PhysicalState,
+                    State = prD.State
+                })
+                .ToListAsync();
         }
 
         public async Task<ActionResponse<int>> GetTotalPagesAsync(PaginationDTO pagination)
@@ -62,6 +79,44 @@ namespace StorageSystem.API.Repositories.Implementations
             {
                 WasSuccess = true,
                 Result = totalPages
+            };
+        }
+
+        public async Task<ActionResponse<ManufacturyDTO>> GetProductDetailGapRecipe(int ProductID)
+        {
+            var ManufacturyDTO = new ManufacturyDTO();
+            var recipe = await _context.Recipes.FirstOrDefaultAsync(r => r.ProductId == ProductID);
+
+            if (recipe == null)
+            {
+                return new ActionResponse<ManufacturyDTO>
+                {
+                    WasSuccess = false,
+                    Message = "El producto no tiene receta asignada",
+                    Result = ManufacturyDTO
+                };
+            }
+
+            var productionGap = await _context.ProductionGaps.Where(pg => pg.RecipeId == recipe.Id).FirstOrDefaultAsync();
+            if (productionGap == null)
+            {
+                return new ActionResponse<ManufacturyDTO>
+                {
+                    WasSuccess = false,
+                    Message = "No hay bache asignado al producto",
+                    Result = ManufacturyDTO
+                };
+            }
+
+            ManufacturyDTO.ProductionGapID = productionGap.Id;
+            ManufacturyDTO.RecipeID = recipe.Id;
+            ManufacturyDTO.RecipeLeftAmount = productionGap.LeftAmount;
+            
+
+            return new ActionResponse<ManufacturyDTO>
+            {
+                WasSuccess = true,
+                Result = ManufacturyDTO
             };
         }
     }

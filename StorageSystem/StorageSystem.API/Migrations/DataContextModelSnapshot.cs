@@ -169,6 +169,10 @@ namespace StorageSystem.API.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("int");
 
+                    b.Property<string>("ControlCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("ProductionGapId")
                         .HasColumnType("int");
 

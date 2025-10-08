@@ -23,6 +23,24 @@ namespace StorageSystem.API.Controllers
             return Ok(await _productsDetailsUnitOfWork.GetComboAsync());
         }
 
+        [HttpGet("comboReferences")]
+        public async Task<IActionResult> GetWithReferencesAsync()
+        {
+            return Ok(await _productsDetailsUnitOfWork.GetWithReferencesAsync());
+        }
+
+        [HttpGet("ManufacturyDetail")]
+        public async Task<IActionResult> GetProductDetailGapRecipe(int ProductID)
+        {            
+            var response = await _productsDetailsUnitOfWork.GetProductDetailGapRecipe(ProductID);
+            if (response.WasSuccess)
+            {
+                return Ok(response.Result);
+            }
+            return BadRequest(response.Message);
+        }
+
+
         [HttpGet]
         public override async Task<IActionResult> GetAsync([FromQuery] PaginationDTO pagination)
         {

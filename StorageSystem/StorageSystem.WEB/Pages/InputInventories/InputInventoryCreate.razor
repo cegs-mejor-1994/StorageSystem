@@ -31,7 +31,7 @@
                                 <InputNumber class="form-control" @bind-Value="inputInventory.Amount" step="0.001" />
                                 <ValidationMessage For="@(() => inputInventory.Amount)" />
                             </div>
-                            <div class="col-sm-4">                                
+                            <div class="col-sm-4">      
                                 @if (measurementUnits is not null)
                                 {
                                     <HxSelect TItem="MeasurementUnit"
@@ -46,23 +46,52 @@
                             </div>
                         </div>
                     </div>
-                    <div class="mb-3">
-                        <label>Lote:</label>
-                        <div>
-                            <InputText class="form-control" @bind-Value="inputInventory.Batch" />
-                            <ValidationMessage For="@(() => inputInventory.Batch)" />
+                    @if (productRole == "Presentacion")
+                    {
+                        <div class="mb-3">
+                            <label>Lote:</label>
+                            <div>
+                                <InputText class="form-control" @bind-Value="inputInventory.Batch" disabled/>
+                                <ValidationMessage For="@(() => inputInventory.Batch)" />
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="mb-3">
+                            <label>Lote:</label>
+                            <div>
+                                <InputText class="form-control" @bind-Value="inputInventory.Batch" />
+                                <ValidationMessage For="@(() => inputInventory.Batch)" />
+                            </div>
+                        </div>
+                    }
+ 
+                </div>
+                @if (productRole == "Presentacion")
+                {
+                    <div class="col-6">
+                        <div class="mb-3">
+                            <label>Fecha de Vencimiento:</label>
+                            <div>
+                                <InputDate class="form-control" @bind-Value="inputInventory.MatutingDate" disabled/>
+                                <ValidationMessage For="@(() => inputInventory.MatutingDate)" />
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-6">
-                    <div class="mb-3">
-                        <label>Fecha de Vencimiento:</label>
-                        <div>
-                            <InputDate class="form-control" @bind-Value="inputInventory.MatutingDate" />
-                            <ValidationMessage For="@(() => inputInventory.MatutingDate)" />
+                }
+                else
+                {
+                    <div class="col-6">
+                        <div class="mb-3">
+                            <label>Fecha de Vencimiento:</label>
+                            <div>
+                                <InputDate class="form-control" @bind-Value="inputInventory.MatutingDate" />
+                                <ValidationMessage For="@(() => inputInventory.MatutingDate)" />
+                            </div>
                         </div>
                     </div>
-                </div>
+                }
                 <button class="btn btn-primary form-control" type="submit">Guardar Cambios</button>                
             </div>
         </EditForm>

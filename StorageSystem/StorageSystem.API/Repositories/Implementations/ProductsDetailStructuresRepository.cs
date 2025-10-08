@@ -3,7 +3,6 @@ using StorageSystem.API.Data;
 using StorageSystem.API.Repositories.Interfaces;
 using StorageSystem.Shared.DTOs;
 using StorageSystem.Shared.Entities;
-using StorageSystem.Shared.Responses;
 
 namespace StorageSystem.API.Repositories.Implementations
 {
@@ -16,12 +15,16 @@ namespace StorageSystem.API.Repositories.Implementations
             _context = context;
         }
 
-        public async Task<IEnumerable<ProductsDetailStructure>> GetComboAsync()
+        public async Task<IEnumerable<ProductDetailStructureDTO>> GetComboAsync(int productDetailID)
         {
             return await _context.ProductsDetailStructures
+                .Where(prDeS => prDeS.ProductsDetailId ==  productDetailID)
                 .OrderBy(pds => pds.Id)
-                .Include(rm => rm!.Product)
-                .ThenInclude(c => c!.Category)
+                .Select(pds => new ProductDetailStructureDTO
+                {
+                    Id = pds.Id,
+                    Name = pds.Product!.Name
+                })
                 .ToListAsync();
         }
     }

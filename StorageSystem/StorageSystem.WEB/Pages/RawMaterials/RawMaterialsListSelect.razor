@@ -16,7 +16,7 @@
                         <tr>
                             <td>@product.Name</td>
                             <td>
-                                <HxButton Color="ThemeColor.Secondary" data-bs-dismiss="modal" Text="Seleccionar" OnClick="@(() => OnSelectedRawMaterialChanged.InvokeAsync($"{product.Id},{product.Name},{product.PhysicalState}"))" />
+                                <HxButton Color="ThemeColor.Secondary" data-bs-dismiss="modal" Text="Seleccionar" OnClick="@(() => OnSelectedRawMaterialChanged.InvokeAsync($"{product.Id},{product.Name},{product.PhysicalState},{product.Role}"))" />
                             </td>
                         </tr>
                     }

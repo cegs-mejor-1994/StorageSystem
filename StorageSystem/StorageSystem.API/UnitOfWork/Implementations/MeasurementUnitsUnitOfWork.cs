@@ -21,5 +21,7 @@ namespace StorageSystem.API.UnitOfWork.Implementations
         public async Task<ActionResponse<IEnumerable<MeasurementUnit>>> GetAsync(PaginationDTO pagination) => await _measurementUnitsRepository.GetAsync(pagination);        
 
         public async Task<ActionResponse<int>> GetTotalPagesAsync(PaginationDTO pagination) => await _measurementUnitsRepository.GetTotalPagesAsync(pagination);
+
+        public async Task<ActionResponse<double>> GetBaseUnitWithFactor(string physycalState, int meausementUnitFactorId) => await _measurementUnitsRepository.GetBaseUnitWithFactor(physycalState, meausementUnitFactorId);
     }
 }

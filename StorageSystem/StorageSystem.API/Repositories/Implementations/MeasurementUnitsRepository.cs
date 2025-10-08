@@ -59,5 +59,18 @@ namespace StorageSystem.API.Repositories.Implementations
                 Result = totalPages
             };
         }
+
+        public async Task<ActionResponse<double>> GetBaseUnitWithFactor(string physycalState, int meausementUnitFactorId)
+        {  
+            var baseUnit = await _context.MeasurementUnits.Where(mu => mu.PhysicalState.ToString() == physycalState && mu.Base).FirstAsync();
+
+            var factorConversion = await _context.MeasurementConversions.Where(cf => cf.FromUnitId == meausementUnitFactorId && cf.ToUnitId == baseUnit.Id).Select(cf => cf.Factor).FirstOrDefaultAsync();
+            
+            return new ActionResponse<double>
+            {
+                WasSuccess = true,
+                Result = factorConversion
+            };
+        }
     }
 }

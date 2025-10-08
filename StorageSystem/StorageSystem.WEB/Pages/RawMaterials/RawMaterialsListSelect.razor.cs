@@ -28,7 +28,7 @@ namespace StorageSystem.WEB.Pages.RawMaterials
                 return;
             }
             products = responseHttp.Response;
-            products = products?.Where(p => p.Role == StorageSystem.Shared.Enums.ProductStateAndPhisical.ProductRole.MateriaPrima).ToList();
+            products = products?.Where(p => p.Role == StorageSystem.Shared.Enums.ProductStateAndPhisical.ProductRole.MateriaPrima || p.Role == StorageSystem.Shared.Enums.ProductStateAndPhisical.ProductRole.Presentacion).ToList();
         }
     }
 }

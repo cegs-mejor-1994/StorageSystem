@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -351,6 +352,7 @@ namespace StorageSystem.API.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    ControlCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Amount = table.Column<int>(type: "int", maxLength: 10, nullable: false),
                     ProductionGapId = table.Column<int>(type: "int", nullable: false),
                     ProductsDetailId = table.Column<int>(type: "int", nullable: false),

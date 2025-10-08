@@ -9,7 +9,8 @@ namespace StorageSystem.WEB.Pages.InputInventories
     {        
         private InputInventory inputInventory = new();  
         
-        private string productName = "Materia prima";        
+        private string productName = "Materia prima";
+        private string productRole = "";
 
         private int productlId { get; set; }       
         private int? measurementUnitId { get; set; }
@@ -58,9 +59,21 @@ namespace StorageSystem.WEB.Pages.InputInventories
             string[] valores = product.Split(',');
             productlId = int.Parse(valores[0]);
             productName = valores[1];
-            measurementUnits = new List<MeasurementUnit>(allMeasurementUnits!);     
-            measurementUnits = measurementUnits.Where(mu => mu.PhysicalState.ToString() == valores[2] && mu.Base).ToList();
-            measurementUnitId = null;
+            productRole = valores[3];
+            if (productRole == "Presentacion")
+            {
+                measurementUnits = new List<MeasurementUnit>(allMeasurementUnits!);
+                measurementUnits = measurementUnits.Where(mu => mu.Id == 5).ToList();
+                measurementUnitId = null;
+                inputInventory.Batch = "N/A";
+                inputInventory.MatutingDate = DateTime.Now;
+            }
+            else
+            {
+                measurementUnits = new List<MeasurementUnit>(allMeasurementUnits!);
+                measurementUnits = measurementUnits.Where(mu => mu.PhysicalState.ToString() == valores[2] && mu.Base).ToList();
+                measurementUnitId = null;
+            }
         }
 
         private async Task CreateAsync()

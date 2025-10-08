@@ -19,6 +19,10 @@ namespace StorageSystem.API.UnitOfWork.Implementations
 
         public async Task<IEnumerable<ProductsDetail>> GetComboAsync() => await _productsDetailsRepository.GetComboAsync();
 
+        public async Task<ActionResponse<ManufacturyDTO>> GetProductDetailGapRecipe(int ProductID) => await _productsDetailsRepository.GetProductDetailGapRecipe(ProductID);
+
         public async Task<ActionResponse<int>> GetTotalPagesAsync(PaginationDTO pagination) => await _productsDetailsRepository.GetTotalPagesAsync(pagination);
+
+        public async Task<IEnumerable<ProductDetailDTO>> GetWithReferencesAsync() => await _productsDetailsRepository.GetWithReferencesAsync();
     }
 }

@@ -44,5 +44,16 @@ namespace StorageSystem.API.Controllers
         {
             return Ok(await _measurementUnitsUnitOfWork.GetComboAsync());
         }
+
+        [HttpGet("baseUnitWithFactor")]
+        public async Task<IActionResult> GetBaseUnitWithFactor(string physycalState, int meausementUnitFactorId)
+        {
+            var action = await _measurementUnitsUnitOfWork.GetBaseUnitWithFactor(physycalState, meausementUnitFactorId);
+            if (action.WasSuccess)
+            {
+                return Ok(action.Result);
+            }
+            return BadRequest();
+        }
     }
 }

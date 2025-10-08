@@ -1,0 +1,72 @@
+﻿@page "/manufacturies/create"
+
+<PageTitle></PageTitle>
+<HxCard>
+    <HeaderTemplate>
+        <div class="row g-1">
+            <div class="col-12 col-sm 12">
+                <HxIcon Icon="@BootstrapIcon.ListCheck" /> Crear Producto Terminado
+                <a href="/manufacturies" class="btn btn-success float-end">Regresar</a>
+            </div>
+        </div>       
+    </HeaderTemplate>
+    <BodyTemplate>
+        <div class="row g-1 align-items-center">
+            <div class="col-12 col-sm-8">
+                <InputText class="form-control" @bind-Value="productDetailName" placeholder="Producto" disabled />
+            </div>
+            <div class="col-12 col-sm-4">
+                <button type="button" class="btn btn-info w-100" data-bs-toggle="modal" data-bs-target="#productId">
+                    Seleccionar
+                </button>
+            </div>
+        </div>
+        <div class="row g-1 align-items-center mt-1">
+            <div class="col-12 col-sm-8 d-flex align-items-center">
+                <label class="me-2 mb-0">Cantidad</label>
+                <InputNumber class="form-control" style="max-width: 200px" @bind-Value="Manufactury.Amount" placeholder="Cantidad" />
+            </div>
+        </div>
+        <div class="row g-1 align-items-center mt-1">
+            <div class="col-12 col-sm-12 d-flex align-items-center">
+                <HxButton Color="ThemeColor.Primary" Text="Guardar Cambios" OnClick="CreateAsync" />
+            </div>
+        </div>
+    </BodyTemplate>
+</HxCard>
+
+<div class="modal fade" id="productId" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Productos </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" />
+            </div>
+            <div class="modal-body">
+                <GenericList MyList="ProductDetailDTOs">
+                    <Body>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th style="width:168px">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var productDetailDTO in ProductDetailDTOs!)
+                                {
+                                    <tr>
+                                        <td>@productDetailDTO.FullName</td>
+                                        <td>
+                                            <HxButton Color="ThemeColor.Secondary" data-bs-dismiss="modal" Text="Seleccionar" OnClick="@(() => ClickProductCallBack($"{productDetailDTO.ProductDetailID},{productDetailDTO.productID},{productDetailDTO.FullName},{productDetailDTO.ReferenceValue},{productDetailDTO.MeasurementUnitID},{productDetailDTO.PhysicalState}"))" />
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </Body>
+                </GenericList>
+            </div>
+        </div>
+    </div>
+</div>

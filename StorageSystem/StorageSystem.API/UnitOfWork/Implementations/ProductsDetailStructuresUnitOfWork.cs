@@ -1,5 +1,6 @@
 ﻿using StorageSystem.API.Repositories.Interfaces;
 using StorageSystem.API.UnitOfWork.Interfaces;
+using StorageSystem.Shared.DTOs;
 using StorageSystem.Shared.Entities;
 
 namespace StorageSystem.API.UnitOfWork.Implementations
@@ -13,6 +14,6 @@ namespace StorageSystem.API.UnitOfWork.Implementations
             _productsDetailStructuresRepository = productsDetailStructuresRepository;
         }
 
-        public async Task<IEnumerable<ProductsDetailStructure>> GetComboAsync() => await _productsDetailStructuresRepository.GetComboAsync();
+        public async Task<IEnumerable<ProductDetailStructureDTO>> GetComboAsync(int productDetailID) => await _productsDetailStructuresRepository.GetComboAsync(productDetailID);
     }
 }

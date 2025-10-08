@@ -41,7 +41,16 @@ namespace StorageSystem.API.Repositories.Implementations
         {
             return await _context.Recipes
                 .OrderBy(p => p.Product!.Name)
-                .Include(p => p.Product)                
+                .Include(p => p.Product)                    
+                .ToListAsync();
+        }
+        
+        public async Task<IEnumerable<Recipe>> GetComboForManufacturyAsync()
+        {
+            return await _context.Recipes
+                .OrderBy(p => p.Product!.Name)
+                .Include(p => p.Product)
+                .Where(p => p.TotalRecipe > 0)
                 .ToListAsync();
         }
 

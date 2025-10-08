@@ -23,6 +23,7 @@ builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepositor
 builder.Services.AddScoped<ICategoriesRepository, CategoriesRepository>();
 builder.Services.AddScoped<IClientsRepository, ClientsRepository>();
 builder.Services.AddScoped<IInputInventoriesRepository, InputInventoriesRepository>();
+builder.Services.AddScoped<IManufacturiesRepository, ManufacturiesRepository>();
 builder.Services.AddScoped<IMeasurementConversionsRepository, MeasurementConversionsRepository>();
 builder.Services.AddScoped<IMeasurementUnitsRepository, MeasurementUnitsRepository>();
 builder.Services.AddScoped<IProductionGapsRepository, ProductionGapsRepository>();
@@ -38,6 +39,7 @@ builder.Services.AddScoped<ISuppliersRepository, SuppliersRepository>();
 builder.Services.AddScoped<ICategoriesUnitOfWork, CategoriesUnitOfWork>();
 builder.Services.AddScoped<IClientsUnitOfWork, ClientsUnitOfWork>();
 builder.Services.AddScoped<IInputInventoriesUnitOfWork, InputInventoriesUnitOfWork>();
+builder.Services.AddScoped<IManufacturiesUnitOfWork, ManufacturiesUnitOfWork>();
 builder.Services.AddScoped<IMeasurementConversionsUnitOfWork, MeasurementConversionsUnitOfWork>();
 builder.Services.AddScoped<IMeasurementUnitsUnitOfWork, MeasurementUnitsUnitOfWork>();
 builder.Services.AddScoped<IProductsUnitOfWork, ProductsUnitOfWork>();

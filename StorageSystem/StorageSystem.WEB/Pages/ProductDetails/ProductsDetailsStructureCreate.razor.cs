@@ -64,7 +64,7 @@ namespace StorageSystem.WEB.Pages.ProductDetails
                 }                                
             }
         }
-
+         
         private async Task LoadRawMaterialsAsync()
         {
             var responseHttp = await Repository.GetAsync<List<Product>>("/api/Products/combo");
@@ -122,7 +122,7 @@ namespace StorageSystem.WEB.Pages.ProductDetails
 
         private async Task LoadProductDetailsAsync(int producDetailId)
         {
-            var responseHttp = await Repository.GetAsync<List<ProductsDetailStructure>>("/api/ProductsDetailStructures/combo");
+            var responseHttp = await Repository.GetAsync<List<ProductsDetailStructure>>($"/api/ProductsDetailStructures/combo?productDetailID={producDetailId}");
             if (responseHttp.Error)
             {
                 var message = await responseHttp.GetErrorMessageAsync();
