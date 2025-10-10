@@ -4,9 +4,7 @@ namespace StorageSystem.Shared.Entities
 {
     public class Manufactury
     {
-        public int Id { get; set; }
-
-        public string ControlCode { get; set; } = null!;
+        public int Id { get; set; }        
 
         [Display(Name = "Cantidad")]        
         [MaxLength(10, ErrorMessage = "El campo {0} no puede tener mas de {1} caracteres")]

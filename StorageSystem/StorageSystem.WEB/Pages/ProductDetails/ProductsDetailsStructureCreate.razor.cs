@@ -1,8 +1,10 @@
 using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components;
+using StorageSystem.Shared.DTOs;
 using StorageSystem.Shared.Entities;
 using StorageSystem.WEB.Pages.Recipes;
 using StorageSystem.WEB.Repositories;
+using System.Linq;
 using System.Net;
 using static StorageSystem.Shared.Enums.ProductStateAndPhisical;
 
@@ -129,19 +131,18 @@ namespace StorageSystem.WEB.Pages.ProductDetails
                 await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
                 return;
             }
-            productsDetailStructures = responseHttp.Response;
-            productsDetailStructures = productsDetailStructures!.Where(r => r.ProductsDetailId == producDetailId).ToList();
+            productsDetailStructures = responseHttp.Response;            
             if(productsDetailStructures != null)
             {
                 foreach (var item in productsDetailStructures)
                 {
-                    if(item.Product != null && item.Product.Category != null)
+                    if(item.Product != null && item.Product!.Category != null)
                     {
                         if (!categoriasFiltro.Contains(item.Product.Category.Name))
                         {
                             categoriasFiltro.Add(item.Product.Category.Name);
                         }
-                    }                    
+                    }               
                 }
             }
         }

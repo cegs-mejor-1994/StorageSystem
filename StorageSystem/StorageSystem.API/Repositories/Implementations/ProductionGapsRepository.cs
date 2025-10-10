@@ -47,6 +47,30 @@ namespace StorageSystem.API.Repositories.Implementations
                 .ToListAsync();
         }
 
+        public async Task<ActionResponse<double>> GetProductionGapsByRecipeIdAsync(int recipeId)
+        {
+            var productionGap = await _context.ProductionGaps
+                .Where(p => p.RecipeId == recipeId)                                
+                .FirstOrDefaultAsync();
+
+            if (productionGap != null) { 
+                if(productionGap.LeftAmount > 0)
+                {
+                    return new ActionResponse<double>
+                    {
+                        WasSuccess = true,
+                        Result = (double)productionGap.LeftAmount
+                    };
+                }
+            }
+
+            return new ActionResponse<double>
+            {
+                WasSuccess = true,
+                Result = 0
+            };
+        }
+
         public async Task<ActionResponse<int>> GetTotalPagesAsync(PaginationDTO pagination)
         {
             var queryable = _context.ProductionGaps.AsQueryable();

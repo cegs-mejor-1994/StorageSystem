@@ -7,6 +7,8 @@ namespace StorageSystem.Shared.Entities
     {
         public int Id { get; set; }
 
+        public string ControlCode { get; set; } = null!;
+
         [Column(TypeName = "decimal(18,3)")]
         [Display(Name = "Total Bache")]
         [Required(ErrorMessage = "El campo {0} es requerido")]

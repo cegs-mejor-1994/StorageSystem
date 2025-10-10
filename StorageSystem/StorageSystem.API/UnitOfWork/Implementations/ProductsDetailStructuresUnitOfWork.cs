@@ -14,6 +14,6 @@ namespace StorageSystem.API.UnitOfWork.Implementations
             _productsDetailStructuresRepository = productsDetailStructuresRepository;
         }
 
-        public async Task<IEnumerable<ProductDetailStructureDTO>> GetComboAsync(int productDetailID) => await _productsDetailStructuresRepository.GetComboAsync(productDetailID);
+        public async Task<IEnumerable<ProductsDetailStructure>> GetComboAsync(int productDetailID) => await _productsDetailStructuresRepository.GetComboAsync(productDetailID);
     }
 }

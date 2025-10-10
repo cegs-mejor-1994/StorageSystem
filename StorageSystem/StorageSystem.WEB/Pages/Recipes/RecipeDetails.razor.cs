@@ -190,7 +190,7 @@ namespace StorageSystem.WEB.Pages.Recipes
                 }
                 return;
             }
-            TotalRecipe -= (double)recipeDetail.Amount;
+            await GetTotalRecipeInDetails(recipeId);            
             await UpdateTotalRecipeAsync(recipe);
             await LoadRecipesDetailsAsync(recipeId);
             var toast = SweetAlertService.Mixin(new SweetAlertOptions
@@ -265,7 +265,7 @@ namespace StorageSystem.WEB.Pages.Recipes
                         await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
                         return;
                     }
-                    TotalRecipe += (double)recipeDetail.Amount;
+                    await GetTotalRecipeInDetails(recipeId);
                     await UpdateTotalRecipeAsync(recipe);
                     await LoadRecipesDetailsAsync(recipeId);
                     productRawMaterialName = "Materia prima";                    

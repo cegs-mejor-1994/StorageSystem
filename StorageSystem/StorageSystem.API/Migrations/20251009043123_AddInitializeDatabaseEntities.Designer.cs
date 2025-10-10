@@ -12,7 +12,7 @@ using StorageSystem.API.Data;
 namespace StorageSystem.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20251003032404_AddInitializeDatabaseEntities")]
+    [Migration("20251009043123_AddInitializeDatabaseEntities")]
     partial class AddInitializeDatabaseEntities
     {
         /// <inheritdoc />
@@ -171,10 +171,6 @@ namespace StorageSystem.API.Migrations
                     b.Property<int>("Amount")
                         .HasMaxLength(10)
                         .HasColumnType("int");
-
-                    b.Property<string>("ControlCode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ProductionGapId")
                         .HasColumnType("int");
@@ -351,6 +347,10 @@ namespace StorageSystem.API.Migrations
 
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,3)");
+
+                    b.Property<string>("ControlCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("LeftAmount")
                         .HasColumnType("decimal(18,2)");

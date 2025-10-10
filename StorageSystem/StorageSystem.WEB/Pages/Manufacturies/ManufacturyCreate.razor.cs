@@ -15,7 +15,7 @@ namespace StorageSystem.WEB.Pages.Manufacturies
         [Inject] private IRepository Repository { get; set; } = null!;
 
         private List<ProductDetailDTO>? ProductDetailDTOs { get; set; }
-        private List<ProductDetailStructureDTO>? ProductDetailStructureDTOs { get; set; }
+        private List<ProductsDetailStructure>? ProductDetailStructures { get; set; }
         private List<InputInventory>? inputInventories { get; set; }
 
         private Manufactury Manufactury { get; set; } = new Manufactury();
@@ -79,7 +79,7 @@ namespace StorageSystem.WEB.Pages.Manufacturies
             productDetailMeasurementUnitId = int.Parse(valores[4]);
             PhysicalState = valores[5];
             await LoadProductDetailStructuresAsync(productDetailId);
-            await GetTotalRecipeInProductDetails(productId);            
+            await GetTotalRecipeInProductDetails(productId);
         }
 
         private async Task CalculateTotalBatch(string physycalState, int meausementUnitFactorId)
@@ -95,7 +95,7 @@ namespace StorageSystem.WEB.Pages.Manufacturies
             factorConversion = responseHttp.Response;
             if (factorConversion > 0)
             {
-                TotalBatchCalculated = Manufactury.Amount * factorConversion * (double)productDetailReferenceValue;
+                TotalBatchCalculated = (double)Manufactury.Amount * factorConversion * (double)productDetailReferenceValue;
             }
         }
 
@@ -110,34 +110,35 @@ namespace StorageSystem.WEB.Pages.Manufacturies
                 return;
             }
             manufacturyDTO = responseHttp.Response;
+            await GetTotalRecipeInDetails(manufacturyDTO!.RecipeID);
         }
 
         private async Task LoadProductDetailStructuresAsync(int productDetailId)
         {
             var url = $"api/ProductsDetailStructures/combo?productDetailID={productDetailId}";
-            var responseHttp = await Repository.GetAsync<List<ProductDetailStructureDTO>>(url);
+            var responseHttp = await Repository.GetAsync<List<ProductsDetailStructure>>(url);
             if (responseHttp.Error)
             {
                 var message = await responseHttp.GetErrorMessageAsync();
                 await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
                 return;
             }
-            ProductDetailStructureDTOs = responseHttp.Response;
+            ProductDetailStructures = responseHttp.Response;
 
-            foreach (var ProductDetailStructureDTO in ProductDetailStructureDTOs!)
+            foreach (var ProductDetailStructureDTO in ProductDetailStructures!)
             {
-                var primerInventario = inputInventories!.Where(ii => ii.LeftAmount > Manufactury.Amount && ii.ProductId == ProductDetailStructureDTO.Id).OrderBy(ii => ii.RegisterDate).FirstOrDefault();
+                var primerInventario = inputInventories!.Where(ii => ii.LeftAmount > Manufactury.Amount && ii.ProductId == ProductDetailStructureDTO.ProductId).OrderBy(ii => ii.RegisterDate).FirstOrDefault();
 
                 if (primerInventario == null)
                 {
-                    productNamesNotExists += $"{ProductDetailStructureDTO.Name},";
+                    productNamesNotExists += $"{ProductDetailStructureDTO.Product!.Name}, ";
                     InputInventoryValidated = false;
                 }
                 else
                 {                  
                     if (primerInventario.LeftAmount <= Manufactury.Amount)
                     {
-                        productsWithLowAmount += $"{ProductDetailStructureDTO.Name}, Cantidad: {primerInventario.LeftAmount}, se necesita: {Manufactury.Amount}";
+                        productsWithLowAmount += $"{ProductDetailStructureDTO.Product!.Name}, Cantidad: {primerInventario.LeftAmount}, se necesita: {Manufactury.Amount};";
                         InputInventoryValidated = false;
                     }
                 }
@@ -147,10 +148,8 @@ namespace StorageSystem.WEB.Pages.Manufacturies
         private async Task CreateAsync()
         {
             if (InputInventoryValidated && productDetailId > 0 && manufacturyDTO != null)
-            {                
-                await GetTotalRecipeInDetails(manufacturyDTO.RecipeID);
+            {
                 await CalculateTotalBatch(PhysicalState, productDetailMeasurementUnitId);
-
                 if (TotalRecipe > TotalBatchCalculated)
                 {
                     await SweetAlertService.FireAsync("Info", "Se puede crear el producto terminado", SweetAlertIcon.Info);
@@ -160,8 +159,7 @@ namespace StorageSystem.WEB.Pages.Manufacturies
                     await SweetAlertService.FireAsync("Info", $"No se pudo fabricar el producto. Cantidad disponible de {productDetailName}: {TotalRecipe}. Cantidad necesaria: {TotalBatchCalculated}", SweetAlertIcon.Info);
                 }
                 /*Manufactury.ProductsDetailId = productDetailId;
-                Manufactury.ProductionGapId = manufacturyDTO.ProductionGapID;
-                Manufactury.ControlCode = "1";
+                Manufactury.ProductionGapId = manufacturyDTO.ProductionGapID;                
 
                 foreach (var ProductDetailStructureDTO in ProductDetailStructureDTOs!)
                 {
@@ -181,7 +179,7 @@ namespace StorageSystem.WEB.Pages.Manufacturies
             }
             else
             {
-                if (ProductDetailStructureDTOs!.Count == 0)
+                if (ProductDetailStructures!.Count == 0)
                 {
                     await SweetAlertService.FireAsync("Error", $"No se ha creado la presentacion para el producto {productDetailName}", SweetAlertIcon.Error);
                     return;
@@ -206,6 +204,11 @@ namespace StorageSystem.WEB.Pages.Manufacturies
                         SweetAlertIcon.Error
                     );
                 }
+                productNamesNotExists = "";
+                productsWithLowAmount = "";
+                Manufactury.Amount = 1;
+                InputInventoryValidated = true;
+                productDetailName = "Producto";
             }
         }
 
@@ -231,7 +234,6 @@ namespace StorageSystem.WEB.Pages.Manufacturies
             }
         }
 
-
         private async Task UpdateLeftAmount(InputInventory inputRDInventory)
         {
             if (inputRDInventory != null)
@@ -248,7 +250,7 @@ namespace StorageSystem.WEB.Pages.Manufacturies
 
         private async Task GetTotalRecipeInDetails(int recipeID)
         {
-            var url = $"api/RecipeDetails/totalAmount?recipeID={recipeID}";
+            var url = $"api/ProductionGaps/totalBatch?recipeId={recipeID}";
             var responseHttp = await Repository.GetAsync<double>(url);
             if (responseHttp.Error)
             {

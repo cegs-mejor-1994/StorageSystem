@@ -15,16 +15,13 @@ namespace StorageSystem.API.Repositories.Implementations
             _context = context;
         }
 
-        public async Task<IEnumerable<ProductDetailStructureDTO>> GetComboAsync(int productDetailID)
+        public async Task<IEnumerable<ProductsDetailStructure>> GetComboAsync(int productDetailID)
         {
             return await _context.ProductsDetailStructures
+                .Include(pds => pds.Product)
+                .ThenInclude(cat => cat!.Category)
                 .Where(prDeS => prDeS.ProductsDetailId ==  productDetailID)
                 .OrderBy(pds => pds.Id)
-                .Select(pds => new ProductDetailStructureDTO
-                {
-                    Id = pds.Id,
-                    Name = pds.Product!.Name
-                })
                 .ToListAsync();
         }
     }

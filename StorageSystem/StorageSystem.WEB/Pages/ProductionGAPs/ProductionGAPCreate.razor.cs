@@ -14,19 +14,23 @@ namespace StorageSystem.WEB.Pages.ProductionGAPs
         private ProductionGapDetail ProductionGapDetail = new();
         private InputInventory? InputInventory;
 
-        private int productId;        
+        private int productId;
+        private int countProductionGap = 0;
+        
         private string productName = "Producto";
         private string productNamesNotExists = "";
         private string productsWithLowAmount = "";
+
         private decimal totalBache;
-        private decimal cantidadBache = 1;
+        private decimal cantidadBache = 1;        
+
         private bool GAPValidated = true;
 
         private List<Recipe>? RecipesMain { get; set; }
         private List<RecipeDetail>? RecipeDetails { get; set; }
-        private List<Recipe>? Recipes { get; set; }
-        
-        private List<InputInventory>? InputInventories { get; set; }  
+        private List<Recipe>? Recipes { get; set; }        
+        private List<InputInventory>? InputInventories { get; set; }   
+        private List<ProductionGap>? ProductionGaps { get; set; }
 
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
@@ -35,6 +39,7 @@ namespace StorageSystem.WEB.Pages.ProductionGAPs
         protected async override Task OnInitializedAsync()
         {                       
             await LoadInputInventoriesAsync();
+            await LoadProductionGapsAsync();
         }
 
         private async Task ClickProductCallBack(string product)
@@ -65,6 +70,7 @@ namespace StorageSystem.WEB.Pages.ProductionGAPs
                     productionGap.RecipeId = Recipe.Id;
                     totalBache = Recipe.TotalRecipe;
                     await LoadRecipeDetailsAsync(Recipe.Id);
+                    countProductionGap = ProductionGaps!.Where(pg => pg.RecipeId == Recipe.Id).Count();
                 }
             }
         }
@@ -80,6 +86,18 @@ namespace StorageSystem.WEB.Pages.ProductionGAPs
             }
             InputInventories = responseHttp.Response;
             InputInventories = InputInventories?.Where(p => p.Product!.Role == StorageSystem.Shared.Enums.ProductStateAndPhisical.ProductRole.MateriaPrima).ToList();
+        }
+
+        private async Task LoadProductionGapsAsync()
+        {
+            var responseHttp = await Repository.GetAsync<List<ProductionGap>>("/api/ProductionGaps/combo");
+            if (responseHttp.Error)
+            {
+                var message = await responseHttp.GetErrorMessageAsync();
+                await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+                return;
+            }
+            ProductionGaps = responseHttp.Response;           
         }
 
         private async Task LoadRecipeDetailsAsync(int recipeID)
@@ -146,8 +164,10 @@ namespace StorageSystem.WEB.Pages.ProductionGAPs
                     return;
                 }
 
-                try {                    
+                try {            
+                    var countGap = countProductionGap + 1;
                     productionGap.Amount =  totalBache * cantidadBache;
+                    productionGap.ControlCode = countGap.ToString();
                     productionGap.LeftAmount = totalBache * cantidadBache;
 
                     var responseHttp = await Repository.PostAsync<ProductionGap, ProductionGap>("/api/ProductionGaps", productionGap);                    
@@ -168,37 +188,37 @@ namespace StorageSystem.WEB.Pages.ProductionGAPs
                         ShowConfirmButton = true,
                         Timer = 3000
                     });
-                    await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Bache creado con exito.");                                                          
+                    await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Bache creado con exito.");
+
+                    foreach (var RecipeDetail in RecipeDetails!)
+                    {
+                        var primerInventario = InputInventories!.Where(ii => ii.LeftAmount > 0 && ii.ProductId == RecipeDetail.ProductId).OrderBy(ii => ii.RegisterDate).FirstOrDefault();
+
+                        if (primerInventario != null)
+                        {
+                            await GetInputInventoryById(primerInventario.Id);
+                            var amountLeftAfterCreateBatch = (double)primerInventario.LeftAmount - (double)RecipeDetail.Amount;
+                            if (InputInventory != null)
+                            {
+                                InputInventory.LeftAmount = (decimal)amountLeftAfterCreateBatch;
+                                await UpdateLeftAmount(InputInventory);
+                                if (productionGapAfterCreated != null)
+                                {
+                                    ProductionGapDetail.ProductionGapId = productionGapAfterCreated.Id;
+                                    ProductionGapDetail.InputInventoryId = InputInventory.Id;
+                                    ProductionGapDetail.Amount = RecipeDetail.Amount * cantidadBache;
+                                    await CreateProductionGAPDetail(ProductionGapDetail);
+                                }
+                            }
+                        }
                     }
+                    NavigationManager.NavigateTo("/productionsgaps");
+                }
                 catch (Exception ex)
                 {
-                await SweetAlertService.FireAsync("Error", ex.Message, SweetAlertIcon.Error);
-                return;
-                }
-
-                foreach (var RecipeDetail in RecipeDetails!)
-                {                   
-                    var primerInventario = InputInventories!.Where(ii => ii.LeftAmount > 0 && ii.ProductId == RecipeDetail.ProductId).OrderBy(ii => ii.RegisterDate).FirstOrDefault();                    
-
-                    if (primerInventario != null)
-                    {
-                        await GetInputInventoryById(primerInventario.Id);                        
-                        var amountLeftAfterCreateBatch = (double)primerInventario.LeftAmount - (double)RecipeDetail.Amount;                        
-                        if (InputInventory != null)
-                        {
-                            InputInventory.LeftAmount = (decimal)amountLeftAfterCreateBatch;
-                            await UpdateLeftAmount(InputInventory);
-                            if (productionGapAfterCreated != null)
-                            {
-                                ProductionGapDetail.ProductionGapId = productionGapAfterCreated.Id;
-                                ProductionGapDetail.InputInventoryId = InputInventory.Id;
-                                ProductionGapDetail.Amount = RecipeDetail.Amount * cantidadBache;
-                                await CreateProductionGAPDetail(ProductionGapDetail);
-                            }
-                        }                  
-                    }
-                } 
-                NavigationManager.NavigateTo("/productionsgaps");
+                    await SweetAlertService.FireAsync("Error", ex.Message, SweetAlertIcon.Error);
+                    return;
+                }                
             }
             else
             {
@@ -221,12 +241,25 @@ namespace StorageSystem.WEB.Pages.ProductionGAPs
 
                 if (mensajes.Count > 0)
                 {
-                    await SweetAlertService.FireAsync(
-                        "Error",
-                        $"No se pudo crear el bache.\n\n{string.Join("\n\n", mensajes)}",
-                        SweetAlertIcon.Error
-                    );
+                    if (cantidadBache == 1)
+                    {
+                        await SweetAlertService.FireAsync(
+                            "Error",
+                            $"No se pudo crear un bache de {productName}.\n\n{string.Join("\n\n", mensajes)}",
+                            SweetAlertIcon.Error
+                        );
+                    }
+                    else {
+                        await SweetAlertService.FireAsync(
+                            "Error",
+                            $"No se pudo crear {cantidadBache} baches de {productName}.\n\n{string.Join("\n\n", mensajes)}",
+                            SweetAlertIcon.Error
+                        );
+                    }
                 }
+                productNamesNotExists = "";
+                productsWithLowAmount = "";
+                cantidadBache = 1;                
             }       
         }
 
@@ -262,7 +295,6 @@ namespace StorageSystem.WEB.Pages.ProductionGAPs
                 InputInventory = responseHttp.Response;
             }
         }
-
 
         private async Task UpdateLeftAmount(InputInventory inputRDInventory)
         {

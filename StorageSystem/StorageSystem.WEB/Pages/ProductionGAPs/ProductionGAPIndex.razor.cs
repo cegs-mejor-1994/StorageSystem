@@ -2,6 +2,7 @@ using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components;
 using StorageSystem.Shared.Entities;
 using StorageSystem.WEB.Repositories;
+using static StorageSystem.Shared.Enums.ProductStateAndPhisical;
 
 namespace StorageSystem.WEB.Pages.ProductionGAPs
 {
@@ -18,10 +19,12 @@ namespace StorageSystem.WEB.Pages.ProductionGAPs
         [Inject] private IRepository Repository { get; set; } = null!;
 
         private List<ProductionGap>? ProductionGaps { get; set; }
+        private List<MeasurementUnit>? measurementUnits { get; set; }        
 
         protected async override Task OnInitializedAsync()
         {
             await LoadAsync();
+            await LoadMeasurementUnitsAsync();
         }
 
         private async Task FilterCallBack(string filter)
@@ -108,6 +111,32 @@ namespace StorageSystem.WEB.Pages.ProductionGAPs
             int page = 1;
             await LoadAsync(page);
             await SelectedPageAsync(page);
+        }
+
+        private string GetMeasurementUnitName(string physicalState)
+        {
+            if (measurementUnits != null)
+            {
+                var measurementUnit = measurementUnits.Where(mu => mu.PhysicalState.ToString() == physicalState && mu.Base).FirstOrDefault();
+                if (measurementUnit != null)
+                {
+                    return measurementUnit.Code;
+                }
+            }
+
+            return "";
+        }
+
+        private async Task LoadMeasurementUnitsAsync()
+        {
+            var responseHttp = await Repository.GetAsync<List<MeasurementUnit>>("/api/MeasurementUnits/combo");
+            if (responseHttp.Error)
+            {
+                var message = await responseHttp.GetErrorMessageAsync();
+                await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+                return;
+            }
+            measurementUnits = responseHttp.Response;            
         }
     }
 }

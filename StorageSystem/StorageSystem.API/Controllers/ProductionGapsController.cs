@@ -43,5 +43,16 @@ namespace StorageSystem.API.Controllers
             }
             return BadRequest();
         }
+
+        [HttpGet("totalBatch")]
+        public async Task<IActionResult> GetProductionGapsByRecipeIdAsync(int recipeId)
+        {
+            var response = await _productionGapsUnitOfWork.GetProductionGapsByRecipeIdAsync(recipeId);
+            if (response.WasSuccess)
+            {
+                return Ok(response.Result);
+            }
+            return BadRequest();
+        }
     }
 }
