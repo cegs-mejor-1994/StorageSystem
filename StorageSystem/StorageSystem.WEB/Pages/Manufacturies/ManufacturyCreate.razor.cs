@@ -4,6 +4,7 @@ using StorageSystem.Shared.DTOs;
 using StorageSystem.Shared.Entities;
 using StorageSystem.WEB.Repositories;
 using System.Net;
+using System.Text.RegularExpressions;
 using static StorageSystem.Shared.Enums.ProductStateAndPhisical;
 
 namespace StorageSystem.WEB.Pages.Manufacturies
@@ -17,6 +18,7 @@ namespace StorageSystem.WEB.Pages.Manufacturies
         private List<ProductDetailDTO>? ProductDetailDTOs { get; set; }
         private List<ProductsDetailStructure>? ProductDetailStructures { get; set; }
         private List<InputInventory>? inputInventories { get; set; }
+        private List<MeasurementUnit>? measurementUnits { get; set; }
 
         private Manufactury Manufactury { get; set; } = new Manufactury();
         private ManufacturyDTO? manufacturyDTO { get; set; }
@@ -44,6 +46,21 @@ namespace StorageSystem.WEB.Pages.Manufacturies
         {
             await LoadProductDetailsAsync();
             await LoadInputInventoriesAsync();  
+            await LoadMeasurementUnitsAsync();
+        }
+
+        private string GetMeasurementUnitName(string physicalState)
+        {
+            if (measurementUnits != null)
+            {
+                var measurementUnit = measurementUnits.Where(mu => mu.PhysicalState.ToString() == physicalState && mu.Base).FirstOrDefault();
+                if (measurementUnit != null)
+                {
+                    return measurementUnit.Code;
+                }
+            }
+
+            return "";
         }
 
         private async Task LoadInputInventoriesAsync()
@@ -69,6 +86,11 @@ namespace StorageSystem.WEB.Pages.Manufacturies
                 return;
             }
             ProductDetailDTOs = responseHttp.Response;            
+        }
+
+        private string ProductNameSetted(string productName)
+        {
+            return Regex.Replace(productName, @"\s*\d+.*$", "");
         }
 
         private async Task ClickProductCallBack(string product)
@@ -179,7 +201,7 @@ namespace StorageSystem.WEB.Pages.Manufacturies
 
                     foreach (var ProductDetailStructure in ProductDetailStructures!)
                     {
-                        var primerInventario = inputInventories!.Where(ii => ii.LeftAmount > amount && ii.ProductId == ProductDetailStructure.Id).OrderBy(ii => ii.RegisterDate).FirstOrDefault();
+                        var primerInventario = inputInventories!.Where(ii => ii.LeftAmount > amount && ii.ProductId == ProductDetailStructure.ProductId).OrderBy(ii => ii.RegisterDate).FirstOrDefault();
 
                         if (primerInventario != null)
                         {
@@ -205,7 +227,7 @@ namespace StorageSystem.WEB.Pages.Manufacturies
                 }
                 else
                 {
-                    await SweetAlertService.FireAsync("Info", $"No se pudo fabricar el producto. Cantidad disponible de {productDetailName}: {TotalRecipe}. Cantidad necesaria: {TotalBatchCalculated}", SweetAlertIcon.Info);
+                    await SweetAlertService.FireAsync("Info", $"No se pudo fabricar el producto. Cantidad disponible de {ProductNameSetted(productDetailName)}: {TotalRecipe} {GetMeasurementUnitName(PhysicalState)}. Cantidad necesaria: {TotalBatchCalculated} {GetMeasurementUnitName(PhysicalState)}", SweetAlertIcon.Info);
                 }
             }
             else
@@ -240,6 +262,12 @@ namespace StorageSystem.WEB.Pages.Manufacturies
                 amount = 1;
                 InputInventoryValidated = true;
                 productDetailName = "Producto";
+                productDetailId = 0;
+                productId = 0;                
+                productDetailReferenceValue = 0;
+                productDetailMeasurementUnitId = 0;
+                PhysicalState = "";
+                factorConversion = 0;
             }
         }
 
@@ -322,6 +350,18 @@ namespace StorageSystem.WEB.Pages.Manufacturies
                 return;
             }
             TotalRecipe = responseHttp.Response;
+        }
+
+        private async Task LoadMeasurementUnitsAsync()
+        {
+            var responseHttp = await Repository.GetAsync<List<MeasurementUnit>>("/api/MeasurementUnits/combo");
+            if (responseHttp.Error)
+            {
+                var message = await responseHttp.GetErrorMessageAsync();
+                await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+                return;
+            }
+            measurementUnits = responseHttp.Response;
         }
     }
 }

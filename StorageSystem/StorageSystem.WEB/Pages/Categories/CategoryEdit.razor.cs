@@ -6,6 +6,7 @@ using StorageSystem.Shared.Entities;
 using StorageSystem.WEB.Repositories;
 using StorageSystem.WEB.Shared;
 using System.Net;
+using System.Text.RegularExpressions;
 
 namespace StorageSystem.WEB.Pages.Categories
 {
