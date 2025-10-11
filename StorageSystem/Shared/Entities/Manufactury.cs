@@ -1,15 +1,17 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace StorageSystem.Shared.Entities
 {
     public class Manufactury
     {
-        public int Id { get; set; }        
+        public int Id { get; set; }
 
-        [Display(Name = "Cantidad")]        
-        [MaxLength(10, ErrorMessage = "El campo {0} no puede tener mas de {1} caracteres")]
+        [Display(Name = "Cantidad")]
+        [Column(TypeName = "decimal(18,2)")]
+        [Range(0.001, 9999, ErrorMessage = "El campo {0} debe ser mayor a 0 y menor que 9999")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
-        public int Amount { get; set; }
+        public decimal Amount { get; set; }
 
         public int ProductionGapId { get; set; }
         public ProductionGap? ProductionGap { get; set; }

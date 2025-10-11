@@ -24,7 +24,7 @@
         <div class="row g-1 align-items-center mt-1">
             <div class="col-12 col-sm-8 d-flex align-items-center">
                 <label class="me-2 mb-0">Cantidad</label>
-                <InputNumber class="form-control" style="max-width: 200px" @bind-Value="Manufactury.Amount" placeholder="Cantidad" />
+                <InputNumber class="form-control" min="1" max="9999"style="max-width: 200px" @bind-Value="amount" placeholder="Cantidad" />
             </div>
         </div>
         <div class="row g-1 align-items-center mt-1">
