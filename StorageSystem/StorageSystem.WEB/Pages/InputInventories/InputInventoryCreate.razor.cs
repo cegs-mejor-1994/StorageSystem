@@ -63,7 +63,7 @@ namespace StorageSystem.WEB.Pages.InputInventories
             if (productRole == "Presentacion")
             {
                 measurementUnits = new List<MeasurementUnit>(allMeasurementUnits!);
-                measurementUnits = measurementUnits.Where(mu => mu.Id == 5).ToList();
+                measurementUnits = measurementUnits.Where(mu => mu.PhysicalState.ToString() == valores[2]).ToList();
                 measurementUnitId = null;
                 inputInventory.Batch = "N/A";
                 inputInventory.MatutingDate = DateTime.Now;
@@ -71,7 +71,7 @@ namespace StorageSystem.WEB.Pages.InputInventories
             else
             {
                 measurementUnits = new List<MeasurementUnit>(allMeasurementUnits!);
-                measurementUnits = measurementUnits.Where(mu => mu.PhysicalState.ToString() == valores[2] && mu.Base).ToList();
+                measurementUnits = measurementUnits.Where(mu => mu.PhysicalState.ToString() == valores[2]).ToList();
                 measurementUnitId = null;
             }
         }
@@ -80,12 +80,11 @@ namespace StorageSystem.WEB.Pages.InputInventories
         {
             try
             {
-                if (inputInventory.Amount > 0 && !string.IsNullOrWhiteSpace(inputInventory.Batch) && inputInventory.MatutingDate != DateTime.MinValue && productlId != 0 && measurementUnitId != 0)
+                if (inputInventory.Amount > 0 && !string.IsNullOrWhiteSpace(inputInventory.Batch) && inputInventory.MatutingDate != DateTime.MinValue && productlId != 0)
                 {
                     await LoadInputInventoriesAsync();
                     inputInventory.ProductId = productlId;
-                    inputInventory.ControlCode = CountInputInventories.ToString();
-                    inputInventory.MeasurementUnitId = measurementUnitId!.Value;
+                    inputInventory.ControlCode = CountInputInventories.ToString();                    
                     inputInventory.LeftAmount = inputInventory.Amount;
 
                     var responseHttp = await Repository.PostAsync("/api/InputInventories", inputInventory);

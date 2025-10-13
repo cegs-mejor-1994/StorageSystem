@@ -1,4 +1,5 @@
 ﻿@page "/products/create"
+@using static StorageSystem.Shared.Enums.ProductStateAndPhisical
 @using StorageSystem.WEB.Pages.Suppliers
 @using StorageSystem.WEB.Pages.Categories
 
@@ -13,7 +14,7 @@
             <DataAnnotationsValidator />
             <div class="mb-3">
                 <label class="form-label">Tipo de producto:</label>
-                <InputRadioGroup @bind-value="@product.Role" Name="rol">
+                <InputRadioGroup @bind-Value="Role" Name="rol">
                     @foreach (var role in Roles)
                     {
                         <div class="form-check form-check-inline">
@@ -25,8 +26,8 @@
             </div>
             <div class="mb-3">
                 <label class="form-label">Estado de producto:</label>
-                <InputRadioGroup @bind-value="@product.PhysicalState" Name="estado">
-                    @foreach (var physicalState in PhysicalState)
+                <InputRadioGroup @bind-Value="Physical" Name="estado">
+                    @foreach (var physicalState in PhysicalStates)
                     {
                         <div class="form-check form-check-inline">
                             <InputRadio class="form-check-input" Value="@physicalState" />
@@ -47,7 +48,7 @@
                     <ValidationMessage For="@(() => product.Name)" />
                 </div>
             </div>
-            @if (product.Role == StorageSystem.Shared.Enums.ProductStateAndPhisical.ProductRole.MateriaPrima || product.Role == StorageSystem.Shared.Enums.ProductStateAndPhisical.ProductRole.Presentacion)
+            @if (product.Role == ProductRole.MateriaPrima || product.Role == ProductRole.Presentacion)
             {
                 <div class="mb-3">
                     <div>
@@ -69,6 +70,21 @@
                             <label class="form-label">Categoria</label>
                             <HxInputText @bind-Value="@categoryName" Enabled="false"/>
                         </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="col-sm-4">
+                        @if (measurementUnits?.Any() == true)
+                        {
+                            <HxSelect TItem="MeasurementUnit"
+                                      TValue="int?"
+                                      Data="measurementUnits"
+                                      @bind-Value="measurementUnitId"
+                                      TextSelector="@(measurementUnit => measurementUnit.Name)"
+                                      ValueSelector="@(measurementUnit => measurementUnit.Id)"
+                                      NullText="--- Seleccione Unidad de Medida ---"
+                                      NullDataText="Cargando Unidades de Medida" />
+                        }
                     </div>
                 </div>
             }      

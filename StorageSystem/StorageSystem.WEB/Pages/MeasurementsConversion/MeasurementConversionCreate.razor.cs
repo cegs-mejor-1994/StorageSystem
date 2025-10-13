@@ -1,9 +1,6 @@
-using Blazored.Modal;
-using Blazored.Modal.Services;
 using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components;
 using StorageSystem.Shared.Entities;
-using StorageSystem.WEB.Pages.MeasurementUnits;
 using StorageSystem.WEB.Repositories;
 
 namespace StorageSystem.WEB.Pages.MeasurementsConversion
@@ -37,7 +34,21 @@ namespace StorageSystem.WEB.Pages.MeasurementsConversion
 
         private async Task CreateAsync()
         {
-            //measurementUnit.DateRegister = DateTime.Now;
+            if (measurementConversion.FromUnitId == 0) {
+                await SweetAlertService.FireAsync("Error", "Debes seleccionar una Unidad de medida origen", SweetAlertIcon.Error);
+                return;
+            }
+
+            if (measurementConversion.ToUnitId == 0) {
+                await SweetAlertService.FireAsync("Error", "Debes seleccionar una Unidad de medida destino", SweetAlertIcon.Error);
+                return;
+            }
+
+            if (measurementConversion.Factor == 0) {
+                await SweetAlertService.FireAsync("Error", "Debes digitar un factor de conversion", SweetAlertIcon.Error);
+                return;
+            }
+            
             var responseHttp = await Repository.PostAsync("/api/MeasurementConversions", measurementConversion);
             if (responseHttp.Error)
             {
@@ -45,7 +56,7 @@ namespace StorageSystem.WEB.Pages.MeasurementsConversion
                 await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
                 return;
             }
-            
+
             NavigationManager.NavigateTo("/measurementConversions");
 
             var toast = SweetAlertService.Mixin(new SweetAlertOptions

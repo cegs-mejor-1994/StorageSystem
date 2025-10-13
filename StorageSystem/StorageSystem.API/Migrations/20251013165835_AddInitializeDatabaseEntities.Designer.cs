@@ -12,7 +12,7 @@ using StorageSystem.API.Data;
 namespace StorageSystem.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20251011010438_AddInitializeDatabaseEntities")]
+    [Migration("20251013165835_AddInitializeDatabaseEntities")]
     partial class AddInitializeDatabaseEntities
     {
         /// <inheritdoc />
@@ -138,9 +138,6 @@ namespace StorageSystem.API.Migrations
                     b.Property<DateTime>("MatutingDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("MeasurementUnitId")
-                        .HasColumnType("int");
-
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
@@ -152,8 +149,6 @@ namespace StorageSystem.API.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("MeasurementUnitId");
 
                     b.HasIndex("ProductId");
 
@@ -305,6 +300,9 @@ namespace StorageSystem.API.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
+                    b.Property<int?>("MeasurementUnitId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -329,6 +327,8 @@ namespace StorageSystem.API.Migrations
 
                     b.HasIndex("Code")
                         .IsUnique();
+
+                    b.HasIndex("MeasurementUnitId");
 
                     b.HasIndex("Name")
                         .IsUnique();
@@ -449,6 +449,9 @@ namespace StorageSystem.API.Migrations
                     b.Property<string>("State")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Unity")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
@@ -618,19 +621,11 @@ namespace StorageSystem.API.Migrations
 
             modelBuilder.Entity("StorageSystem.Shared.Entities.InputInventory", b =>
                 {
-                    b.HasOne("StorageSystem.Shared.Entities.MeasurementUnit", "MeasurementUnit")
-                        .WithMany("InputInventories")
-                        .HasForeignKey("MeasurementUnitId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("StorageSystem.Shared.Entities.Product", "Product")
                         .WithMany("InputInventories")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.Navigation("MeasurementUnit");
 
                     b.Navigation("Product");
                 });
@@ -699,7 +694,14 @@ namespace StorageSystem.API.Migrations
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Restrict);
 
+                    b.HasOne("StorageSystem.Shared.Entities.MeasurementUnit", "MeasurementUnit")
+                        .WithMany("InputInventories")
+                        .HasForeignKey("MeasurementUnitId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.Navigation("Category");
+
+                    b.Navigation("MeasurementUnit");
                 });
 
             modelBuilder.Entity("StorageSystem.Shared.Entities.ProductionGap", b =>

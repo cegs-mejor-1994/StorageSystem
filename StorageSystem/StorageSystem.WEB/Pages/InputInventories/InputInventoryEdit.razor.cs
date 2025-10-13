@@ -45,8 +45,7 @@ namespace StorageSystem.WEB.Pages.InputInventories
             else
             {
                 inputInventory = responseHttp.Response;                
-                await LoadProduct(inputInventory!.ProductId);
-                measurementUnit = measurementUnits!.FirstOrDefault(x => x.Id == inputInventory.MeasurementUnitId);
+                await LoadProduct(inputInventory!.ProductId);                
             }
         }
 

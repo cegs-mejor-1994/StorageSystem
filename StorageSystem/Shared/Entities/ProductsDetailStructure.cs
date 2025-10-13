@@ -1,4 +1,6 @@
-﻿namespace StorageSystem.Shared.Entities
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace StorageSystem.Shared.Entities
 {
     public class ProductsDetailStructure
     {
@@ -9,6 +11,9 @@
 
         public int ProductId { get; set; }
         public Product? Product { get; set; }
+
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal Unity { get; set; }
 
         public string State { get; set; } = "Disponible";
 

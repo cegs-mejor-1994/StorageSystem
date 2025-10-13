@@ -1,7 +1,6 @@
 using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components;
 using StorageSystem.Shared.Entities;
-using StorageSystem.WEB.Pages.Recipes;
 using StorageSystem.WEB.Repositories;
 using static StorageSystem.Shared.Enums.ProductStateAndPhisical;
 
@@ -13,25 +12,58 @@ namespace StorageSystem.WEB.Pages.Products
         private Recipe recipe = new();
         private RawMaterial rawMaterial = new();
 
-        public ProductRole Role { get; set; }
+        public List<ProductRole> Roles { get; set; } = Enum.GetValues(typeof(ProductRole)).Cast<ProductRole>().ToList();
+
+        public List<ProductPhysicalState> PhysicalStates { get; set; } = Enum.GetValues(typeof(ProductPhysicalState)).Cast<ProductPhysicalState>().ToList();
+
+        private ProductRole Role
+        {
+            get => product.Role;
+            set
+            {
+                product.Role = value;               
+            }
+        }
+
+        private ProductPhysicalState Physical
+        {
+            get => product.PhysicalState;
+            set
+            {
+                product.PhysicalState = value;
+                FilterMeasurementUnits(value.ToString());
+            }
+        }
+
+        private void FilterMeasurementUnits(string physicalState)
+        {
+            measurementUnits = allMeasurementUnits!
+                .Where(mu => mu.PhysicalState.ToString() == physicalState)
+                .ToList();
+            measurementUnitId = null;
+        }
 
         private string? supplierName { get; set; } = "Proveedor";
         private string? categoryName { get; set; } = "Categoria";
 
         private int supplierId { get; set; }        
         private int categoryId { get; set; }
-        private int productId { get; set; } 
-        private int productRecipeId { get; set; }
+        private int productId { get; set; }         
+        private int? measurementUnitId { get; set; }
 
         [Inject] private IRepository repository { get; set; } = null!;
         [Inject] private SweetAlertService sweetAlertService { get; set; } = null!;
         [Inject] private NavigationManager navigationManager { get; set; } = null!;
 
-        private List<Product>? products;
+        private List<Product>? products;        
+        private List<MeasurementUnit>? measurementUnits { get; set; }
+        private List<MeasurementUnit>? allMeasurementUnits { get; set; }
 
-        public List<ProductRole> Roles { get; set; } = Enum.GetValues(typeof(ProductRole)).Cast<ProductRole>().ToList();
-
-        public List<ProductPhysicalState> PhysicalState { get; set; } = Enum.GetValues(typeof(ProductPhysicalState)).Cast<ProductPhysicalState>().ToList();
+        protected override async Task OnInitializedAsync()
+        {
+            await LoadMeasurementUnitsAsync();
+            FilterMeasurementUnits(product.PhysicalState.ToString());
+        }
 
         private async Task LoadProductsAsync()
         {
@@ -49,7 +81,16 @@ namespace StorageSystem.WEB.Pages.Products
         {
             if (product.Role == ProductRole.MateriaPrima || product.Role == ProductRole.Presentacion)
             {
-                product.CategoryId = categoryId;                
+                product.CategoryId = categoryId;    
+                if (measurementUnitId != null)
+                {
+                    product.MeasurementUnitId = measurementUnitId.Value;
+                }
+                else
+                {
+                    await sweetAlertService.FireAsync("Error", "Debe seleccionar una unidad de medida.", SweetAlertIcon.Error);
+                    return;
+                }
             }
             else
             {
@@ -170,6 +211,18 @@ namespace StorageSystem.WEB.Pages.Products
             {
                 productId = productData.Id;
             }
+        }
+
+        private async Task LoadMeasurementUnitsAsync()
+        {
+            var responseHttp = await repository.GetAsync<List<MeasurementUnit>>("/api/MeasurementUnits/combo");
+            if (responseHttp.Error)
+            {
+                var message = await responseHttp.GetErrorMessageAsync();
+                await sweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+                return;
+            }
+            allMeasurementUnits = responseHttp.Response;
         }
     }
 }

@@ -32,6 +32,9 @@ namespace StorageSystem.Shared.Entities
         
         public RawMaterial? RawMaterial { get; set; }
 
+        public int? MeasurementUnitId { get; set; }
+        public MeasurementUnit? MeasurementUnit { get; set; } = null!;
+
         public ICollection<ProductsDetail>? ProductsDetails { get; set; }
         public ICollection<InputInventory>? InputInventories { get; set; }
         public ICollection<Recipe>? Recipes { get; set; }

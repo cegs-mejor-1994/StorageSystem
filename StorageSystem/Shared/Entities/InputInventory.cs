@@ -39,9 +39,6 @@ namespace StorageSystem.Shared.Entities
         public int ProductId { get; set; }  
         public Product? Product { get; set; } = null!;
 
-        public int MeasurementUnitId { get; set; }
-        public MeasurementUnit? MeasurementUnit { get; set; } = null!;
-
         public ICollection<ProductionGapDetail>? ProductionGapDetails { get; set; }
 
         public string State { get; set; } = "Disponible";        

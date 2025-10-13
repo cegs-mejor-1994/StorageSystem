@@ -50,8 +50,7 @@ namespace StorageSystem.WEB.Pages.MeasurementUnits
                 await SweetAlertService.FireAsync("Error", message);
                 return;
             }
-
-            await BlazoredModal.CloseAsync(ModalResult.Ok());
+            
             NavigationManager.NavigateTo("/measurementUnits");
             var toast = SweetAlertService.Mixin(new SweetAlertOptions
             {

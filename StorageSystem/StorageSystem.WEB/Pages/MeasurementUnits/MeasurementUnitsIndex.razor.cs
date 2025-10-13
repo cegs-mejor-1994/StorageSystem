@@ -67,7 +67,7 @@ namespace StorageSystem.WEB.Pages.MeasurementUnits
         {
             if (recordsnumber == 0)
             {
-                RecordsNumber = 10;
+                RecordsNumber = 8;
             }
         }
 
@@ -130,7 +130,7 @@ namespace StorageSystem.WEB.Pages.MeasurementUnits
             {
                 return;
             }
-            
+
             measurementUnit.State = "Eliminado";
             var responseHttp = await Repository.PutAsync($"/api/MeasurementUnits", measurementUnit);
             if (responseHttp.Error)

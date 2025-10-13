@@ -82,31 +82,6 @@ namespace StorageSystem.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Products",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Code = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    PhysicalState = table.Column<int>(type: "int", nullable: false),
-                    Role = table.Column<int>(type: "int", nullable: false),
-                    RegisterDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    State = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CategoryId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Products", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Products_Categories_CategoryId",
-                        column: x => x.CategoryId,
-                        principalTable: "Categories",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "MeasurementConversions",
                 columns: table => new
                 {
@@ -128,6 +103,38 @@ namespace StorageSystem.API.Migrations
                     table.ForeignKey(
                         name: "FK_MeasurementConversions_MeasurementUnits_ToUnitId",
                         column: x => x.ToUnitId,
+                        principalTable: "MeasurementUnits",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Products",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Code = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    PhysicalState = table.Column<int>(type: "int", nullable: false),
+                    Role = table.Column<int>(type: "int", nullable: false),
+                    RegisterDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    State = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    MeasurementUnitId = table.Column<int>(type: "int", nullable: true),
+                    CategoryId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Products", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Products_Categories_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "Categories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Products_MeasurementUnits_MeasurementUnitId",
+                        column: x => x.MeasurementUnitId,
                         principalTable: "MeasurementUnits",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -167,18 +174,11 @@ namespace StorageSystem.API.Migrations
                     MatutingDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     RegisterDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ProductId = table.Column<int>(type: "int", nullable: false),
-                    MeasurementUnitId = table.Column<int>(type: "int", nullable: false),
                     State = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_InputInventories", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_InputInventories_MeasurementUnits_MeasurementUnitId",
-                        column: x => x.MeasurementUnitId,
-                        principalTable: "MeasurementUnits",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_InputInventories_Products_ProductId",
                         column: x => x.ProductId,
@@ -327,6 +327,7 @@ namespace StorageSystem.API.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ProductsDetailId = table.Column<int>(type: "int", nullable: false),
                     ProductId = table.Column<int>(type: "int", nullable: false),
+                    Unity = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     State = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     RegisterDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -451,11 +452,6 @@ namespace StorageSystem.API.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_InputInventories_MeasurementUnitId",
-                table: "InputInventories",
-                column: "MeasurementUnitId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_InputInventories_ProductId",
                 table: "InputInventories",
                 column: "ProductId");
@@ -528,6 +524,11 @@ namespace StorageSystem.API.Migrations
                 table: "Products",
                 column: "Code",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Products_MeasurementUnitId",
+                table: "Products",
+                column: "MeasurementUnitId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Products_Name",
@@ -651,10 +652,10 @@ namespace StorageSystem.API.Migrations
                 name: "Products");
 
             migrationBuilder.DropTable(
-                name: "MeasurementUnits");
+                name: "Categories");
 
             migrationBuilder.DropTable(
-                name: "Categories");
+                name: "MeasurementUnits");
         }
     }
 }

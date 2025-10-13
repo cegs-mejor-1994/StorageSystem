@@ -19,13 +19,14 @@ namespace StorageSystem.Shared.Entities
         
         public string State { get; set; } = "Disponible";
 
+        [Required(ErrorMessage = "El campo {0} es requerido")]
         public ProductPhysicalState PhysicalState { get; set; }
 
         public bool Base { get; set; } = false;
 
         public ICollection<MeasurementConversion>? ConversionsFrom { get; set; }
         public ICollection<MeasurementConversion>? ConversionsTo { get; set; }
-        public ICollection<InputInventory>? InputInventories { get; set; }
+        public ICollection<Product>? InputInventories { get; set; }
         public ICollection<Reference>? References { get; set; }
         public ICollection<RecipeDetail>? RecipeDetails { get; set; }
     }
