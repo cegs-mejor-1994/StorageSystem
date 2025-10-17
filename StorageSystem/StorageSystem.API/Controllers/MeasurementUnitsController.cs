@@ -55,5 +55,16 @@ namespace StorageSystem.API.Controllers
             }
             return BadRequest();
         }
+
+        [HttpGet("getMeasurementById")]
+        public async Task<IActionResult> GetMeasurementById(string MCode, string MName)
+        {
+            var action = await _measurementUnitsUnitOfWork.GetMeasurementUnitById(MCode, MName);
+            if (action.WasSuccess)
+            {
+                return Ok(action.Result);
+            }
+            return BadRequest();
+        }
     }
 }

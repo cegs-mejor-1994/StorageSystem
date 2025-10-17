@@ -32,14 +32,11 @@ namespace StorageSystem.API.Repositories.Implementations
             }
             catch (DbUpdateException ex)
             {
-                if (ex.InnerException!.Message.Contains("duplicate"))
-                {
-                    return DbUpdateExceptionActionResponse();
-                }
+                string userMessage = DatabaseHelper.GetFriendlyUniqueConstraintError(ex);
                 return new ActionResponse<T>
                 {
                     WasSuccess = false,
-                    Message = ex.Message
+                    Message = userMessage
                 };
             }
             catch (Exception exception)
@@ -143,29 +140,17 @@ namespace StorageSystem.API.Repositories.Implementations
             }
             catch (DbUpdateException ex)
             {
-                if (ex.InnerException!.Message.Contains("duplicate"))
-                {
-                    return DbUpdateExceptionActionResponse();
-                }
+                string userMessage = DatabaseHelper.GetFriendlyUniqueConstraintError(ex);
                 return new ActionResponse<T>
                 {
                     WasSuccess = false,
-                    Message = ex.Message
+                    Message = userMessage
                 };
             }
             catch (Exception exception)
             {
                 return ExceptionActionResponse(exception);
             }
-        }
-
-        private ActionResponse<T> DbUpdateExceptionActionResponse()
-        {
-            return new ActionResponse<T>
-            {
-                WasSuccess = false,
-                Message = "Ya existe el registro que estas intentando crear."
-            };
         }
 
         private ActionResponse<T> ExceptionActionResponse(Exception exception)
