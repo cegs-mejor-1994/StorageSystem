@@ -32,7 +32,7 @@ namespace StorageSystem.WEB.Pages.Suppliers
                     var result = await sweetAlertService.FireAsync(new SweetAlertOptions
                     {
                         Title = "¿Desea reactivar el registro?",
-                        Text = "Ya existe un registro eliminado con ese código o nombre. ¿Desea reactivarlo?",
+                        Text = "Ya existe un registro eliminado con ese nit. ¿Desea reactivarlo?",
                         Icon = SweetAlertIcon.Question,
                         ShowCancelButton = true,
                         ConfirmButtonText = "Sí, reactivar",
