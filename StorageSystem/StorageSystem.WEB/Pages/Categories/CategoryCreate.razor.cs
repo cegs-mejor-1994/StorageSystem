@@ -3,7 +3,6 @@ using Blazored.Modal.Services;
 using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components;
 using StorageSystem.Shared.Entities;
-using StorageSystem.WEB.Pages.MeasurementUnits;
 using StorageSystem.WEB.Repositories;
 using StorageSystem.WEB.Shared;
 
@@ -81,7 +80,6 @@ namespace StorageSystem.WEB.Pages.Categories
             });
             await toast.FireAsync(icon: SweetAlertIcon.Success, message: message);
         }
-
 
         private async Task AddCategory(Category category)
         {

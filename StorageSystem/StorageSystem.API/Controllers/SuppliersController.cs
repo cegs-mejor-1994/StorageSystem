@@ -44,5 +44,16 @@ namespace StorageSystem.API.Controllers
         {
             return Ok(await _suppliersUnitOfWork.GetComboAsync());
         }
+
+        [HttpGet("getSupplierById")]
+        public async Task<IActionResult> GetCategoryByID(string SNit)
+        {
+            var action = await _suppliersUnitOfWork.GetSupplierById(SNit);
+            if (action.WasSuccess)
+            {
+                return Ok(action.Result);
+            }
+            return BadRequest();
+        }
     }
 }

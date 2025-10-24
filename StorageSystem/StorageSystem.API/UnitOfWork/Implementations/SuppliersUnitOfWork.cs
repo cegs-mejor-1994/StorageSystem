@@ -20,6 +20,8 @@ namespace StorageSystem.API.UnitOfWork.Implementations
 
         public async Task<IEnumerable<Supplier>> GetComboAsync() => await _suppliersRepository.GetComboAsync();
 
+        public async Task<ActionResponse<int>> GetSupplierById(string SNit) => await _suppliersRepository.GetSupplierById(SNit);
+
         public async Task<ActionResponse<int>> GetTotalPagesAsync(PaginationDTO pagination) => await _suppliersRepository.GetTotalPagesAsync(pagination);
     }
 }
