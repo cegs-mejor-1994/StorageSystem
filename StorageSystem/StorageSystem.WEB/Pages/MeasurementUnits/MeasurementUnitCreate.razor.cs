@@ -16,9 +16,7 @@ namespace StorageSystem.WEB.Pages.MeasurementUnits
         
         [Inject] private IRepository repository { get; set; } = null!;
         [Inject] private SweetAlertService sweetAlertService { get; set; } = null!;
-        [Inject] private NavigationManager navigationManager { get; set; } = null!;
-
-        private int measurementUnitID;
+        [Inject] private NavigationManager navigationManager { get; set; } = null!;        
 
         public List<ProductPhysicalState> PhysicalStats { get; set; } = Enum.GetValues(typeof(ProductPhysicalState)).Cast<ProductPhysicalState>().ToList();
 
@@ -29,7 +27,7 @@ namespace StorageSystem.WEB.Pages.MeasurementUnits
             switch (responseHttp.Response)
             {
                 case 0:
-                    await AddMeasurementUnit(measurementUnit);
+                    await AddMeasurementUnit(measurementUnit);                                        
                     break;
 
                 case -1:
@@ -56,22 +54,7 @@ namespace StorageSystem.WEB.Pages.MeasurementUnits
                             PhysicalState = measurementUnit.PhysicalState,
                             State = "Disponible"
                         };
-                        var responseHttpPut = await repository.PutAsync($"/api/MeasurementUnits/", measurementUnitEdited);
-                        if (responseHttpPut.Error)
-                        {
-                            var messagePut = await responseHttpPut.GetErrorMessageAsync();
-                            await sweetAlertService.FireAsync("Error", messagePut, SweetAlertIcon.Error);
-                            return;
-                        }
-                        navigationManager.NavigateTo("/measurementUnits");
-                        var toast = sweetAlertService.Mixin(new SweetAlertOptions
-                        {
-                            Toast = true,
-                            Position = SweetAlertPosition.BottomEnd,
-                            ShowConfirmButton = true,
-                            Timer = 3000
-                        });
-                        await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro reactivado con éxito.");
+                        await UpdateStateOfMeasurementUnit(measurementUnitEdited);                        
                     }
                     break;
 
@@ -79,8 +62,7 @@ namespace StorageSystem.WEB.Pages.MeasurementUnits
                         var message = await responseHttp.GetErrorMessageAsync();
                         await sweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
                         break;
-            }
-            
+            }            
         }
 
         private async Task AddMeasurementUnit(MeasurementUnit measurementUnit)
@@ -91,10 +73,25 @@ namespace StorageSystem.WEB.Pages.MeasurementUnits
                 var message = await responseHttp.GetErrorMessageAsync();
                 await sweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
                 return;
-            }
+            }            
+            await Return("Registro creado con éxito.");
+        }
 
+        private async Task UpdateStateOfMeasurementUnit(MeasurementUnit measurementUnit)
+        {
+            var responseHttpPut = await repository.PutAsync($"/api/MeasurementUnits/", measurementUnit);
+            if (responseHttpPut.Error)
+            {
+                var messagePut = await responseHttpPut.GetErrorMessageAsync();
+                await sweetAlertService.FireAsync("Error", messagePut, SweetAlertIcon.Error);
+                return;
+            }            
+            await Return("Registro reactivado con éxito.");
+        }
+
+        private async Task Return(string Message)
+        {
             navigationManager.NavigateTo("/measurementUnits");
-
             var toast = sweetAlertService.Mixin(new SweetAlertOptions
             {
                 Toast = true,
@@ -102,7 +99,7 @@ namespace StorageSystem.WEB.Pages.MeasurementUnits
                 ShowConfirmButton = true,
                 Timer = 3000
             });
-            await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro creado con éxito.");
+            await toast.FireAsync(icon: SweetAlertIcon.Success, message: Message);
         }
     }
 }

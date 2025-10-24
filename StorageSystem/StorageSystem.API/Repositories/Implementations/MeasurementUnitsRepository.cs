@@ -19,19 +19,20 @@ namespace StorageSystem.API.Repositories.Implementations
 
         public async Task<ActionResponse<IEnumerable<MeasurementUnit>>> GetAsync(PaginationDTO pagination)
         {
-            var queryable = _context.MeasurementUnits.AsQueryable();
+            var queryable = _context.MeasurementUnits
+                .Where(ms => ms.State == "Disponible")
+                .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(pagination.Filter))
             {
-                queryable = queryable.Where(x => x.Name.ToLower().Contains(pagination.Filter.ToLower()));
+                queryable = queryable.Where(x => EF.Functions.Like(x.Name, $"%{pagination.Filter}%"));
             }
 
             return new ActionResponse<IEnumerable<MeasurementUnit>>
             {
                 WasSuccess = true,
                 Result = await queryable
-                    .OrderBy(x => x.Name)                    
-                    .Where(ms => ms.State == "Disponible")
+                    .OrderBy(x => x.Name)                                        
                     .Paginate(pagination)
                     .ToListAsync()
             };
@@ -72,13 +73,10 @@ namespace StorageSystem.API.Repositories.Implementations
                 // Escenario 1: Buscar si existe registro eliminado
                 var mUnit = await _context.MeasurementUnits
                        .FirstOrDefaultAsync(mu => mu.Code == MCode && mu.Name == MName && mu.State == "Eliminado");
-
                 // Escenario 2: Si no existe eliminado, verificar si existe activo o en otro estado
                 if (mUnit == null)
                 {
-                    var existing = await _context.MeasurementUnits
-                        .AnyAsync(mu => mu.Code == MCode || mu.Name == MName);
-
+                    var existing = await _context.MeasurementUnits.AnyAsync(mu => mu.Code == MCode || mu.Name == MName);
                     // Escenario 2A: No existe ningún registro → crear uno nuevo
                     if (!existing)
                     {
@@ -89,7 +87,6 @@ namespace StorageSystem.API.Repositories.Implementations
                             Message = "Se puede crear el registro."
                         };
                     }
-
                     // Escenario 2B: No existe eliminado, pero sí existe otro (activo o diferente)
                     return new ActionResponse<int>
                     {
@@ -98,7 +95,6 @@ namespace StorageSystem.API.Repositories.Implementations
                         Message = "Ya existe una unidad de medida con estado Disponible con ese Código o Nombre."
                     };
                 }
-
                 // Escenario 3: Si existe eliminado, validar si puede reactivarse
                 bool existsActive = await _context.MeasurementUnits.AnyAsync(mu =>
                     mu.State != "Eliminado" &&
@@ -113,7 +109,6 @@ namespace StorageSystem.API.Repositories.Implementations
                         Message = "Ya existe una unidad de medida con estado Disponible con ese Código o Nombre."
                     };
                 }
-
                 // Escenario 4: Reactivar registro eliminado
                 return new ActionResponse<int>
                 {

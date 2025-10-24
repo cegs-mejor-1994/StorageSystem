@@ -148,20 +148,16 @@ namespace StorageSystem.WEB.Pages.Categories
             {
                 return;
             }
-            var responseHttp = await Repository.DeleteAsync<Category>($"api/Categories/{category.Id}");
+
+            category.State = "Eliminado";
+            var responseHttp = await Repository.PutAsync($"/api/Categories", category);
             if (responseHttp.Error)
             {
-                if (responseHttp.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
-                {
-                    NavigationManager.NavigateTo("/");
-                }
-                else
-                {
-                    var messageError = await responseHttp.GetErrorMessageAsync();
-                    await SweetAlertService.FireAsync("Error", messageError, SweetAlertIcon.Error);
-                }
+                var message = await responseHttp.GetErrorMessageAsync();
+                await SweetAlertService.FireAsync("Error", message);
                 return;
             }
+
             await LoadAsync();
             var toast = SweetAlertService.Mixin(new SweetAlertOptions
             {

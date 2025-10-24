@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using StorageSystem.API.UnitOfWork.Implementations;
 using StorageSystem.API.UnitOfWork.Interfaces;
 using StorageSystem.Shared.DTOs;
 using StorageSystem.Shared.Entities;
@@ -42,6 +43,17 @@ namespace StorageSystem.API.Controllers
         public async Task<IActionResult> GetComboAsync()
         {
             return Ok(await _categoriesUnitOfWork.GetComboAsync());
+        }
+
+        [HttpGet("getCategoryById")]
+        public async Task<IActionResult> GetCategoryByID(string CCode, string CName)
+        {
+            var action = await _categoriesUnitOfWork.GetCategoryById(CCode, CName);
+            if (action.WasSuccess)
+            {
+                return Ok(action.Result);
+            }
+            return BadRequest();
         }
     }
 }

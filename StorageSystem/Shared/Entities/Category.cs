@@ -18,7 +18,7 @@ namespace StorageSystem.Shared.Entities
         public string Name { get; set; } = null!;
 
         public string State { get; set; } = "Disponible";
-        public DateTime DateRegister { get; set; }
+        public DateTime DateRegister { get; set; } = DateTime.Now;
 
         public ICollection<Product>? Products { get; set; }
     }
