@@ -44,5 +44,16 @@ namespace StorageSystem.API.Controllers
         {
             return Ok(await _clientsUnitOfWork.GetComboAsync());
         }
+
+        [HttpGet("getClientById")]
+        public async Task<IActionResult> GetClientByID(string CNit)
+        {
+            var action = await _clientsUnitOfWork.GetClientById(CNit);
+            if (action.WasSuccess)
+            {
+                return Ok(action.Result);
+            }
+            return BadRequest();
+        }
     }
 }

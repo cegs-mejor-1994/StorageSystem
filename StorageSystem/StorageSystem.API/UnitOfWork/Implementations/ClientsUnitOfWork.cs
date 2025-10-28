@@ -17,6 +17,8 @@ namespace StorageSystem.API.UnitOfWork.Implementations
 
         public async Task<ActionResponse<IEnumerable<Client>>> GetAsync(PaginationDTO pagination) => await _clientsRepository.GetAsync(pagination);
 
+        public async Task<ActionResponse<int>> GetClientById(string CNit) => await _clientsRepository.GetClientById(CNit);
+
         public async Task<IEnumerable<Client>> GetComboAsync() => await _clientsRepository.GetComboAsync();
 
         public async Task<ActionResponse<int>> GetTotalPagesAsync(PaginationDTO pagination) => await _clientsRepository.GetTotalPagesAsync(pagination);

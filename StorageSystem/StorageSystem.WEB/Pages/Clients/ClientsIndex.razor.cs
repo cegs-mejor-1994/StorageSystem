@@ -148,18 +148,13 @@ namespace StorageSystem.WEB.Pages.Clients
             {
                 return;
             }
-            var responseHttp = await Repository.DeleteAsync<Client>($"api/Clients/{client.Id}");
+
+            client.State = "Eliminado";
+            var responseHttp = await Repository.PutAsync($"/api/Clients", client);
             if (responseHttp.Error)
             {
-                if (responseHttp.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
-                {
-                    NavigationManager.NavigateTo("/");
-                }
-                else
-                {
-                    var messageError = await responseHttp.GetErrorMessageAsync();
-                    await SweetAlertService.FireAsync("Error", messageError, SweetAlertIcon.Error);
-                }
+                var message = await responseHttp.GetErrorMessageAsync();
+                await SweetAlertService.FireAsync("Error", message);
                 return;
             }
             await LoadAsync();

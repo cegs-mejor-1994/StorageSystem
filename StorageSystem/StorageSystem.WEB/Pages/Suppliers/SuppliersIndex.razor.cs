@@ -1,9 +1,6 @@
-using Blazored.Modal;
-using Blazored.Modal.Services;
 using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components;
 using StorageSystem.Shared.Entities;
-using StorageSystem.WEB.Pages.Clients;
 using StorageSystem.WEB.Repositories;
 using System.Net;
 
@@ -130,18 +127,13 @@ namespace StorageSystem.WEB.Pages.Suppliers
             {
                 return;
             }
-            var responseHttp = await Repository.DeleteAsync<Supplier>($"api/Suppliers/{supplier.Id}");
+
+            supplier.State = "Eliminado";
+            var responseHttp = await Repository.PutAsync($"/api/Suppliers", supplier);
             if (responseHttp.Error)
             {
-                if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
-                {
-                    NavigationManager.NavigateTo("/");
-                }
-                else
-                {
-                    var messageError = await responseHttp.GetErrorMessageAsync();
-                    await SweetAlertService.FireAsync("Error", messageError, SweetAlertIcon.Error);
-                }
+                var message = await responseHttp.GetErrorMessageAsync();
+                await SweetAlertService.FireAsync("Error", message);
                 return;
             }
             await LoadAsync();

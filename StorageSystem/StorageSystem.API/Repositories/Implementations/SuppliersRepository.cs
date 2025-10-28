@@ -19,11 +19,13 @@ namespace StorageSystem.API.Repositories.Implementations
 
         public async Task<ActionResponse<IEnumerable<Supplier>>> GetAsync(PaginationDTO pagination)
         {
-            var queryable = _context.Suppliers.AsQueryable();
+            var queryable = _context.Suppliers
+                .Where(s => s.State == "Disponible")
+                .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(pagination.Filter))
             {
-                queryable = queryable.Where(x => x.Name.ToLower().Contains(pagination.Filter.ToLower()));
+                queryable = queryable.Where(x => EF.Functions.Like(x.Name, $"%{pagination.Filter}%"));
             }
 
             return new ActionResponse<IEnumerable<Supplier>>
@@ -40,16 +42,19 @@ namespace StorageSystem.API.Repositories.Implementations
         {
             return await _context.Suppliers
                 .OrderBy(s => s.Name)
+                .Where(s => s.State == "Disponible")
                 .ToListAsync(); 
         }
 
         public async Task<ActionResponse<int>> GetTotalPagesAsync(PaginationDTO pagination)
         {
-            var queryable = _context.Suppliers.AsQueryable();
+            var queryable = _context.Suppliers
+                .Where(s => s.State == "Disponible")
+                .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(pagination.Filter))
             {
-                queryable = queryable.Where(x => x.Name.ToLower().Contains(pagination.Filter.ToLower()));
+                queryable = queryable.Where(x => EF.Functions.Like(x.Name, $"%{pagination.Filter}%"));
             }
             double count = await queryable.CountAsync();
             int totalPages = (int)Math.Ceiling(count / pagination.RecordsNumber);
