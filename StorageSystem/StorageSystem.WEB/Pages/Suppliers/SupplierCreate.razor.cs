@@ -1,7 +1,6 @@
 using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components;
 using StorageSystem.Shared.Entities;
-using StorageSystem.WEB.Pages.Categories;
 using StorageSystem.WEB.Repositories;
 
 namespace StorageSystem.WEB.Pages.Suppliers
@@ -10,6 +9,7 @@ namespace StorageSystem.WEB.Pages.Suppliers
     {
         private Supplier supplier = new();
         private Supplier? supplierEdited;
+        private SupplierForm? supplierForm;
 
         [Inject] private IRepository repository { get; set; } = null!;
         [Inject] private SweetAlertService sweetAlertService { get; set; } = null!;
@@ -62,7 +62,8 @@ namespace StorageSystem.WEB.Pages.Suppliers
         }
 
         private void Return()
-        {            
+        {
+            supplierForm!.FormPostedSuccessfully = true;
             navigationManager.NavigateTo("/suppliers");
         }
 
