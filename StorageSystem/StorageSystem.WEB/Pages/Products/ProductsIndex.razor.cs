@@ -66,7 +66,7 @@ namespace StorageSystem.WEB.Pages.Products
         {
             if (recordsnumber == 0)
             {
-                RecordsNumber = 10;
+                RecordsNumber = 8;
             }
         }
 

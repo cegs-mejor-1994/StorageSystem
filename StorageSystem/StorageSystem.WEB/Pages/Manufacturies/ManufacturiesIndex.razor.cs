@@ -62,7 +62,7 @@ namespace StorageSystem.WEB.Pages.Manufacturies
         {
             if (recordsnumber == 0)
             {
-                RecordsNumber = 10;
+                RecordsNumber = 8;
             }
         }
 

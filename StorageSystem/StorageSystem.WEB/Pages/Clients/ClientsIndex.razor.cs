@@ -85,7 +85,7 @@ namespace StorageSystem.WEB.Pages.Clients
         {
             if (recordsnumber == 0)
             {
-                RecordsNumber = 10;
+                RecordsNumber = 8;
             }
         }
 

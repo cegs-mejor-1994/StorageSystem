@@ -63,7 +63,7 @@ namespace StorageSystem.WEB.Pages.InputInventories
         {
             if (recordsnumber == 0)
             {
-                RecordsNumber = 10;
+                RecordsNumber = 8;
             }
         }
 
