@@ -6,8 +6,8 @@ namespace StorageSystem.API.UnitOfWork.Interfaces
 {
     public interface IInputInventoriesUnitOfWork
     {
-        Task<IEnumerable<InputInventory>> GetWithRawMaterialsAndSuppliersAsync();        
-        Task<ActionResponse<IEnumerable<InputInventory>>> GetAsync(PaginationDTO pagination);
+        Task<IEnumerable<InputInventoryDTO>> GetWithRawMaterialsAndSuppliersAsync();        
+        Task<ActionResponse<IEnumerable<InputInventoryDTO>>> GetAsync(PaginationDTO pagination);
         Task<ActionResponse<int>> GetTotalPagesAsync(PaginationDTO pagination);
     }
 }

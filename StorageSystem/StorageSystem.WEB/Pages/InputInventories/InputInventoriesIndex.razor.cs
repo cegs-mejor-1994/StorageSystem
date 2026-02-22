@@ -1,5 +1,6 @@
 using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components;
+using StorageSystem.Shared.DTOs;
 using StorageSystem.Shared.Entities;
 using StorageSystem.WEB.Repositories;
 using System.Net;
@@ -18,7 +19,7 @@ namespace StorageSystem.WEB.Pages.InputInventories
         [Inject] private IRepository Repository { get; set; } = null!;
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
-        public List<InputInventory>? InputInventories { get; set; }
+        public List<InputInventoryDTO>? InputInventories { get; set; }
 
         protected async override Task OnInitializedAsync()
         {
@@ -75,7 +76,7 @@ namespace StorageSystem.WEB.Pages.InputInventories
             {
                 url += $"&filter={Filter}";
             }
-            var responseHttp = await Repository.GetAsync<List<InputInventory>>(url);
+            var responseHttp = await Repository.GetAsync<List<InputInventoryDTO>>(url);
             if (responseHttp.Error)
             {
                 var messageError = await responseHttp.GetErrorMessageAsync();

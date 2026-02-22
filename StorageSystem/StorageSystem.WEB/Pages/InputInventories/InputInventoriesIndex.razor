@@ -19,7 +19,7 @@
                             <th>Cantidad</th>
                             <th>Lote</th>
                             <th>Fecha de Vencimiento</th>
-                            @*<th>Proveedor</th>*@
+                            <th>Proveedor</th>
                             <th style="width: 210px">Acciones</th>
                         </tr>
                     </thead>
@@ -28,14 +28,14 @@
                         {                            
                             <tr>
                                 <td>@inputInventory.ControlCode</td>
-                                <td>@inputInventory.Product!.Name</td>
-                                <td>@inputInventory.Amount @inputInventory.Product!.MeasurementUnit!.Code</td>
+                                <td>@inputInventory.ProductName</td>
+                                <td>@inputInventory.Amount @inputInventory.MeasurementUnitCode</td>
                                 <td>@inputInventory.Batch</td>
-                                <td>@inputInventory.MatutingDate</td>
-                                @*<td>@inputInventory.Supplier!.Name</td>*@
+                                <td>@inputInventory.MatutingDate</td>     
+                                <td>@inputInventory.SupplierName</td>
                                 <td>
-                                    <a href="/inputInventories/edit/@inputInventory.Id" class="btn btn-warning"><i class="bi bi-pencil"/> Editar</a>
-                                    <HxButton Color="ThemeColor.Danger" Text="Borrar" OnClick="@(() => DeleteAsync(inputInventory))" />
+                                    <a href="/inputInventories/edit/@inputInventory.ID" class="btn btn-warning"><i class="bi bi-pencil"/> Editar</a>
+                                    
                                 </td>
                             </tr>                            
                         }
