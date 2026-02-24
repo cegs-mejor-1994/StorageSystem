@@ -16,7 +16,7 @@ namespace StorageSystem.API.UnitOfWork.Implementations
             _inputInventoriesRepository = inputInventoriesRepository;
         }
 
-        public async Task<IEnumerable<InputInventoryDTO>> GetWithRawMaterialsAndSuppliersAsync() => await _inputInventoriesRepository.GetWithRawMaterialsAndSuppliersAsync();
+        public async Task<IEnumerable<InputInventory>> GetWithRawMaterialsAndSuppliersAsync() => await _inputInventoriesRepository.GetWithRawMaterialsAndSuppliersAsync();
 
         public async Task<ActionResponse<IEnumerable<InputInventoryDTO>>> GetAsync(PaginationDTO pagination) => await _inputInventoriesRepository.GetAsync(pagination);
 

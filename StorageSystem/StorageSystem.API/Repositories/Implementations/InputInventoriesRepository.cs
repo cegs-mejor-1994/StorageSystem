@@ -66,21 +66,11 @@ namespace StorageSystem.API.Repositories.Implementations
             };
         }
 
-        public async Task<IEnumerable<InputInventoryDTO>> GetWithRawMaterialsAndSuppliersAsync()
+        public async Task<IEnumerable<InputInventory>> GetWithRawMaterialsAndSuppliersAsync()
         {
             return await _context.InputInventories
                 .OrderBy(i => i.Id)
-                    .Select(i => new InputInventoryDTO
-                    {
-                        ID = i.Id,
-                        ControlCode = i.ControlCode,
-                        Amount = i.Amount,
-                        ProductName = i.Product!.Name,
-                        MeasurementUnitCode = i.Product!.MeasurementUnit!.Code,
-                        Batch = i.Batch,
-                        MatutingDate = i.MatutingDate,
-                        SupplierName = i.Product.RawMaterial != null && i.Product.RawMaterial.Supplier != null ? i.Product.RawMaterial.Supplier.Name! : string.Empty
-                    })
+                .Include(i => i.Product)
                 .ToListAsync();
         }
     }
