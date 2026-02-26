@@ -127,7 +127,7 @@ namespace StorageSystem.WEB.Pages.ProductionGAPs
             {
                 var primerInventario = InputInventories!.Where(ii => ii.LeftAmount > 0 && ii.ProductId == RecipeDetail.ProductId).OrderBy(ii => ii.RegisterDate).FirstOrDefault();
 
-                /*if (primerInventario == null)
+                if (primerInventario == null)
                 {
                     productNamesNotExists += $"{RecipeDetail.Product!.Name},";
                     GAPValidated = false;                    
@@ -137,10 +137,10 @@ namespace StorageSystem.WEB.Pages.ProductionGAPs
                     var amountNeccesaryForBatch = (double)RecipeDetail.Amount * (double)cantidadBache;
                     if ((double)primerInventario.LeftAmount <= amountNeccesaryForBatch)
                     {
-                        productsWithLowAmount += $"{RecipeDetail.Product!.Name}, Cantidad: {primerInventario.LeftAmount}  {primerInventario.MeasurementUnit!.Code}, se necesita: {amountNeccesaryForBatch} {RecipeDetail.MeasurementUnit!.Code};";
+                        productsWithLowAmount += $"{RecipeDetail.Product!.Name}, Cantidad: {primerInventario.LeftAmount}  {primerInventario.Product!.MeasurementUnit!.Code}, se necesita: {amountNeccesaryForBatch} {RecipeDetail.MeasurementUnit!.Code};";
                         GAPValidated = false;                        
                     }
-                }*/
+                }
             }
         }
 

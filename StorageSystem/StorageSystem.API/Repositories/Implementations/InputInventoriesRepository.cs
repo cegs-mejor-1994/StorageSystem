@@ -71,6 +71,7 @@ namespace StorageSystem.API.Repositories.Implementations
             return await _context.InputInventories
                 .OrderBy(i => i.Id)
                 .Include(i => i.Product)
+                .ThenInclude(p => p!.MeasurementUnit)
                 .ToListAsync();
         }
     }
