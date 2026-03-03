@@ -125,7 +125,7 @@ namespace StorageSystem.WEB.Pages.ProductionGAPs
 
             foreach (var RecipeDetail in RecipeDetails!)
             {
-                var primerInventario = InputInventories!.Where(ii => ii.LeftAmount > 0 && ii.ProductId == RecipeDetail.ProductId).OrderBy(ii => ii.RegisterDate).FirstOrDefault();
+                /*var primerInventario = InputInventories!.Where(ii => ii.LeftAmount > 0 && ii.ProductId == RecipeDetail.ProductId).OrderBy(ii => ii.RegisterDate).FirstOrDefault();
 
                 if (primerInventario == null)
                 {
@@ -139,6 +139,41 @@ namespace StorageSystem.WEB.Pages.ProductionGAPs
                     {
                         productsWithLowAmount += $"{RecipeDetail.Product!.Name}, Cantidad: {primerInventario.LeftAmount}  {primerInventario.Product!.MeasurementUnit!.Code}, se necesita: {amountNeccesaryForBatch} {RecipeDetail.MeasurementUnit!.Code};";
                         GAPValidated = false;                        
+                    }
+                }*/
+
+                var amountNeccesaryForBatch = RecipeDetail.Amount * cantidadBache;
+                
+
+                // Traer TODOS los lotes del producto una sola vez
+                var inventariosProducto = InputInventories!
+                    .Where(ii => ii.LeftAmount > 0 && ii.ProductId == RecipeDetail.ProductId)
+                    .OrderBy(ii => ii.RegisterDate) // FIFO
+                    .ToList();
+
+                if (!inventariosProducto.Any())
+                {
+                    productNamesNotExists += $"{RecipeDetail.Product!.Name},";
+                    GAPValidated = false;
+                }
+                else
+                {
+                    // Buscar el primer lote que cumpla con la cantidad necesaria
+                    var inventarioValido = inventariosProducto
+                        .FirstOrDefault(ii => ii.LeftAmount >= amountNeccesaryForBatch);
+
+                    if (inventarioValido == null)
+                    {
+                        // Obtener el lote con mayor cantidad solo para mostrar información
+                        var mayorLote = inventariosProducto
+                            .OrderByDescending(ii => ii.LeftAmount)
+                            .First();
+
+                        productsWithLowAmount += $"{RecipeDetail.Product!.Name}, " +
+                            $"Mayor lote disponible: {mayorLote.LeftAmount} {mayorLote.Product!.MeasurementUnit!.Code}, " +
+                            $"se necesita: {amountNeccesaryForBatch} {RecipeDetail.MeasurementUnit!.Code};";
+
+                        GAPValidated = false;
                     }
                 }
             }
@@ -192,15 +227,20 @@ namespace StorageSystem.WEB.Pages.ProductionGAPs
 
                     foreach (var RecipeDetail in RecipeDetails!)
                     {
-                        var primerInventario = InputInventories!.Where(ii => ii.LeftAmount > 0 && ii.ProductId == RecipeDetail.ProductId).OrderBy(ii => ii.RegisterDate).FirstOrDefault();
+
+                        var amountNeccesaryForBatch = RecipeDetail.Amount * cantidadBache;
+
+                        var inventariosProducto = InputInventories!.Where(ii => ii.LeftAmount > 0 && ii.ProductId == RecipeDetail.ProductId).OrderBy(ii => ii.RegisterDate).ToList(); 
+
+                        var primerInventario = inventariosProducto.FirstOrDefault(ii => ii.LeftAmount >= amountNeccesaryForBatch);
 
                         if (primerInventario != null)
                         {
                             await GetInputInventoryById(primerInventario.Id);
-                            var amountLeftAfterCreateBatch = (double)primerInventario.LeftAmount - (double)RecipeDetail.Amount;
+                            var amountLeftAfterCreateBatch = primerInventario.LeftAmount - amountNeccesaryForBatch;
                             if (InputInventory != null)
                             {
-                                InputInventory.LeftAmount = (decimal)amountLeftAfterCreateBatch;
+                                InputInventory.LeftAmount = amountLeftAfterCreateBatch;
                                 await UpdateLeftAmount(InputInventory);
                                 if (productionGapAfterCreated != null)
                                 {
