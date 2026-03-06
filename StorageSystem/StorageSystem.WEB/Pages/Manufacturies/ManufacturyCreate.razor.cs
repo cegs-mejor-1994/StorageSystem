@@ -59,7 +59,6 @@ namespace StorageSystem.WEB.Pages.Manufacturies
                     return measurementUnit.Code;
                 }
             }
-
             return "";
         }
 
