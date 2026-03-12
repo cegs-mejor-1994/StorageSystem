@@ -3,12 +3,14 @@ using Microsoft.AspNetCore.Components;
 using StorageSystem.Shared.Entities;
 using StorageSystem.WEB.Repositories;
 using System.Net;
+using static StorageSystem.Shared.Enums.ProductStateAndPhisical;
 
 namespace StorageSystem.WEB.Pages.ProductionGAPs
 {
     public partial class ProductionGAPCreate
     {
         private ProductionGap productionGap = new();
+        private ProductionGap? ProductionGAP;
         private ProductionGap productionGapAfterCreated = new();
         private Recipe Recipe = new();         
         private ProductionGapDetail ProductionGapDetail = new();
@@ -125,55 +127,58 @@ namespace StorageSystem.WEB.Pages.ProductionGAPs
 
             foreach (var RecipeDetail in RecipeDetails!)
             {
-                /*var primerInventario = InputInventories!.Where(ii => ii.LeftAmount > 0 && ii.ProductId == RecipeDetail.ProductId).OrderBy(ii => ii.RegisterDate).FirstOrDefault();
-
-                if (primerInventario == null)
-                {
-                    productNamesNotExists += $"{RecipeDetail.Product!.Name},";
-                    GAPValidated = false;                    
-                }
-                else
-                {
-                    var amountNeccesaryForBatch = (double)RecipeDetail.Amount * (double)cantidadBache;
-                    if ((double)primerInventario.LeftAmount <= amountNeccesaryForBatch)
-                    {
-                        productsWithLowAmount += $"{RecipeDetail.Product!.Name}, Cantidad: {primerInventario.LeftAmount}  {primerInventario.Product!.MeasurementUnit!.Code}, se necesita: {amountNeccesaryForBatch} {RecipeDetail.MeasurementUnit!.Code};";
-                        GAPValidated = false;                        
-                    }
-                }*/
-
                 var amountNeccesaryForBatch = RecipeDetail.Amount * cantidadBache;
-                
 
-                // Traer TODOS los lotes del producto una sola vez
-                var inventariosProducto = InputInventories!
-                    .Where(ii => ii.LeftAmount > 0 && ii.ProductId == RecipeDetail.ProductId)
-                    .OrderBy(ii => ii.RegisterDate) // FIFO
-                    .ToList();
-
-                if (!inventariosProducto.Any())
+                if (RecipeDetail.Product!.Role == ProductRole.MateriaPrima)
                 {
-                    productNamesNotExists += $"{RecipeDetail.Product!.Name},";
-                    GAPValidated = false;
-                }
-                else
-                {
-                    // Buscar el primer lote que cumpla con la cantidad necesaria
-                    var inventarioValido = inventariosProducto
-                        .FirstOrDefault(ii => ii.LeftAmount >= amountNeccesaryForBatch);
+                    // Traer TODOS los lotes del producto una sola vez
+                    var inventariosProducto = InputInventories!
+                        .Where(ii => ii.LeftAmount > 0 && ii.ProductId == RecipeDetail.ProductId).OrderBy(ii => ii.RegisterDate).ToList();
 
-                    if (inventarioValido == null)
+                    if (!inventariosProducto.Any())
                     {
-                        // Obtener el lote con mayor cantidad solo para mostrar información
-                        var mayorLote = inventariosProducto
-                            .OrderByDescending(ii => ii.LeftAmount)
-                            .First();
-
-                        productsWithLowAmount += $"{RecipeDetail.Product!.Name}, " +
-                            $"Mayor lote disponible: {mayorLote.LeftAmount} {mayorLote.Product!.MeasurementUnit!.Code}, " +
-                            $"se necesita: {amountNeccesaryForBatch} {RecipeDetail.MeasurementUnit!.Code};";
-
+                        productNamesNotExists += $"{RecipeDetail.Product!.Name},";
                         GAPValidated = false;
+                    }
+                    else
+                    {
+                        // Buscar el primer lote que cumpla con la cantidad necesaria
+                        var inventarioValido = inventariosProducto
+                            .FirstOrDefault(ii => ii.LeftAmount >= amountNeccesaryForBatch);
+
+                        if (inventarioValido == null)
+                        {
+                            // Obtener el lote con mayor cantidad solo para mostrar información
+                            var mayorLote = inventariosProducto.OrderByDescending(ii => ii.LeftAmount).First();
+
+                            productsWithLowAmount += $"{RecipeDetail.Product!.Name}, " +
+                                $"Mayor lote disponible: {mayorLote.LeftAmount} {mayorLote.Product!.MeasurementUnit!.Code}, " +
+                                $"se necesita: {amountNeccesaryForBatch} {RecipeDetail.MeasurementUnit!.Code};";
+
+                            GAPValidated = false;
+                        }
+                    }
+                }
+                else if (RecipeDetail.Product!.Role == ProductRole.ProductoIntermedio)
+                {
+                    var bachesProducto = ProductionGaps!.Where(pg => pg.Recipe!.ProductId == productId && pg.LeftAmount > 0).ToList();
+
+                    if (!bachesProducto.Any())
+                    {
+                        productNamesNotExists += $"{RecipeDetail.Product!.Name},";
+                        GAPValidated = false;
+                    }
+                    else 
+                    {
+                        var bacheValido = bachesProducto.FirstOrDefault(pg => pg.LeftAmount >= amountNeccesaryForBatch);
+                        if (bacheValido == null)
+                        {
+                            var mayorBache = bachesProducto.OrderByDescending(gp => gp.LeftAmount).First();
+                            productsWithLowAmount += $"{RecipeDetail.Product!.Name}, " +
+                                $"Mayor lote disponible: {mayorBache.LeftAmount} {mayorBache.Recipe!.Product!.MeasurementUnit!.Code}, " +
+                                $"se necesita: {amountNeccesaryForBatch} {RecipeDetail.MeasurementUnit!.Code};";
+                            GAPValidated = false;
+                        }
                     }
                 }
             }
@@ -230,7 +235,49 @@ namespace StorageSystem.WEB.Pages.ProductionGAPs
 
                         var amountNeccesaryForBatch = RecipeDetail.Amount * cantidadBache;
 
-                        var inventariosProducto = InputInventories!.Where(ii => ii.LeftAmount > 0 && ii.ProductId == RecipeDetail.ProductId).OrderBy(ii => ii.RegisterDate).ToList(); 
+                        //Inventario y Baches
+                        if (RecipeDetail.Product!.Role == ProductRole.MateriaPrima)
+                        {
+                            var inventariosProducto = InputInventories!.Where(ii => ii.LeftAmount > 0 && ii.ProductId == RecipeDetail.ProductId).OrderBy(ii => ii.RegisterDate).ToList();
+
+                            var primerInventario = inventariosProducto.FirstOrDefault(ii => ii.LeftAmount >= amountNeccesaryForBatch);
+
+                            if (primerInventario != null)
+                            {
+                                await GetInputInventoryById(primerInventario.Id);
+                                var amountLeftAfterCreateBatch = primerInventario.LeftAmount - amountNeccesaryForBatch;
+                                if (InputInventory != null)
+                                {
+                                    InputInventory.LeftAmount = amountLeftAfterCreateBatch;
+                                    await UpdateInputInventoryLeftAmount(InputInventory);
+                                    if (productionGapAfterCreated != null)
+                                    {
+                                        ProductionGapDetail.ProductionGapId = productionGapAfterCreated.Id;
+                                        ProductionGapDetail.InputInventoryId = InputInventory.Id;
+                                        ProductionGapDetail.Amount = RecipeDetail.Amount * cantidadBache;
+                                        await CreateProductionGAPDetail(ProductionGapDetail);
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            var bachesProducto = ProductionGaps!.Where(pg => pg.Recipe!.ProductId == RecipeDetail.ProductId && pg.LeftAmount > 0).ToList();
+                            var bacheValido = bachesProducto.FirstOrDefault(pg => pg.LeftAmount >= amountNeccesaryForBatch);
+                            if (bacheValido != null)
+                            {
+                                await GetProductionGAPById(bacheValido.Id);
+                                var amountLeftAfterCreateBatch = bacheValido.LeftAmount - amountNeccesaryForBatch;
+                                if (ProductionGAP != null)
+                                {
+                                    ProductionGAP.LeftAmount = amountLeftAfterCreateBatch;
+                                    await UpdateProductionGAPLeftAmount(ProductionGAP);
+                                }
+                            }
+                        }
+
+                        //Solo Inventario
+                        /*var inventariosProducto = InputInventories!.Where(ii => ii.LeftAmount > 0 && ii.ProductId == RecipeDetail.ProductId).OrderBy(ii => ii.RegisterDate).ToList(); 
 
                         var primerInventario = inventariosProducto.FirstOrDefault(ii => ii.LeftAmount >= amountNeccesaryForBatch);
 
@@ -241,7 +288,7 @@ namespace StorageSystem.WEB.Pages.ProductionGAPs
                             if (InputInventory != null)
                             {
                                 InputInventory.LeftAmount = amountLeftAfterCreateBatch;
-                                await UpdateLeftAmount(InputInventory);
+                                await UpdateInputInventoryLeftAmount(InputInventory);
                                 if (productionGapAfterCreated != null)
                                 {
                                     ProductionGapDetail.ProductionGapId = productionGapAfterCreated.Id;
@@ -250,7 +297,7 @@ namespace StorageSystem.WEB.Pages.ProductionGAPs
                                     await CreateProductionGAPDetail(ProductionGapDetail);
                                 }
                             }
-                        }
+                        }*/
                     }
                     NavigationManager.NavigateTo("/productionsgaps");
                 }
@@ -336,7 +383,7 @@ namespace StorageSystem.WEB.Pages.ProductionGAPs
             }
         }
 
-        private async Task UpdateLeftAmount(InputInventory inputRDInventory)
+        private async Task UpdateInputInventoryLeftAmount(InputInventory inputRDInventory)
         {
             if(inputRDInventory != null)
             {
@@ -345,6 +392,42 @@ namespace StorageSystem.WEB.Pages.ProductionGAPs
                 {
                     var message = await responseHttp.GetErrorMessageAsync();
                     await SweetAlertService.FireAsync("Error", "Error al actualizar inventario", SweetAlertIcon.Error);
+                    return;
+                }
+            }
+        }
+
+        private async Task GetProductionGAPById(int id)
+        {
+            var responseHttp = await Repository.GetAsync<ProductionGap>($"/api/ProductionGaps/{id}");
+            if (responseHttp.Error)
+            {
+                if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
+                {
+                    var message = await responseHttp.GetErrorMessageAsync();
+                    await SweetAlertService.FireAsync(new SweetAlertOptions { Title = "Error", Text = message, Icon = SweetAlertIcon.Error });
+                }
+                else
+                {
+                    var message = await responseHttp.GetErrorMessageAsync();
+                    await SweetAlertService.FireAsync(new SweetAlertOptions { Title = "Error", Text = "Error al buscar dato de bache", Icon = SweetAlertIcon.Error });
+                }
+            }
+            else
+            {
+                ProductionGAP = responseHttp.Response;
+            }
+        }
+
+        private async Task UpdateProductionGAPLeftAmount(ProductionGap productionGap)
+        {
+            if (productionGap != null)
+            {
+                var responseHttp = await Repository.PutAsync($"/api/ProductionGaps", productionGap);
+                if (responseHttp.Error)
+                {
+                    var message = await responseHttp.GetErrorMessageAsync();
+                    await SweetAlertService.FireAsync("Error", "Error al actualizar bache", SweetAlertIcon.Error);
                     return;
                 }
             }
