@@ -342,7 +342,7 @@ namespace StorageSystem.API.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,3)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("ControlCode")
                         .IsRequired()
@@ -379,10 +379,13 @@ namespace StorageSystem.API.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("InputInventoryId")
+                    b.Property<int?>("InputInventoryId")
                         .HasColumnType("int");
 
                     b.Property<int>("ProductionGapId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ProductionGapSourceId")
                         .HasColumnType("int");
 
                     b.Property<string>("State")
@@ -391,11 +394,18 @@ namespace StorageSystem.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("InputInventoryId");
+                    b.HasIndex("InputInventoryId")
+                        .HasFilter("[InputInventoryId] IS NOT NULL");
 
                     b.HasIndex("ProductionGapId");
 
-                    b.ToTable("ProductionGapDetails");
+                    b.HasIndex("ProductionGapSourceId")
+                        .HasFilter("[ProductionGapSourceId] IS NOT NULL");
+
+                    b.ToTable("ProductionGapDetails", t =>
+                        {
+                            t.HasCheckConstraint("CK_ProductionRelations_Source", "(InputInventoryId IS NOT NULL AND ProductionGapSourceId IS NULL) OR (InputInventoryId IS NULL AND ProductionGapSourceId IS NOT NULL)");
+                        });
                 });
 
             modelBuilder.Entity("StorageSystem.Shared.Entities.ProductsDetail", b =>
@@ -717,18 +727,24 @@ namespace StorageSystem.API.Migrations
                     b.HasOne("StorageSystem.Shared.Entities.InputInventory", "InputInventory")
                         .WithMany("ProductionGapDetails")
                         .HasForeignKey("InputInventoryId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("StorageSystem.Shared.Entities.ProductionGap", "ProductionGap")
-                        .WithMany()
+                        .WithMany("ProductionGapDetails")
                         .HasForeignKey("ProductionGapId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("StorageSystem.Shared.Entities.ProductionGap", "ProductionGapSource")
+                        .WithMany()
+                        .HasForeignKey("ProductionGapSourceId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.Navigation("InputInventory");
 
                     b.Navigation("ProductionGap");
+
+                    b.Navigation("ProductionGapSource");
                 });
 
             modelBuilder.Entity("StorageSystem.Shared.Entities.ProductsDetail", b =>
@@ -884,6 +900,8 @@ namespace StorageSystem.API.Migrations
             modelBuilder.Entity("StorageSystem.Shared.Entities.ProductionGap", b =>
                 {
                     b.Navigation("Manufacturies");
+
+                    b.Navigation("ProductionGapDetails");
                 });
 
             modelBuilder.Entity("StorageSystem.Shared.Entities.ProductsDetail", b =>

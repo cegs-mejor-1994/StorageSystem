@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace StorageSystem.API.Migrations
 {
     /// <inheritdoc />
-    public partial class InitializeEntitiesDatabase : Migration
+    public partial class AddInitializeEntitiesDatabase : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -267,7 +267,7 @@ namespace StorageSystem.API.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ControlCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Amount = table.Column<decimal>(type: "decimal(18,3)", nullable: false),
+                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     LeftAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     RecipeId = table.Column<int>(type: "int", nullable: false),
                     State = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -384,13 +384,15 @@ namespace StorageSystem.API.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ProductionGapId = table.Column<int>(type: "int", nullable: false),
-                    InputInventoryId = table.Column<int>(type: "int", nullable: false),
+                    InputInventoryId = table.Column<int>(type: "int", nullable: true),
+                    ProductionGapSourceId = table.Column<int>(type: "int", nullable: true),
                     Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     State = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ProductionGapDetails", x => x.Id);
+                    table.CheckConstraint("CK_ProductionRelations_Source", "(InputInventoryId IS NOT NULL AND ProductionGapSourceId IS NULL) OR (InputInventoryId IS NULL AND ProductionGapSourceId IS NOT NULL)");
                     table.ForeignKey(
                         name: "FK_ProductionGapDetails_InputInventories_InputInventoryId",
                         column: x => x.InputInventoryId,
@@ -400,6 +402,12 @@ namespace StorageSystem.API.Migrations
                     table.ForeignKey(
                         name: "FK_ProductionGapDetails_ProductionGaps_ProductionGapId",
                         column: x => x.ProductionGapId,
+                        principalTable: "ProductionGaps",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ProductionGapDetails_ProductionGaps_ProductionGapSourceId",
+                        column: x => x.ProductionGapSourceId,
                         principalTable: "ProductionGaps",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -502,12 +510,19 @@ namespace StorageSystem.API.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_ProductionGapDetails_InputInventoryId",
                 table: "ProductionGapDetails",
-                column: "InputInventoryId");
+                column: "InputInventoryId",
+                filter: "[InputInventoryId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProductionGapDetails_ProductionGapId",
                 table: "ProductionGapDetails",
                 column: "ProductionGapId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductionGapDetails_ProductionGapSourceId",
+                table: "ProductionGapDetails",
+                column: "ProductionGapSourceId",
+                filter: "[ProductionGapSourceId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProductionGaps_RecipeId",

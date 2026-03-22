@@ -9,7 +9,7 @@ namespace StorageSystem.Shared.Entities
 
         public string ControlCode { get; set; } = null!;
 
-        [Column(TypeName = "decimal(18,3)")]
+        [Column(TypeName = "decimal(18,2)")]
         [Display(Name = "Total Bache")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
         public decimal Amount { get; set; }
@@ -26,5 +26,6 @@ namespace StorageSystem.Shared.Entities
         public DateTime RegisterDate { get; set; } = DateTime.UtcNow;
 
         public ICollection<Manufactury>? Manufacturies { get; set; }
+        public ICollection<ProductionGapDetail> ProductionGapDetails { get; set; } = new List<ProductionGapDetail>();
     }
 }

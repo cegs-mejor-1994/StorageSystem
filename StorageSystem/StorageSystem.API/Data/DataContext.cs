@@ -59,7 +59,34 @@ namespace StorageSystem.API.Data
                 .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<ProductionGap>();
             modelBuilder.Entity<ProductsDetail>().HasIndex(prd => new { prd.ProductId, prd.ReferenceId }).IsUnique();
-            modelBuilder.Entity<ProductionGapDetail>();
+            modelBuilder.Entity<ProductionGapDetail>(entity =>
+            {
+                entity.HasOne(pgd => pgd.ProductionGap)
+                    .WithMany(pg => pg.ProductionGapDetails)
+                    .HasForeignKey(pgd => pgd.ProductionGapId)
+                    .OnDelete(DeleteBehavior.Restrict);
+                entity.HasOne(pgd => pgd.InputInventory)
+                    .WithMany(ii => ii.ProductionGapDetails)
+                    .HasForeignKey(pgd => pgd.InputInventoryId)
+                    .OnDelete(DeleteBehavior.Restrict);
+                entity.HasOne(pgd => pgd.ProductionGapSource)
+                    .WithMany()
+                    .HasForeignKey(pgd => pgd.ProductionGapSourceId)
+                    .OnDelete(DeleteBehavior.Restrict);
+                entity.HasIndex(e => e.InputInventoryId)
+                    .HasFilter("[InputInventoryId] IS NOT NULL");
+
+                entity.HasIndex(e => e.ProductionGapSourceId)
+                    .HasFilter("[ProductionGapSourceId] IS NOT NULL");
+                entity.ToTable(t =>
+                {
+                    t.HasCheckConstraint(
+                        "CK_ProductionRelations_Source",
+                        "(InputInventoryId IS NOT NULL AND ProductionGapSourceId IS NULL) OR (InputInventoryId IS NULL AND ProductionGapSourceId IS NOT NULL)"
+                    );
+                });
+            });
+
             modelBuilder.Entity<ProductsDetailStructure>().HasIndex(prds => new { prds.ProductsDetailId, prds.ProductId }).IsUnique();
             modelBuilder.Entity<RawMaterial>().HasIndex(ra => new { ra.ProductId, ra.SupplierId }).IsUnique();
             modelBuilder.Entity<RawMaterial>()
